@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { useAuth } from './hooks/useAuth'
+import { useAuth } from './contexts/AuthContext'
 
 // Layouts
 import AppShell from './layouts/AppShell/AppShell'
@@ -10,6 +10,7 @@ import { LandingPage } from './pages/marketing/LandingPage'
 // Auth Pages
 import GoogleCallbackPage from './pages/auth/GoogleCallbackPage'
 import LoginPage from './pages/auth/LoginPage'
+import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
 import BillingPage from './pages/billing/BillingPage'
@@ -42,7 +43,20 @@ function AppRouter() {
       
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
+      
+      {/* Legacy routes - redirect to new paths */}
+      <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+      <Route path="/datasets/upload" element={<Navigate to="/app/datasets/upload" replace />} />
+      <Route path="/datasets/:id" element={<Navigate to="/app/datasets/:id" replace />} />
+      <Route path="/jobs" element={<Navigate to="/app/jobs" replace />} />
+      <Route path="/jobs/:id" element={<Navigate to="/app/jobs/:id" replace />} />
+      <Route path="/cards/upload" element={<Navigate to="/app/cards/upload" replace />} />
+      <Route path="/cards/review" element={<Navigate to="/app/cards/review" replace />} />
+      <Route path="/contacts" element={<Navigate to="/app/contacts" replace />} />
+      <Route path="/exports" element={<Navigate to="/app/exports" replace />} />
+      <Route path="/billing" element={<Navigate to="/app/billing" replace />} />
 
       {/* Protected Routes */}
       <Route

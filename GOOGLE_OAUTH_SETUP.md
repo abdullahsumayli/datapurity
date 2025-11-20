@@ -68,6 +68,7 @@ GOOGLE_REDIRECT_URI=https://yourdomain.com/api/v1/auth/google/callback
 ```
 
 وأضف في Google Console:
+
 ```
 https://yourdomain.com/api/v1/auth/google/callback
 https://yourdomain.com/auth/callback

@@ -8,7 +8,9 @@ function TopBar() {
     <header className="topbar">
       <div className="topbar-content">
         <div className="topbar-left">
-          {/* Breadcrumb or page title could go here */}
+          <h2 style={{ margin: 0, fontSize: '1.125rem', color: '#64748b' }}>
+            مرحباً بك في نظام تنقية البيانات ✨
+          </h2>
         </div>
         
         <div className="topbar-right">
@@ -16,7 +18,7 @@ function TopBar() {
             <div className="user-menu">
               <span className="user-email">{user.email}</span>
               <button onClick={logout} className="btn-logout">
-                Logout
+                تسجيل الخروج
               </button>
             </div>
           )}

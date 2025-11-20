@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     # Google OAuth
     GOOGLE_CLIENT_ID: str = ""
     GOOGLE_CLIENT_SECRET: str = ""
-    GOOGLE_REDIRECT_URI: str = "http://localhost:8000/api/v1/auth/google/callback"
+    GOOGLE_REDIRECT_URI: str = "http://localhost:5000/api/v1/auth/google/callback"
 
     # Celery
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"

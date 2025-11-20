@@ -10,7 +10,7 @@ function GoogleCallbackPage() {
     
     if (token) {
       // Save token to localStorage
-      localStorage.setItem('token', token)
+      localStorage.setItem('access_token', token)
       
       // Redirect to dashboard
       navigate('/app/dashboard', { replace: true })

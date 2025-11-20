@@ -7,7 +7,7 @@ from authlib.integrations.starlette_client import OAuth
 from starlette.requests import Request
 
 from app.db.session import get_db
-from app.schemas.auth import LoginRequest, Token
+from app.schemas.auth import LoginRequest, SignupRequest, Token
 from app.schemas.user import UserResponse
 from app.core.security import create_access_token, verify_password, get_password_hash
 from app.core.deps import get_current_user
@@ -66,6 +66,44 @@ async def login(
     
     # Create access token
     access_token = create_access_token(subject=str(user.id))
+    
+    return Token(access_token=access_token, token_type="bearer")
+
+
+@router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED)
+async def signup(
+    request: SignupRequest,
+    db: AsyncSession = Depends(get_db),
+):
+    """Register a new user and return access token."""
+    from sqlalchemy import select
+    from app.models.user import User
+    
+    # Check if user already exists
+    result = await db.execute(select(User).where(User.email == request.email))
+    existing_user = result.scalar_one_or_none()
+    
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="البريد الإلكتروني مسجل مسبقاً",
+        )
+    
+    # Create new user
+    hashed_password = get_password_hash(request.password)
+    new_user = User(
+        email=request.email,
+        hashed_password=hashed_password,
+        full_name=request.full_name,
+        is_active=True,
+    )
+    
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+    
+    # Create access token
+    access_token = create_access_token(subject=str(new_user.id))
     
     return Token(access_token=access_token, token_type="bearer")
 

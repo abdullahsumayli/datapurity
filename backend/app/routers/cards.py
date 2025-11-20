@@ -4,7 +4,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
+from app.core.database import get_db
+from app.core.security import get_current_user
+from app.models.user import User
 from app.schemas.card import CardResponse, CardUpdate
 
 router = APIRouter()
@@ -12,19 +14,24 @@ router = APIRouter()
 
 @router.post("/upload", response_model=CardResponse, status_code=status.HTTP_201_CREATED)
 async def upload_card(
-    file: UploadFile = File(...),
+    files: List[UploadFile] = File(...),
     db: AsyncSession = Depends(get_db),
-    # TODO: Add current_user dependency
+    current_user: User = Depends(get_current_user)
 ):
-    """Upload a business card image for OCR."""
-    # TODO: Validate file type (JPG, PNG, PDF)
-    # TODO: Upload to S3
-    # TODO: Create card record
-    # TODO: Queue OCR processing task
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Card upload not yet implemented",
-    )
+    """Upload business card images for OCR."""
+    # Mock response - في الإنتاج سيتم معالجة الصور واستخراج البيانات
+    return {
+        "id": "1",
+        "image_url": "/uploads/cards/sample.jpg",
+        "extracted_data": {
+            "name": "أحمد محمد",
+            "title": "مدير تقني",
+            "company": "شركة التقنية",
+            "email": "ahmed@tech.com",
+            "phone": "+966501234567"
+        },
+        "reviewed": False
+    }
 
 
 @router.get("/", response_model=List[CardResponse])
@@ -33,57 +40,88 @@ async def list_cards(
     limit: int = 100,
     reviewed: bool = None,
     db: AsyncSession = Depends(get_db),
-    # TODO: Add current_user dependency
+    current_user: User = Depends(get_current_user)
 ):
     """List all business cards."""
-    # TODO: Query cards with filters
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="List cards not yet implemented",
-    )
+    # Mock data
+    cards = [
+        {
+            "id": "1",
+            "image_url": "/uploads/cards/card1.jpg",
+            "extracted_data": {
+                "name": "أحمد محمد",
+                "title": "مدير تقني",
+                "company": "شركة التقنية",
+                "email": "ahmed@tech.com",
+                "phone": "+966501234567"
+            },
+            "reviewed": False
+        },
+        {
+            "id": "2",
+            "image_url": "/uploads/cards/card2.jpg",
+            "extracted_data": {
+                "name": "سارة علي",
+                "title": "مديرة مبيعات",
+                "company": "شركة التسويق",
+                "email": "sara@marketing.com",
+                "phone": "+966507654321"
+            },
+            "reviewed": True
+        }
+    ]
+    
+    if reviewed is not None:
+        cards = [c for c in cards if c["reviewed"] == reviewed]
+    
+    return cards[skip:skip + limit]
 
 
 @router.get("/{card_id}", response_model=CardResponse)
 async def get_card(
-    card_id: int,
+    card_id: str,
     db: AsyncSession = Depends(get_db),
-    # TODO: Add current_user dependency
+    current_user: User = Depends(get_current_user)
 ):
     """Get card details."""
-    # TODO: Retrieve card by ID
-    # TODO: Verify ownership
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Get card not yet implemented",
-    )
+    # Mock data
+    return {
+        "id": card_id,
+        "image_url": f"/uploads/cards/card{card_id}.jpg",
+        "extracted_data": {
+            "name": "أحمد محمد",
+            "title": "مدير تقني",
+            "company": "شركة التقنية",
+            "email": "ahmed@tech.com",
+            "phone": "+966501234567"
+        },
+        "reviewed": False
+    }
 
 
-@router.patch("/{card_id}", response_model=CardResponse)
+@router.put("/{card_id}", response_model=CardResponse)
 async def update_card(
-    card_id: int,
+    card_id: str,
     card_update: CardUpdate,
     db: AsyncSession = Depends(get_db),
-    # TODO: Add current_user dependency
+    current_user: User = Depends(get_current_user)
 ):
     """Update extracted card data (manual correction)."""
-    # TODO: Update card fields
-    # TODO: Mark as reviewed
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Update card not yet implemented",
-    )
+    # Mock response - تحديث البيانات
+    return {
+        "id": card_id,
+        "image_url": f"/uploads/cards/card{card_id}.jpg",
+        "extracted_data": card_update.extracted_data or {},
+        "reviewed": card_update.reviewed or False
+    }
 
 
 @router.delete("/{card_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_card(
-    card_id: int,
+    card_id: str,
     db: AsyncSession = Depends(get_db),
-    # TODO: Add current_user dependency
+    current_user: User = Depends(get_current_user)
 ):
     """Delete a card."""
-    # TODO: Delete from S3
-    # TODO: Delete card record
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Delete card not yet implemented",
-    )
+    # Mock - في الإنتاج سيتم حذف الملف والسجل
+    return None

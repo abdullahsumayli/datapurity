@@ -9,7 +9,7 @@ export function useContacts() {
   const fetchContacts = async (datasetId?: number, search?: string) => {
     setIsLoading(true)
     try {
-      const params: any = {}
+      const params: Record<string, number | string> = {}
       if (datasetId) params.dataset_id = datasetId
       if (search) params.search = search
       

@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
-
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,14 +16,15 @@ function LoginPage() {
     try {
       await login({ email, password })
       navigate('/app/dashboard')
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Login failed')
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } }
+      setError(error.response?.data?.detail || 'Login failed')
     }
   }
 
   const handleGoogleLogin = () => {
-    // Redirect to backend Google OAuth endpoint
-    window.location.href = `${API_BASE_URL}/auth/google/login`
+    // استخدام مسار نسبي للـ OAuth
+    window.location.href = '/api/v1/auth/google/login'
   }
 
   return (
@@ -79,6 +78,10 @@ function LoginPage() {
             تسجيل الدخول بحساب Google
           </button>
         </form>
+        
+        <p className="auth-footer">
+          ليس لديك حساب؟ <a href="/signup">إنشاء حساب جديد</a>
+        </p>
       </div>
     </div>
   )

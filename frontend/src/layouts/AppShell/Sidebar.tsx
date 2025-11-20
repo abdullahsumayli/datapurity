@@ -9,43 +9,43 @@ function Sidebar() {
       </div>
       
       <nav className="sidebar-nav">
-        <NavLink to="/dashboard" className="nav-item">
-          📊 Dashboard
+        <NavLink to="/app/dashboard" className="nav-item">
+          <span>📊</span> لوحة التحكم
         </NavLink>
         
         <div className="nav-section">
-          <div className="nav-section-title">Data Management</div>
-          <NavLink to="/datasets/upload" className="nav-item">
-            📤 Upload Dataset
+          <div className="nav-section-title">إدارة البيانات</div>
+          <NavLink to="/app/datasets/upload" className="nav-item">
+            <span>📤</span> رفع ملف بيانات
           </NavLink>
-          <NavLink to="/contacts" className="nav-item">
-            👥 Contacts
-          </NavLink>
-        </div>
-        
-        <div className="nav-section">
-          <div className="nav-section-title">Business Cards</div>
-          <NavLink to="/cards/upload" className="nav-item">
-            📇 Upload Cards
-          </NavLink>
-          <NavLink to="/cards/review" className="nav-item">
-            ✏️ Review Cards
+          <NavLink to="/app/contacts" className="nav-item">
+            <span>👥</span> جهات الاتصال
           </NavLink>
         </div>
         
         <div className="nav-section">
-          <div className="nav-section-title">Operations</div>
-          <NavLink to="/jobs" className="nav-item">
-            ⚙️ Jobs
+          <div className="nav-section-title">بطاقات الأعمال</div>
+          <NavLink to="/app/cards/upload" className="nav-item">
+            <span>📇</span> رفع البطاقات
           </NavLink>
-          <NavLink to="/exports" className="nav-item">
-            📥 Exports
+          <NavLink to="/app/cards/review" className="nav-item">
+            <span>✏️</span> مراجعة البطاقات
           </NavLink>
         </div>
         
         <div className="nav-section">
-          <NavLink to="/billing" className="nav-item">
-            💳 Billing
+          <div className="nav-section-title">العمليات</div>
+          <NavLink to="/app/jobs" className="nav-item">
+            <span>⚙️</span> المهام الخلفية
+          </NavLink>
+          <NavLink to="/app/exports" className="nav-item">
+            <span>📥</span> التصديرات
+          </NavLink>
+        </div>
+        
+        <div className="nav-section">
+          <NavLink to="/app/billing" className="nav-item">
+            <span>💳</span> الفوترة والاشتراك
           </NavLink>
         </div>
       </nav>
