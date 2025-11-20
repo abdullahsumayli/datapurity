@@ -19,18 +19,24 @@ async def upload_card(
     current_user: User = Depends(get_current_user)
 ):
     """Upload business card images for OCR."""
+    from datetime import datetime
     # Mock response - في الإنتاج سيتم معالجة الصور واستخراج البيانات
     return {
-        "id": "1",
-        "image_url": "/uploads/cards/sample.jpg",
-        "extracted_data": {
-            "name": "أحمد محمد",
-            "title": "مدير تقني",
-            "company": "شركة التقنية",
-            "email": "ahmed@tech.com",
-            "phone": "+966501234567"
-        },
-        "reviewed": False
+        "id": 1,
+        "user_id": current_user.id,
+        "original_filename": files[0].filename if files else "sample.jpg",
+        "storage_path": "/uploads/cards/sample.jpg",
+        "ocr_text": None,
+        "ocr_confidence": None,
+        "extracted_name": "أحمد محمد",
+        "extracted_company": "شركة التقنية",
+        "extracted_phone": "+966501234567",
+        "extracted_email": "ahmed@tech.com",
+        "extracted_address": None,
+        "is_processed": True,
+        "is_reviewed": False,
+        "created_at": datetime.now(),
+        "updated_at": None
     }
 
 
@@ -43,36 +49,47 @@ async def list_cards(
     current_user: User = Depends(get_current_user)
 ):
     """List all business cards."""
+    from datetime import datetime
     # Mock data
     cards = [
         {
-            "id": "1",
-            "image_url": "/uploads/cards/card1.jpg",
-            "extracted_data": {
-                "name": "أحمد محمد",
-                "title": "مدير تقني",
-                "company": "شركة التقنية",
-                "email": "ahmed@tech.com",
-                "phone": "+966501234567"
-            },
-            "reviewed": False
+            "id": 1,
+            "user_id": current_user.id,
+            "original_filename": "card1.jpg",
+            "storage_path": "/uploads/cards/card1.jpg",
+            "ocr_text": None,
+            "ocr_confidence": None,
+            "extracted_name": "أحمد محمد",
+            "extracted_company": "شركة التقنية",
+            "extracted_phone": "+966501234567",
+            "extracted_email": "ahmed@tech.com",
+            "extracted_address": None,
+            "is_processed": True,
+            "is_reviewed": False,
+            "created_at": datetime.now(),
+            "updated_at": None
         },
         {
-            "id": "2",
-            "image_url": "/uploads/cards/card2.jpg",
-            "extracted_data": {
-                "name": "سارة علي",
-                "title": "مديرة مبيعات",
-                "company": "شركة التسويق",
-                "email": "sara@marketing.com",
-                "phone": "+966507654321"
-            },
-            "reviewed": True
+            "id": 2,
+            "user_id": current_user.id,
+            "original_filename": "card2.jpg",
+            "storage_path": "/uploads/cards/card2.jpg",
+            "ocr_text": None,
+            "ocr_confidence": None,
+            "extracted_name": "سارة علي",
+            "extracted_company": "شركة التسويق",
+            "extracted_phone": "+966507654321",
+            "extracted_email": "sara@marketing.com",
+            "extracted_address": None,
+            "is_processed": True,
+            "is_reviewed": True,
+            "created_at": datetime.now(),
+            "updated_at": None
         }
     ]
     
     if reviewed is not None:
-        cards = [c for c in cards if c["reviewed"] == reviewed]
+        cards = [c for c in cards if c["is_reviewed"] == reviewed]
     
     return cards[skip:skip + limit]
 
@@ -84,18 +101,24 @@ async def get_card(
     current_user: User = Depends(get_current_user)
 ):
     """Get card details."""
+    from datetime import datetime
     # Mock data
     return {
-        "id": card_id,
-        "image_url": f"/uploads/cards/card{card_id}.jpg",
-        "extracted_data": {
-            "name": "أحمد محمد",
-            "title": "مدير تقني",
-            "company": "شركة التقنية",
-            "email": "ahmed@tech.com",
-            "phone": "+966501234567"
-        },
-        "reviewed": False
+        "id": int(card_id),
+        "user_id": current_user.id,
+        "original_filename": f"card{card_id}.jpg",
+        "storage_path": f"/uploads/cards/card{card_id}.jpg",
+        "ocr_text": None,
+        "ocr_confidence": None,
+        "extracted_name": "أحمد محمد",
+        "extracted_company": "شركة التقنية",
+        "extracted_phone": "+966501234567",
+        "extracted_email": "ahmed@tech.com",
+        "extracted_address": "الرياض، المملكة العربية السعودية",
+        "is_processed": True,
+        "is_reviewed": False,
+        "created_at": datetime.now(),
+        "updated_at": None
     }
 
 
@@ -107,12 +130,24 @@ async def update_card(
     current_user: User = Depends(get_current_user)
 ):
     """Update extracted card data (manual correction)."""
+    from datetime import datetime
     # Mock response - تحديث البيانات
     return {
-        "id": card_id,
-        "image_url": f"/uploads/cards/card{card_id}.jpg",
-        "extracted_data": card_update.extracted_data or {},
-        "reviewed": card_update.reviewed or False
+        "id": int(card_id),
+        "user_id": current_user.id,
+        "original_filename": f"card{card_id}.jpg",
+        "storage_path": f"/uploads/cards/card{card_id}.jpg",
+        "ocr_text": None,
+        "ocr_confidence": None,
+        "extracted_name": card_update.extracted_name,
+        "extracted_company": card_update.extracted_company,
+        "extracted_phone": card_update.extracted_phone,
+        "extracted_email": card_update.extracted_email,
+        "extracted_address": card_update.extracted_address,
+        "is_processed": True,
+        "is_reviewed": card_update.is_reviewed if card_update.is_reviewed is not None else False,
+        "created_at": datetime.now(),
+        "updated_at": datetime.now()
     }
 
 
