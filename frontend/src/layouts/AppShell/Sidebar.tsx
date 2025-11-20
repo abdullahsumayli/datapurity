@@ -47,6 +47,9 @@ function Sidebar() {
           <NavLink to="/app/billing" className="nav-item">
             <span>💳</span> الفوترة والاشتراك
           </NavLink>
+          <NavLink to="/app/profile" className="nav-item">
+            <span>👤</span> الملف الشخصي
+          </NavLink>
         </div>
       </nav>
     </aside>

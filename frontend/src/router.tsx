@@ -24,6 +24,7 @@ import ExportsPage from './pages/exports/ExportsPage'
 import JobDetailsPage from './pages/jobs/JobDetailsPage'
 import JobsListPage from './pages/jobs/JobsListPage'
 import NotFoundPage from './pages/misc/NotFoundPage'
+import ProfilePage from './pages/profile/ProfilePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -88,6 +89,7 @@ function AppRouter() {
         <Route path="contacts" element={<ContactsPage />} />
         <Route path="exports" element={<ExportsPage />} />
         <Route path="billing" element={<BillingPage />} />
+        <Route path="profile" element={<ProfilePage />} />
       </Route>
 
       {/* 404 */}
