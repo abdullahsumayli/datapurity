@@ -2,16 +2,21 @@ import { useEffect, useState } from 'react'
 import apiClient from '../../config/apiClient'
 
 interface Card {
-  id: string
-  image_url: string
-  extracted_data: {
-    name?: string
-    title?: string
-    company?: string
-    email?: string
-    phone?: string
-  }
-  reviewed: boolean
+  id: number
+  user_id: number
+  original_filename: string
+  storage_path: string
+  ocr_text?: string | null
+  ocr_confidence?: number | null
+  extracted_name?: string | null
+  extracted_company?: string | null
+  extracted_phone?: string | null
+  extracted_email?: string | null
+  extracted_address?: string | null
+  is_processed: boolean
+  is_reviewed: boolean
+  created_at: string
+  updated_at?: string | null
 }
 
 function CardReviewPage() {
@@ -36,15 +41,21 @@ function CardReviewPage() {
   }
 
   const startEditing = (card: Card) => {
-    setEditingCard(card.id)
-    setFormData(card.extracted_data)
+    setEditingCard(card.id.toString())
+    setFormData({
+      extracted_name: card.extracted_name || '',
+      extracted_company: card.extracted_company || '',
+      extracted_phone: card.extracted_phone || '',
+      extracted_email: card.extracted_email || '',
+      extracted_address: card.extracted_address || ''
+    })
   }
 
   const saveCard = async (cardId: string) => {
     try {
       await apiClient.put(`/cards/${cardId}`, {
-        extracted_data: formData,
-        reviewed: true
+        ...formData,
+        is_reviewed: true
       })
       setEditingCard(null)
       fetchCards()
@@ -55,7 +66,7 @@ function CardReviewPage() {
 
   const markAsReviewed = async (cardId: string) => {
     try {
-      await apiClient.put(`/cards/${cardId}`, { reviewed: true })
+      await apiClient.put(`/cards/${cardId}`, { is_reviewed: true })
       fetchCards()
     } catch (error) {
       alert('فشل تحديث الحالة')
@@ -84,64 +95,66 @@ function CardReviewPage() {
           <div className="no-data">لا توجد بطاقات للمراجعة</div>
         ) : (
           cards.map(card => (
-            <div key={card.id} className={`card-item ${card.reviewed ? 'reviewed' : ''}`}>
+            <div key={card.id} className={`card-item ${card.is_reviewed ? 'reviewed' : ''}`}>
               <div className="card-image">
-                <img src={card.image_url} alt="Business card" />
+                <img src={card.storage_path} alt={card.original_filename} />
               </div>
               
-              {editingCard === card.id ? (
+              {editingCard === card.id.toString() ? (
                 <div className="card-form">
                   <input
-                    value={formData.name || ''}
-                    onChange={e => setFormData({...formData, name: e.target.value})}
+                    value={formData.extracted_name || ''}
+                    onChange={e => setFormData({...formData, extracted_name: e.target.value})}
                     placeholder="الاسم"
                   />
                   <input
-                    value={formData.title || ''}
-                    onChange={e => setFormData({...formData, title: e.target.value})}
-                    placeholder="المسمى الوظيفي"
-                  />
-                  <input
-                    value={formData.company || ''}
-                    onChange={e => setFormData({...formData, company: e.target.value})}
+                    value={formData.extracted_company || ''}
+                    onChange={e => setFormData({...formData, extracted_company: e.target.value})}
                     placeholder="الشركة"
                   />
                   <input
-                    value={formData.email || ''}
-                    onChange={e => setFormData({...formData, email: e.target.value})}
+                    value={formData.extracted_email || ''}
+                    onChange={e => setFormData({...formData, extracted_email: e.target.value})}
                     placeholder="البريد الإلكتروني"
                   />
                   <input
-                    value={formData.phone || ''}
-                    onChange={e => setFormData({...formData, phone: e.target.value})}
+                    value={formData.extracted_phone || ''}
+                    onChange={e => setFormData({...formData, extracted_phone: e.target.value})}
                     placeholder="رقم الهاتف"
                   />
+                  <input
+                    value={formData.extracted_address || ''}
+                    onChange={e => setFormData({...formData, extracted_address: e.target.value})}
+                    placeholder="العنوان"
+                  />
                   <div className="form-actions">
-                    <button onClick={() => saveCard(card.id)} className="btn-primary">حفظ</button>
+                    <button onClick={() => saveCard(card.id.toString())} className="btn-primary">حفظ</button>
                     <button onClick={() => setEditingCard(null)} className="btn-secondary">إلغاء</button>
                   </div>
                 </div>
               ) : (
                 <div className="card-data">
                   <div className="data-row">
-                    <strong>الاسم:</strong> {card.extracted_data.name || '-'}
+                    <strong>الاسم:</strong> {card.extracted_name || '-'}
                   </div>
                   <div className="data-row">
-                    <strong>المسمى:</strong> {card.extracted_data.title || '-'}
+                    <strong>الشركة:</strong> {card.extracted_company || '-'}
                   </div>
                   <div className="data-row">
-                    <strong>الشركة:</strong> {card.extracted_data.company || '-'}
+                    <strong>البريد:</strong> {card.extracted_email || '-'}
                   </div>
                   <div className="data-row">
-                    <strong>البريد:</strong> {card.extracted_data.email || '-'}
+                    <strong>الهاتف:</strong> {card.extracted_phone || '-'}
                   </div>
-                  <div className="data-row">
-                    <strong>الهاتف:</strong> {card.extracted_data.phone || '-'}
-                  </div>
+                  {card.extracted_address && (
+                    <div className="data-row">
+                      <strong>العنوان:</strong> {card.extracted_address}
+                    </div>
+                  )}
                   <div className="card-actions">
                     <button onClick={() => startEditing(card)} className="btn-secondary">✏️ تعديل</button>
-                    {!card.reviewed && (
-                      <button onClick={() => markAsReviewed(card.id)} className="btn-primary">✓ تأكيد</button>
+                    {!card.is_reviewed && (
+                      <button onClick={() => markAsReviewed(card.id.toString())} className="btn-primary">✓ تأكيد</button>
                     )}
                   </div>
                 </div>
