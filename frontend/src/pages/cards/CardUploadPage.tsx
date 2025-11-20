@@ -43,12 +43,16 @@ function CardUploadPage() {
     files.forEach(file => formData.append('files', file))
 
     try {
-      await apiClient.post('/cards/upload', formData, {
+      const response = await apiClient.post('/cards/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
+      console.log('Upload successful:', response.data)
+      // Navigate to review page
       navigate('/app/cards/review')
-    } catch (error) {
-      alert('فشل رفع البطاقات. حاول مرة أخرى.')
+    } catch (error: any) {
+      console.error('Upload failed:', error)
+      const errorMessage = error.response?.data?.detail || 'فشل رفع البطاقات. حاول مرة أخرى.'
+      alert(errorMessage)
     } finally {
       setUploading(false)
     }

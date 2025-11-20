@@ -22,6 +22,7 @@ interface Card {
 function CardReviewPage() {
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [editingCard, setEditingCard] = useState<string | null>(null)
   const [formData, setFormData] = useState<any>({})
 
@@ -32,9 +33,12 @@ function CardReviewPage() {
   const fetchCards = async () => {
     try {
       const response = await apiClient.get('/cards')
+      console.log('Fetched cards:', response.data)
       setCards(response.data)
-    } catch (error) {
+      setError(null)
+    } catch (error: any) {
       console.error('Failed to fetch cards:', error)
+      setError(error.response?.data?.detail || 'فشل تحميل البطاقات')
     } finally {
       setLoading(false)
     }
@@ -77,6 +81,18 @@ function CardReviewPage() {
     return (
       <div className="page-container">
         <div className="loading">جاري التحميل...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="page-container">
+        <div className="error-message">
+          <h3>⚠️ حدث خطأ</h3>
+          <p>{error}</p>
+          <button onClick={fetchCards} className="btn-primary">إعادة المحاولة</button>
+        </div>
       </div>
     )
   }
@@ -247,6 +263,25 @@ function CardReviewPage() {
           padding: 3rem;
           font-size: 1.25rem;
           color: #6b7280;
+        }
+
+        .error-message {
+          text-align: center;
+          padding: 3rem;
+          background: #fef2f2;
+          border-radius: 12px;
+          margin: 2rem auto;
+          max-width: 500px;
+        }
+
+        .error-message h3 {
+          color: #dc2626;
+          margin-bottom: 1rem;
+        }
+
+        .error-message p {
+          color: #991b1b;
+          margin-bottom: 1.5rem;
         }
       `}</style>
     </div>
