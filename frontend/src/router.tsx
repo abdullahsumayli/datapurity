@@ -4,6 +4,9 @@ import { useAuth } from './hooks/useAuth'
 // Layouts
 import AppShell from './layouts/AppShell/AppShell'
 
+// Marketing
+import { LandingPage } from './pages/marketing/LandingPage'
+
 // Auth Pages
 import LoginPage from './pages/auth/LoginPage'
 
@@ -33,19 +36,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRouter() {
   return (
     <Routes>
+      {/* Landing Page */}
+      <Route path="/" element={<LandingPage />} />
+      
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
 
       {/* Protected Routes */}
       <Route
-        path="/"
+        path="/app"
         element={
           <ProtectedRoute>
             <AppShell />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route index element={<Navigate to="/app/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
         
         <Route path="datasets">
