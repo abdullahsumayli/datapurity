@@ -1,16 +1,33 @@
 """Authentication endpoints."""
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+from authlib.integrations.starlette_client import OAuth
+from starlette.requests import Request
 
 from app.db.session import get_db
 from app.schemas.auth import LoginRequest, Token
 from app.schemas.user import UserResponse
-from app.core.security import create_access_token, verify_password
+from app.core.security import create_access_token, verify_password, get_password_hash
 from app.core.deps import get_current_user
+from app.core.settings import get_settings
 from app.models.user import User
 
 router = APIRouter()
+settings = get_settings()
+
+# Setup OAuth
+oauth = OAuth()
+oauth.register(
+    name='google',
+    client_id=settings.GOOGLE_CLIENT_ID,
+    client_secret=settings.GOOGLE_CLIENT_SECRET,
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
 
 
 @router.post("/login", response_model=Token)
@@ -72,3 +89,75 @@ async def refresh_token(
         status_code=status.HTTP_501_NOT_IMPLEMENTED,
         detail="Token refresh not yet implemented",
     )
+
+
+@router.get("/google/login")
+async def google_login(request: Request):
+    """Initiate Google OAuth login."""
+    redirect_uri = settings.GOOGLE_REDIRECT_URI
+    return await oauth.google.authorize_redirect(request, redirect_uri)
+
+
+@router.get("/google/callback")
+async def google_callback(
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+):
+    """Handle Google OAuth callback."""
+    try:
+        # Get token from Google
+        token = await oauth.google.authorize_access_token(request)
+        
+        # Get user info from Google
+        user_info = token.get('userinfo')
+        if not user_info:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Failed to get user info from Google"
+            )
+        
+        email = user_info.get('email')
+        name = user_info.get('name', '')
+        google_id = user_info.get('sub')
+        
+        if not email or not google_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email or Google ID not provided"
+            )
+        
+        # Check if user exists
+        from sqlalchemy import select
+        result = await db.execute(select(User).where(User.email == email))
+        user = result.scalar_one_or_none()
+        
+        if not user:
+            # Create new user
+            user = User(
+                email=email,
+                full_name=name,
+                hashed_password=get_password_hash(google_id),  # Use Google ID as password
+                is_active=True,
+                google_id=google_id
+            )
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
+        else:
+            # Update Google ID if not set
+            if not user.google_id:
+                user.google_id = google_id
+                await db.commit()
+        
+        # Create access token
+        access_token = create_access_token(subject=str(user.id))
+        
+        # Redirect to frontend with token
+        frontend_url = f"http://localhost:5173/auth/callback?token={access_token}"
+        return RedirectResponse(url=frontend_url)
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Authentication failed: {str(e)}"
+        )

@@ -8,6 +8,7 @@ import AppShell from './layouts/AppShell/AppShell'
 import { LandingPage } from './pages/marketing/LandingPage'
 
 // Auth Pages
+import GoogleCallbackPage from './pages/auth/GoogleCallbackPage'
 import LoginPage from './pages/auth/LoginPage'
 
 // Protected Pages
@@ -41,6 +42,7 @@ function AppRouter() {
       
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/auth/callback" element={<GoogleCallbackPage />} />
 
       {/* Protected Routes */}
       <Route
