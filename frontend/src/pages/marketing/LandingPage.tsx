@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "../../styles/landing.css";
 
 export const LandingPage: React.FC = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
   return (
     <div className="dp-landing">
       {/* Top Nav */}
@@ -11,11 +13,22 @@ export const LandingPage: React.FC = () => {
           <span className="dp-logo-dot" />
           <span>DataPurity</span>
         </div>
-        <nav className="dp-landing-links">
-          <a href="#features">المزايا</a>
-          <a href="#how-it-works">كيف يعمل؟</a>
-          <a href="#sectors">القطاعات</a>
-          <a href="#pricing">الأسعار</a>
+        
+        <button 
+          className="dp-mobile-menu-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="القائمة"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={`dp-landing-links ${mobileMenuOpen ? 'dp-menu-open' : ''}`}>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>المزايا</a>
+          <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>كيف يعمل؟</a>
+          <a href="#sectors" onClick={() => setMobileMenuOpen(false)}>القطاعات</a>
+          <a href="#pricing" onClick={() => setMobileMenuOpen(false)}>الأسعار</a>
         </nav>
         <div className="dp-landing-cta-nav">
           <Link to="/login" className="dp-btn dp-btn-text">
