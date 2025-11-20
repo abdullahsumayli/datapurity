@@ -7,6 +7,7 @@ function SignupPage() {
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const { signup } = useAuth()
   const navigate = useNavigate()
 
@@ -14,12 +15,22 @@ function SignupPage() {
     e.preventDefault()
     setError('')
     
+    // Validate password length
+    if (password.length < 8) {
+      setError('يجب أن تكون كلمة المرور 8 أحرف على الأقل')
+      return
+    }
+    
+    setLoading(true)
+    
     try {
       await signup({ email, password, full_name: fullName })
       navigate('/app/dashboard')
     } catch (err) {
       const error = err as { response?: { data?: { detail?: string } } }
-      setError(error.response?.data?.detail || 'فشل التسجيل')
+      setError(error.response?.data?.detail || 'فشل إنشاء الحساب. حاول مرة أخرى.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -31,8 +42,10 @@ function SignupPage() {
   return (
     <div className="auth-page">
       <div className="auth-container">
-        <h1>إنشاء حساب في DataPurity</h1>
-        <p>ابدأ بتنظيف بياناتك اليوم</p>
+        <div className="auth-header">
+          <h1>انضم إلى DataPurity 🚀</h1>
+          <p>أنشئ حسابك الآن وابدأ بتنظيم بياناتك</p>
+        </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
@@ -45,6 +58,7 @@ function SignupPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="أدخل اسمك الكامل"
+              disabled={loading}
               required
             />
           </div>
@@ -57,6 +71,7 @@ function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="example@email.com"
+              disabled={loading}
               required
             />
           </div>
@@ -69,12 +84,16 @@ function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="8 أحرف على الأقل"
+              disabled={loading}
               required
               minLength={8}
             />
+            <small className="form-hint">يجب أن تحتوي على 8 أحرف على الأقل</small>
           </div>
           
-          <button type="submit" className="btn-primary">إنشاء حساب</button>
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
+          </button>
           
           <div className="auth-divider">
             <span>أو</span>

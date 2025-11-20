@@ -6,19 +6,23 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setLoading(true)
     
     try {
       await login({ email, password })
       navigate('/app/dashboard')
     } catch (err) {
       const error = err as { response?: { data?: { detail?: string } } }
-      setError(error.response?.data?.detail || 'Login failed')
+      setError(error.response?.data?.detail || 'فشل تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -30,35 +34,46 @@ function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-container">
-        <h1>Login to DataPurity</h1>
-        <p>Smart data cleaning and contact management</p>
+        <div className="auth-header">
+          <h1>مرحباً بعودتك 👋</h1>
+          <p>سجّل دخولك للوصول إلى لوحة التحكم</p>
+        </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           {error && <div className="error-message">{error}</div>}
           
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">البريد الإلكتروني</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              disabled={loading}
               required
             />
           </div>
           
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">كلمة المرور</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              disabled={loading}
               required
             />
+            <div className="forgot-password">
+              <a href="/forgot-password">نسيت كلمة المرور؟</a>
+            </div>
           </div>
           
-          <button type="submit" className="btn-primary">Login</button>
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+          </button>
           
           <div className="auth-divider">
             <span>أو</span>
