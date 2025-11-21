@@ -138,8 +138,8 @@ class UsageLog(Base):
     # Quantity
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     
-    # Metadata
-    metadata: Mapped[Optional[str]] = mapped_column(String(1000))  # JSON string with additional details
+    # Additional details
+    details: Mapped[Optional[str]] = mapped_column(String(1000))  # JSON string with additional details
     
     # Timestamp
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
