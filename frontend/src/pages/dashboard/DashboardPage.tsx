@@ -420,7 +420,7 @@ function DashboardPage() {
             </div>
             <div className="chart-placeholder">
               <div className="bar-chart">
-                {['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'].map((day, i) => (
+                {['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'].map((day) => (
                   <div key={day} className="bar-item">
                     <div className="bar" style={{ height: `${Math.random() * 100}%` }}>
                       <span className="bar-value">{Math.floor(Math.random() * 500)}</span>
