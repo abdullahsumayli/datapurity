@@ -7,22 +7,23 @@
 }
 
 :root {
-  --color-primary: #667eea;
-  --color-primary-dark: #5568d3;
-  --color-primary-light: #f8f9ff;
-  --color-secondary: #764ba2;
+  /* DataPurity Brand Colors */
+  --color-primary: #1F7FED;
+  --color-primary-dark: #1565C0;
+  --color-primary-light: #E3F2FD;
+  --color-secondary: #4FE3C1;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-  --color-info: #3b82f6;
-  --color-text: #1e293b;
+  --color-info: #1F7FED;
+  --color-text: #1A1A1D;
   --color-text-secondary: #64748b;
-  --color-border: #e2e8f0;
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f8fafc;
-  --color-bg-hover: #f1f5f9;
-  --color-shadow: rgba(102, 126, 234, 0.1);
-  --color-shadow-lg: rgba(102, 126, 234, 0.15);
+  --color-border: #E6E9EF;
+  --color-bg: #FFFFFF;
+  --color-bg-secondary: #F8FAFB;
+  --color-bg-hover: #E6E9EF;
+  --color-shadow: rgba(31, 127, 237, 0.1);
+  --color-shadow-lg: rgba(31, 127, 237, 0.15);
   
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -42,13 +43,13 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text);
   background-color: var(--color-bg);
+  font-weight: 400;
+  letter-spacing: -0.01em;
   line-height: 1.6;
 }
 
@@ -93,14 +94,16 @@ a:hover {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1F7FED 0%, #1565C0 100%);
   color: white;
   box-shadow: 0 4px 12px var(--color-shadow);
+  font-weight: 600;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--color-shadow-lg);
+  box-shadow: 0 6px 20px rgba(31, 127, 237, 0.25);
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
 }
 
 .btn-primary:active {

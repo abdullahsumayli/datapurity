@@ -1,9 +1,8 @@
-/* Landing Page Styles */
+/* Landing Page Styles - DataPurity Brand */
 .dp-landing {
-  background: #f5f5dc;
-  color: #2c2c2c;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFB 100%);
+  color: #1A1A1D;
+  font-family: 'IBM Plex Sans Arabic', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   direction: rtl;
   text-align: right;
   min-height: 100vh;
@@ -16,32 +15,35 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 5%;
-  background: rgba(245, 245, 220, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+  border-bottom: 1px solid #E6E9EF;
+  box-shadow: 0 2px 10px rgba(31, 127, 237, 0.05);
 }
 
 .dp-landing-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #1F7FED 0%, #1565C0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   z-index: 1001;
+  letter-spacing: -0.02em;
 }
 
 .dp-logo-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #1F7FED 0%, #4FE3C1 100%);
+  box-shadow: 0 2px 8px rgba(31, 127, 237, 0.3);
 }
 
 .dp-mobile-menu-btn {
@@ -58,7 +60,7 @@
 .dp-mobile-menu-btn span {
   width: 25px;
   height: 3px;
-  background: #3b82f6;
+  background: #1F7FED;
   border-radius: 2px;
   transition: all 0.3s ease;
 }
@@ -70,15 +72,16 @@
 }
 
 .dp-landing-links a {
-  color: #4a5568;
+  color: #64748b;
   text-decoration: none;
   transition: color 0.3s ease;
   font-size: 1rem;
+  font-weight: 500;
   white-space: nowrap;
 }
 
 .dp-landing-links a:hover {
-  color: #3b82f6;
+  color: #1F7FED;
   text-decoration: none;
 }
 
@@ -90,39 +93,42 @@
 
 /* Buttons */
 .dp-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.75rem;
   text-decoration: none;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   cursor: pointer;
   display: inline-block;
+  letter-spacing: -0.01em;
 }
 
 .dp-btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  background: linear-gradient(135deg, #1F7FED 0%, #1565C0 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 16px rgba(31, 127, 237, 0.25);
 }
 
 .dp-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 24px rgba(31, 127, 237, 0.35);
+  background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%);
   text-decoration: none;
   color: white;
 }
 
 .dp-btn-text {
   background: transparent;
-  color: #3b82f6;
-  border: 2px solid #3b82f6;
+  color: #1F7FED;
+  border: 2px solid #1F7FED;
 }
 
 .dp-btn-text:hover {
-  background: rgba(59, 130, 246, 0.1);
+  background: rgba(31, 127, 237, 0.1);
   text-decoration: none;
-  color: #3b82f6;
+  color: #1565C0;
+  border-color: #1565C0;
 }
 
 /* Main Content */
@@ -132,8 +138,8 @@
 
 /* Hero Section */
 .dp-hero {
-  padding: 4rem 5% 3rem;
-  background: radial-gradient(ellipse at top, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+  padding: 5rem 5% 4rem;
+  background: radial-gradient(ellipse at top, rgba(31, 127, 237, 0.08) 0%, transparent 70%);
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -146,27 +152,25 @@
 }
 
 .dp-hero h1 {
-  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #ffffff 0%, #3b82f6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.3;
+  color: #1A1A1D;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .dp-hero-highlight {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #1F7FED 0%, #4FE3C1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .dp-hero p {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  color: #4a5568;
-  margin-bottom: 2rem;
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  color: #64748b;
+  margin-bottom: 2.5rem;
   line-height: 1.8;
 }
 
@@ -355,27 +359,29 @@
 }
 
 .dp-feature-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #E6E9EF;
   border-radius: 1rem;
   padding: 2rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(31, 127, 237, 0.05);
 }
 
 .dp-feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
-  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 12px 32px rgba(31, 127, 237, 0.15);
+  border-color: #1F7FED;
 }
 
 .dp-feature-card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: #2c2c2c;
+  color: #1A1A1D;
+  font-weight: 700;
 }
 
 .dp-feature-card p {
-  color: #4a5568;
+  color: #64748b;
   line-height: 1.8;
   margin-bottom: 1rem;
 }
@@ -388,7 +394,7 @@
 
 .dp-feature-card li {
   padding: 0.5rem 0;
-  color: #4a5568;
+  color: #64748b;
   position: relative;
   padding-right: 1.5rem;
 }
@@ -397,7 +403,7 @@
   content: "✓";
   position: absolute;
   right: 0;
-  color: #3b82f6;
+  color: #1F7FED;
   font-weight: 700;
 }
 
