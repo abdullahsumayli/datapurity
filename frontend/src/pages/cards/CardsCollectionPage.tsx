@@ -62,7 +62,7 @@ export default function CardsCollectionPage() {
   }
 
   const handleSelectAll = () => {
-    if (selectedContacts.size === filteredContacts.length) {
+    if (selectedContacts.size === filteredContacts.length && filteredContacts.length > 0) {
       setSelectedContacts(new Set())
     } else {
       setSelectedContacts(new Set(filteredContacts.map(c => c.id)))

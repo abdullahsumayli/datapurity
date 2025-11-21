@@ -68,7 +68,7 @@ function BulkCardScanPage() {
         address: 'الرياض، المملكة العربية السعودية',
         position: 'مدير',
         confidence: Math.round(85 + Math.random() * 15),
-        imageUrl: card.imageData
+        image_url: card.imageData
       }))
 
       navigate('/app/cards/processing', { 
