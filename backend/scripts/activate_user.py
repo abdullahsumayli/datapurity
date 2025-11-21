@@ -1,15 +1,39 @@
 """Script to activate or create a user account."""
 import asyncio
 import sys
+import os
+
+# Set the working directory to backend
+backend_dir = '/opt/datapurity/backend'
+os.chdir(backend_dir)
+sys.path.insert(0, backend_dir)
+
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select
+from sqlalchemy import select, Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import declarative_base
+from datetime import datetime
+from passlib.context import CryptContext
 
-# Add parent directory to path
-sys.path.insert(0, '/opt/datapurity/backend')
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-from app.models.user import User
-from app.core.security import get_password_hash
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
+
+# Define User model directly to avoid circular imports
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    full_name = Column(String)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
 async def activate_user(email: str, password: str = "Abdullah@2025", full_name: str = "Abdullah Sumayli"):
