@@ -436,33 +436,80 @@ export const LandingPage: React.FC = () => {
             اختر الخطة المناسبة لحجم عملك
           </p>
           <div className="dp-pricing-grid">
+            <div className="dp-price-card dp-price-card-free">
+              <div className="dp-free-badge">مجاني للأبد</div>
+              <h3>Free</h3>
+              <p className="dp-price">
+                <span style={{ fontSize: '3rem', fontWeight: 800 }}>0</span>
+                <span style={{ fontSize: '1.25rem', marginRight: '0.5rem' }}>ريال</span>
+              </p>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+                مثالي للتجربة والاستكشاف
+              </p>
+              <ul>
+                <li>عملية تنظيف واحدة شهريًا</li>
+                <li>حتى 100 سجل لكل ملف</li>
+                <li>10 كروت OCR شهريًا</li>
+                <li>تصدير إلى Excel/CSV</li>
+                <li>تقرير Data Health أساسي</li>
+                <li>دعم عبر البريد الإلكتروني</li>
+              </ul>
+              <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(79, 227, 193, 0.1)', borderRadius: '0.5rem', border: '1px solid rgba(79, 227, 193, 0.3)' }}>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: '#059669', fontWeight: 600, textAlign: 'center' }}>
+                  ✨ ابدأ فورًا بدون بطاقة ائتمانية
+                </p>
+              </div>
+            </div>
+
             <div className="dp-price-card">
               <h3>Starter</h3>
-              <p className="dp-price">79 / شهر</p>
+              <p className="dp-price">79 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+                للشركات الناشئة والفرق الصغيرة
+              </p>
               <ul>
-                <li>3 عمليات تنظيف</li>
-                <li>50 كرت شهريًا</li>
+                <li>5 عمليات تنظيف شهريًا</li>
+                <li>حتى 500 سجل لكل ملف</li>
+                <li>100 كرت OCR شهريًا</li>
                 <li>تصدير غير محدود</li>
+                <li>تقارير Data Health متقدمة</li>
+                <li>كشف التكرار الذكي</li>
+                <li>دعم ذو أولوية</li>
               </ul>
             </div>
+
             <div className="dp-price-card dp-price-card-main">
               <div className="dp-popular-badge">الأكثر طلبًا</div>
               <h3>Business</h3>
-              <p className="dp-price">199 / شهر</p>
+              <p className="dp-price">199 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+                للشركات النامية والفرق المتوسطة
+              </p>
               <ul>
-                <li>10 عمليات تنظيف</li>
-                <li>300 كرت</li>
-                <li>تقارير جودة بيانات</li>
+                <li>20 عملية تنظيف شهريًا</li>
+                <li>حتى 2000 سجل لكل ملف</li>
+                <li>500 كرت OCR شهريًا</li>
+                <li>تقارير جودة بيانات تفصيلية</li>
+                <li>تصنيف العملاء (Hot/Warm/Cold)</li>
                 <li>حتى 3 مستخدمين</li>
+                <li>دعم WhatsApp مباشر</li>
               </ul>
             </div>
+
             <div className="dp-price-card">
-              <h3>Pro</h3>
-              <p className="dp-price">399 / شهر</p>
+              <h3>Enterprise</h3>
+              <p className="dp-price">499 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+                للشركات الكبيرة والمؤسسات
+              </p>
               <ul>
-                <li>30 عملية تنظيف</li>
-                <li>1000 كرت</li>
+                <li>عمليات تنظيف غير محدودة</li>
+                <li>ملفات بدون حد للسجلات</li>
+                <li>2000 كرت OCR شهريًا</li>
                 <li>وصول إلى API و Webhooks</li>
+                <li>تكامل مع CRM خارجي</li>
+                <li>مستخدمين غير محدودين</li>
+                <li>دعم مخصص + تدريب</li>
               </ul>
             </div>
           </div>
@@ -507,13 +554,13 @@ export const LandingPage: React.FC = () => {
         <section className="dp-section dp-cta-final">
           <div className="dp-cta-content">
             <h2>جاهز لتنظيف بياناتك؟</h2>
-            <p>ابدأ مجانًا بتنظيف أول 100 سجل — بدون بطاقة ائتمانية</p>
+            <p>ابدأ مجانًا الآن — حتى 100 سجل شهريًا بدون بطاقة ائتمانية</p>
             <div className="dp-cta-buttons">
               <Link to="/login" className="dp-btn dp-btn-primary dp-btn-large">
-                ابدأ الآن مجانًا
+                ابدأ مجانًا الآن
               </Link>
               <a href="#pricing" className="dp-btn dp-btn-text">
-                اطلع على الأسعار
+                اطلع على جميع الباقات
               </a>
             </div>
           </div>
