@@ -54,18 +54,38 @@ function UploadDatasetPage() {
   }
 
   const handleUpload = async () => {
-    if (!file) return
+    if (!processedData) return
 
     setUploading(true)
-    const formData = new FormData()
-    formData.append('file', file)
-
+    
     try {
-      const response = await apiClient.post('/datasets/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      // إنشاء ملف Excel من البيانات المنظفة
+      const timestamp = new Date().toISOString().slice(0, 10)
+      const cleanedFileName = `cleaned_${file?.name || 'data'}_${timestamp}.xlsx`
+      
+      // إنشاء FormData وإرسال البيانات المنظفة
+      const response = await apiClient.post('/datasets/upload', {
+        filename: cleanedFileName,
+        data: processedData.cleanedData,
+        stats: {
+          total: processedData.totalRows,
+          valid: processedData.cleanedData.filter(c => c.status === 'valid').length,
+          warnings: processedData.cleanedData.filter(c => c.status === 'warning').length,
+          errors: processedData.cleanedData.filter(c => c.status === 'error').length,
+          duplicates: processedData.duplicates,
+          emptyRows: processedData.emptyRows
+        }
       })
-      navigate(`/app/datasets/${response.data.id}`)
+      
+      // الانتقال إلى صفحة التفاصيل
+      if (response.data.id) {
+        navigate(`/app/datasets/${response.data.id}`)
+      } else {
+        alert('تم رفع البيانات بنجاح!')
+        navigate('/app/datasets')
+      }
     } catch (error) {
+      console.error('Upload error:', error)
       alert('فشل رفع الملف. حاول مرة أخرى.')
     } finally {
       setUploading(false)
@@ -171,18 +191,27 @@ function UploadDatasetPage() {
             </div>
 
             <div className="action-buttons">
-              <button onClick={handleExportExcel} className="btn-success">
+              <button 
+                onClick={handleExportExcel} 
+                className="btn-success"
+                title="تصدير البيانات المنظفة إلى Excel"
+              >
                 📗 تصدير Excel
               </button>
-              <button onClick={handleExportCSV} className="btn-secondary">
+              <button 
+                onClick={handleExportCSV} 
+                className="btn-secondary"
+                title="تصدير البيانات المنظفة إلى CSV"
+              >
                 📄 تصدير CSV
               </button>
               <button
                 onClick={handleUpload}
-                disabled={uploading}
+                disabled={uploading || !processedData}
                 className="btn-primary"
+                title="رفع البيانات المنظفة إلى قاعدة البيانات"
               >
-                {uploading ? 'جاري الرفع...' : '☁️ رفع إلى النظام'}
+                {uploading ? '⏳ جاري الرفع...' : '☁️ رفع إلى النظام'}
               </button>
             </div>
 
@@ -420,6 +449,12 @@ function UploadDatasetPage() {
           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
+        .btn-success:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+        }
+
         .btn-secondary {
           background: #f3f4f6;
           color: #1f2937;
@@ -427,6 +462,27 @@ function UploadDatasetPage() {
 
         .btn-secondary:hover {
           background: #e5e7eb;
+        }
+
+        .btn-secondary:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
         }
 
         .data-preview {
