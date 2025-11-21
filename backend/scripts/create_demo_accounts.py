@@ -15,7 +15,7 @@ backend_path = Path(__file__).parent.parent
 sys.path.insert(0, str(backend_path))
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import async_session_maker
+from app.core.database import AsyncSessionLocal
 from app.models.user import User
 from app.models.subscription import Subscription, PlanType, SubscriptionStatus
 from app.core.security import get_password_hash
@@ -27,7 +27,7 @@ async def create_demo_accounts():
     
     print("🚀 بدء إنشاء الحسابات التجريبية...\n")
     
-    async with async_session_maker() as session:
+    async with AsyncSessionLocal() as session:
         # كلمة المرور الموحدة: Demo123!
         hashed_password = get_password_hash("Demo123!")
         
@@ -145,7 +145,7 @@ async def reset_demo_accounts():
     
     print("🔄 إعادة تعيين الحسابات التجريبية...\n")
     
-    async with async_session_maker() as session:
+    async with AsyncSessionLocal() as session:
         from sqlalchemy import select, update
         
         # الحصول على المستخدمين التجريبيين
@@ -191,7 +191,7 @@ async def delete_demo_accounts():
         print("تم الإلغاء")
         return
     
-    async with async_session_maker() as session:
+    async with AsyncSessionLocal() as session:
         from sqlalchemy import select, delete
         from app.models.subscription import UsageLog, Payment
         
