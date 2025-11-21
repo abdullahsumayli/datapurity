@@ -168,7 +168,7 @@ export function unregisterServiceWorker() {
 // Check if app is running as PWA
 export function isPWA(): boolean {
   return window.matchMedia('(display-mode: standalone)').matches ||
-         (window.navigator as any).standalone === true ||
+         (window.navigator as { standalone?: boolean }).standalone === true ||
          document.referrer.includes('android-app://');
 }
 
@@ -186,11 +186,16 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
 
 // Show install prompt
 export function showInstallPrompt() {
-  let deferredPrompt: any = null;
+  interface BeforeInstallPromptEvent extends Event {
+    prompt: () => Promise<void>
+    userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+  }
+  
+  let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
-  window.addEventListener('beforeinstallprompt', (e) => {
+  window.addEventListener('beforeinstallprompt', (e: Event) => {
     e.preventDefault();
-    deferredPrompt = e;
+    deferredPrompt = e as BeforeInstallPromptEvent;
     console.log('[PWA] Install prompt ready');
 
     // Show custom install button

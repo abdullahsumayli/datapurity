@@ -29,6 +29,7 @@ export default function CardsCollectionPage() {
 
   useEffect(() => {
     applyFilters()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contacts, searchQuery, filterSource])
 
   const loadContacts = () => {

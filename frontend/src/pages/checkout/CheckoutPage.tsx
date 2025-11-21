@@ -113,8 +113,9 @@ function CheckoutPage() {
       } else {
         navigate('/app/billing?status=success')
       }
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'حدث خطأ أثناء معالجة الدفع')
+    } catch (err) {
+      const error = err as { response?: { data?: { detail?: string } } }
+      setError(error.response?.data?.detail || 'حدث خطأ أثناء معالجة الدفع')
       setLoading(false)
     }
   }
@@ -227,7 +228,7 @@ function CheckoutPage() {
                       name="paymentMethod"
                       value="mada"
                       checked={paymentMethod === 'mada'}
-                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                      onChange={(e) => setPaymentMethod(e.target.value as 'mada' | 'visa' | 'applepay')}
                     />
                     <div className="method-content">
                       <span className="method-icon">💳</span>
@@ -241,7 +242,7 @@ function CheckoutPage() {
                       name="paymentMethod"
                       value="visa"
                       checked={paymentMethod === 'visa'}
-                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                      onChange={(e) => setPaymentMethod(e.target.value as 'mada' | 'visa' | 'applepay')}
                     />
                     <div className="method-content">
                       <span className="method-icon">💳</span>
@@ -255,7 +256,7 @@ function CheckoutPage() {
                       name="paymentMethod"
                       value="applepay"
                       checked={paymentMethod === 'applepay'}
-                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                      onChange={(e) => setPaymentMethod(e.target.value as 'mada' | 'visa' | 'applepay')}
                     />
                     <div className="method-content">
                       <span className="method-icon"></span>

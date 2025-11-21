@@ -162,6 +162,7 @@ self.addEventListener('notificationclick', (event) => {
 
   if (event.action === 'explore') {
     event.waitUntil(
+      // eslint-disable-next-line no-undef
       clients.openWindow('/app/dashboard')
     );
   }

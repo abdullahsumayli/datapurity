@@ -14,7 +14,7 @@ const PWAInstallButton = () => {
   useEffect(() => {
     // Check if already installed
     const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
-                  (window.navigator as any).standalone === true;
+                  (window.navigator as { standalone?: boolean }).standalone === true;
     
     if (isPWA) {
       setIsInstalled(true);
