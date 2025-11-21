@@ -108,6 +108,121 @@ export const LandingPage: React.FC = () => {
           </div>
         </section>
 
+        {/* How it works Diagram */}
+        <section className="dp-section dp-diagram-section">
+          <h2>كيف تعمل المنصة؟</h2>
+          <p className="dp-section-subtitle">
+            عملية بسيطة من 3 خطوات لتحويل بياناتك الفوضوية إلى بيانات نظيفة جاهزة للاستخدام
+          </p>
+          
+          <div className="dp-process-diagram">
+            <div className="dp-process-step">
+              <div className="dp-process-icon dp-process-input">
+                📤
+              </div>
+              <h3>1. الإدخال</h3>
+              <p>ارفع ملفات Excel/CSV أو صور كروت الأعمال</p>
+              <div className="dp-process-examples">
+                <span className="dp-tag">Excel</span>
+                <span className="dp-tag">CSV</span>
+                <span className="dp-tag">صور</span>
+                <span className="dp-tag">ZIP</span>
+              </div>
+            </div>
+
+            <div className="dp-process-arrow">
+              <svg width="60" height="40" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 20 L45 20 M45 20 L35 10 M45 20 L35 30" stroke="#1F7FED" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div className="dp-process-step">
+              <div className="dp-process-icon dp-process-processing">
+                ⚙️
+              </div>
+              <h3>2. المعالجة الذكية</h3>
+              <p>تنظيف، تصحيح، واستخراج تلقائي للبيانات</p>
+              <div className="dp-process-examples">
+                <span className="dp-tag">تصحيح الأرقام</span>
+                <span className="dp-tag">إزالة التكرار</span>
+                <span className="dp-tag">OCR</span>
+                <span className="dp-tag">التحقق</span>
+              </div>
+            </div>
+
+            <div className="dp-process-arrow">
+              <svg width="60" height="40" viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 20 L45 20 M45 20 L35 10 M45 20 L35 30" stroke="#1F7FED" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+
+            <div className="dp-process-step">
+              <div className="dp-process-icon dp-process-output">
+                ✅
+              </div>
+              <h3>3. النتيجة النظيفة</h3>
+              <p>بيانات جاهزة للاستخدام في أنظمتك</p>
+              <div className="dp-process-examples">
+                <span className="dp-tag">Excel</span>
+                <span className="dp-tag">CRM</span>
+                <span className="dp-tag">تقارير</span>
+                <span className="dp-tag">API</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Visual representation */}
+          <div className="dp-visual-flow">
+            <div className="dp-visual-box dp-visual-messy">
+              <div className="dp-visual-header">قبل التنظيف ❌</div>
+              <div className="dp-visual-content">
+                <div className="dp-messy-data">
+                  <span>05xxxxxxx</span>
+                  <span>+966xxxxxxx</span>
+                  <span>email@@@</span>
+                  <span>تكرار تكرار</span>
+                  <span>بيانات فوضوية</span>
+                  <span>???</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="dp-visual-transform">
+              <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="30" r="25" fill="url(#transformGradient)" opacity="0.2"/>
+                <path d="M20 30 L55 30 M55 30 L45 20 M55 30 L45 40" stroke="url(#transformGradient)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                <defs>
+                  <linearGradient id="transformGradient" x1="0" y1="0" x2="80" y2="60">
+                    <stop offset="0%" stopColor="#1F7FED"/>
+                    <stop offset="100%" stopColor="#4FE3C1"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="dp-transform-text">DataPurity</span>
+            </div>
+
+            <div className="dp-visual-box dp-visual-clean">
+              <div className="dp-visual-header">بعد التنظيف ✓</div>
+              <div className="dp-visual-content">
+                <div className="dp-clean-data">
+                  <div className="dp-data-row">
+                    <span className="dp-data-label">الجوال:</span>
+                    <span className="dp-data-value">+966 5X XXX XXXX</span>
+                  </div>
+                  <div className="dp-data-row">
+                    <span className="dp-data-label">البريد:</span>
+                    <span className="dp-data-value">valid@email.com</span>
+                  </div>
+                  <div className="dp-data-row">
+                    <span className="dp-data-label">الحالة:</span>
+                    <span className="dp-data-value dp-status-clean">✓ نظيف</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features */}
         <section id="features" className="dp-section">
           <h2>ماذا يقدم DataPurity؟</h2>
