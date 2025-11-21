@@ -34,9 +34,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(response.data)
       setIsAuthenticated(true)
     } catch (error) {
-      // Token expired or invalid
-      localStorage.removeItem('access_token')
-      setIsAuthenticated(false)
+      // في حالة فشل جلب البيانات، نبقي على الحالة كما هي
+      // لا نقوم بتسجيل الخروج تلقائيًا
+      console.log('Failed to fetch user data:', error)
     } finally {
       setIsLoading(false)
     }

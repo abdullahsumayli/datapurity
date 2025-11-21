@@ -26,12 +26,8 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // TODO: Handle token expiration
-      // Redirect to login or refresh token
-      localStorage.removeItem('access_token')
-      window.location.href = '/login'
-    }
+    // عدم تسجيل الخروج التلقائي - فقط إرجاع الخطأ
+    // يمكن للمستخدم تسجيل الخروج يدويًا من القائمة
     return Promise.reject(error)
   }
 )
