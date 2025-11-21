@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import apiClient from '../../config/apiClient'
 
 interface Contact {
-  id: string
-  name: string
-  email: string
-  phone: string
-  company?: string
-  quality_score: number
-  source: string
+  id: number
+  full_name: string | null
+  email: string | null
+  phone: string | null
+  company?: string | null
+  overall_quality_score: number | null
+  dataset_id: number
   created_at: string
 }
 
@@ -16,7 +16,7 @@ function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterSource, setFilterSource] = useState('all')
+  const [filterDataset, setFilterDataset] = useState<number | 'all'>('all')
 
   useEffect(() => {
     fetchContacts()
@@ -35,10 +35,10 @@ function ContactsPage() {
 
   const filteredContacts = contacts.filter(contact => {
     const matchesSearch = !searchTerm || 
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase())
+      (contact.full_name && contact.full_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (contact.email && contact.email.toLowerCase().includes(searchTerm.toLowerCase()))
     
-    const matchesFilter = filterSource === 'all' || contact.source === filterSource
+    const matchesFilter = filterDataset === 'all' || contact.dataset_id === filterDataset
     
     return matchesSearch && matchesFilter
   })
@@ -77,14 +77,11 @@ function ContactsPage() {
           />
         </div>
         <select 
-          value={filterSource} 
-          onChange={e => setFilterSource(e.target.value)}
+          value={filterDataset} 
+          onChange={e => setFilterDataset(e.target.value === 'all' ? 'all' : Number(e.target.value))}
           className="filter-select"
         >
-          <option value="all">كل المصادر</option>
-          <option value="dataset">ملف بيانات</option>
-          <option value="business_card">بطاقة عمل</option>
-          <option value="manual">يدوي</option>
+          <option value="all">كل مجموعات البيانات</option>
         </select>
       </div>
 
@@ -109,19 +106,20 @@ function ContactsPage() {
               </tr>
             ) : (
               filteredContacts.map(contact => {
-                const quality = getQualityBadge(contact.quality_score)
+                const score = contact.overall_quality_score || 0
+                const quality = getQualityBadge(score)
                 return (
                   <tr key={contact.id}>
-                    <td>{contact.name}</td>
-                    <td>{contact.email}</td>
-                    <td>{contact.phone}</td>
+                    <td>{contact.full_name || '-'}</td>
+                    <td>{contact.email || '-'}</td>
+                    <td>{contact.phone || '-'}</td>
                     <td>{contact.company || '-'}</td>
                     <td>
                       <span className={`quality-badge quality-${quality.className}`}>
-                        {contact.quality_score}% {quality.label}
+                        {score.toFixed(0)}% {quality.label}
                       </span>
                     </td>
-                    <td>{contact.source}</td>
+                    <td>Dataset #{contact.dataset_id}</td>
                   </tr>
                 )
               })

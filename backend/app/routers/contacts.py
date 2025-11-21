@@ -3,9 +3,11 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, or_
 
 from app.db.session import get_db
 from app.schemas.contact import ContactResponse, ContactUpdate
+from app.models.contact import Contact
 
 router = APIRouter()
 
@@ -20,13 +22,30 @@ async def list_contacts(
     # TODO: Add current_user dependency
 ):
     """List contacts with optional filters."""
-    # TODO: Build query with filters
-    # TODO: Support search across name, email, company
-    # TODO: Filter by dataset
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="List contacts not yet implemented",
-    )
+    query = select(Contact)
+    
+    # Filter by dataset if specified
+    if dataset_id:
+        query = query.where(Contact.dataset_id == dataset_id)
+    
+    # Search across name, email, company
+    if search:
+        search_term = f"%{search}%"
+        query = query.where(
+            or_(
+                Contact.full_name.ilike(search_term),
+                Contact.email.ilike(search_term),
+                Contact.company.ilike(search_term),
+            )
+        )
+    
+    # Apply pagination
+    query = query.offset(skip).limit(limit)
+    
+    result = await db.execute(query)
+    contacts = result.scalars().all()
+    
+    return contacts
 
 
 @router.get("/{contact_id}", response_model=ContactResponse)
