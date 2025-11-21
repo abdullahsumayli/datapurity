@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { apiClient } from '../../config/apiClient'
+import apiClient from '../../config/apiClient'
 import './checkout.css'
 
 interface PlanDetails {

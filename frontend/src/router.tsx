@@ -14,10 +14,10 @@ import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
 import BillingPage from './pages/billing/BillingPage'
-import CheckoutPage from './pages/checkout/CheckoutPage'
 import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
 import CardUploadPage from './pages/cards/CardUploadPage'
+import CheckoutPage from './pages/checkout/CheckoutPage'
 import ContactsPage from './pages/contacts/ContactsPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
 import DatasetDetailsPage from './pages/datasets/DatasetDetailsPage'
