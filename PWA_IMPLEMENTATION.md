@@ -9,6 +9,7 @@
 ## 📋 ما تم إضافته
 
 ### 1. **Web App Manifest** ✅
+
 **ملف:** `frontend/public/manifest.json`
 
 ```json
@@ -26,6 +27,7 @@
 ```
 
 **الميزات:**
+
 - ✓ 8 أحجام للأيقونات (16px → 512px)
 - ✓ Shortcuts للوصول السريع (رفع بطاقة، جهات الاتصال، Dashboard)
 - ✓ دعم RTL للعربية
@@ -34,14 +36,17 @@
 ---
 
 ### 2. **Service Worker** ✅
+
 **ملف:** `frontend/public/service-worker.js`
 
 **الاستراتيجيات:**
+
 - **Static Assets**: Cache First (أولوية للتخزين المؤقت)
 - **API Requests**: Network First (أولوية للشبكة)
 - **Runtime Caching**: تخزين تلقائي للملفات المستخدمة
 
 **الميزات:**
+
 - ✓ Offline Support (العمل بدون إنترنت)
 - ✓ Background Sync (مزامنة في الخلفية)
 - ✓ Push Notifications (إشعارات)
@@ -50,9 +55,11 @@
 ---
 
 ### 3. **PWA Icons** ✅
+
 **المجلد:** `frontend/public/icons/`
 
 **الأيقونات المُنشأة:**
+
 ```
 ✓ icon-16x16.svg
 ✓ icon-32x32.svg
@@ -71,15 +78,18 @@
 ```
 
 **ملاحظة:** الأيقونات الحالية SVG placeholders. للإنتاج، استبدلها بـ PNG عبر:
+
 - https://realfavicongenerator.net/
 - https://favicon.io/
 
 ---
 
 ### 4. **Service Worker Registration** ✅
+
 **ملف:** `frontend/src/pwa/registerSW.ts`
 
 **الميزات:**
+
 - ✓ تسجيل تلقائي للـ Service Worker
 - ✓ كشف التحديثات الجديدة
 - ✓ إشعارات Online/Offline
@@ -87,6 +97,7 @@
 - ✓ كشف وضع PWA
 
 **Functions متاحة:**
+
 ```typescript
 registerServiceWorker(config?: SWConfig)
 unregisterServiceWorker()
@@ -98,27 +109,32 @@ showInstallPrompt()
 ---
 
 ### 5. **زر التثبيت** ✅
+
 **Component:** `frontend/src/components/PWAInstallButton/`
 
 **الميزات:**
+
 - ✓ ظهور تلقائي عند توفر التثبيت
 - ✓ تصميم responsive
 - ✓ إخفاء بعد التثبيت
 - ✓ حفظ الرفض في localStorage
 
 **الاستخدام:**
-```tsx
-import PWAInstallButton from './components/PWAInstallButton/PWAInstallButton';
 
-<PWAInstallButton />
+```tsx
+import PWAInstallButton from "./components/PWAInstallButton/PWAInstallButton";
+
+<PWAInstallButton />;
 ```
 
 ---
 
 ### 6. **Vite PWA Plugin** ✅
+
 **ملف:** `frontend/vite.config.ts`
 
 **التهيئة:**
+
 ```typescript
 VitePWA({
   registerType: 'autoUpdate',
@@ -132,9 +148,11 @@ VitePWA({
 ---
 
 ### 7. **Meta Tags للـ PWA** ✅
+
 **ملف:** `frontend/index.html`
 
 **Tags المُضافة:**
+
 ```html
 <meta name="application-name" content="DataPurity" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -149,11 +167,14 @@ VitePWA({
 ## 🚀 كيف تعمل PWA الآن
 
 ### على الجوال:
+
 1. **الزيارة الأولى:**
+
    - يظهر شريط "إضافة إلى الشاشة الرئيسية"
    - أو زر "تثبيت" في الصفحة
 
 2. **بعد التثبيت:**
+
    - أيقونة على الشاشة الرئيسية
    - فتح كـ full-screen app (بدون شريط المتصفح)
    - Splash screen عند الفتح
@@ -164,7 +185,9 @@ VitePWA({
    - API calls تُخزن وتُرسل عند الاتصال
 
 ### على الكمبيوتر:
+
 1. **Chrome/Edge:**
+
    - أيقونة تثبيت في شريط العنوان
    - أو زر التثبيت في الصفحة
 
@@ -178,21 +201,26 @@ VitePWA({
 ## 🧪 اختبار PWA
 
 ### محلياً (Development):
+
 ```bash
 cd frontend
 npm run build
 npm run preview
 ```
+
 ثم افتح: http://localhost:4173
 
 ### على الإنتاج:
+
 1. **Lighthouse Audit:**
+
    - افتح Chrome DevTools
    - اذهب لـ Lighthouse
    - Run PWA audit
    - يجب أن تحصل على 100/100
 
 2. **تجربة التثبيت:**
+
    - افتح في Chrome
    - انقر على أيقونة التثبيت في شريط العنوان
    - أو استخدم زر "تثبيت" في الصفحة
@@ -208,6 +236,7 @@ npm run preview
 ## 📊 معايير PWA المُحققة
 
 ### ✅ Core Requirements:
+
 - ✓ **HTTPS** (مطلوب للإنتاج - حالياً HTTP فقط)
 - ✓ **Web App Manifest**
 - ✓ **Service Worker**
@@ -216,6 +245,7 @@ npm run preview
 - ✓ **Offline Support**
 
 ### ✅ Enhanced Features:
+
 - ✓ **Install Prompt**
 - ✓ **Push Notifications** (جاهز للتفعيل)
 - ✓ **Background Sync**
@@ -224,6 +254,7 @@ npm run preview
 - ✓ **Splash Screens**
 
 ### ⚠️ ناقص (اختياري):
+
 - ⚠️ **HTTPS** - السيرفر الإنتاجي يعمل على HTTP
 - ⚠️ **PNG Icons** - حالياً SVG (يجب تحويلها)
 
@@ -232,9 +263,11 @@ npm run preview
 ## 🔧 خطوات ما بعد النشر
 
 ### 1. **تفعيل HTTPS** (مهم!)
+
 PWA **يتطلب HTTPS** للعمل بشكل كامل.
 
 **الحل:**
+
 ```bash
 # تثبيت Certbot على السيرفر
 ssh root@46.62.239.119
@@ -254,12 +287,14 @@ systemctl reload nginx
 ### 2. **تحويل Icons إلى PNG**
 
 **Option 1: استخدام أداة أونلاين**
+
 - اذهب إلى: https://realfavicongenerator.net/
 - ارفع شعار DataPurity
 - حمّل جميع الأيقونات
 - استبدل `/public/icons/`
 
 **Option 2: ImageMagick**
+
 ```bash
 cd frontend/public/icons
 
@@ -274,6 +309,7 @@ done
 ### 3. **تفعيل Push Notifications**
 
 **Backend (FastAPI):**
+
 ```python
 from pywebpush import webpush, WebPushException
 
@@ -293,21 +329,22 @@ async def send_push(user_id: int, message: str):
 ```
 
 **Frontend:**
+
 ```typescript
 // طلب إذن الإشعارات
 const permission = await requestNotificationPermission();
 
-if (permission === 'granted') {
+if (permission === "granted") {
   // الاشتراك في Push
   const subscription = await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: VAPID_PUBLIC_KEY
+    applicationServerKey: VAPID_PUBLIC_KEY,
   });
-  
+
   // إرسال subscription للـ backend
-  await fetch('/api/v1/push/subscribe', {
-    method: 'POST',
-    body: JSON.stringify(subscription)
+  await fetch("/api/v1/push/subscribe", {
+    method: "POST",
+    body: JSON.stringify(subscription),
   });
 }
 ```
@@ -333,15 +370,17 @@ if (permission === 'granted') {
 ## 🎨 التخصيص
 
 ### تغيير الألوان:
+
 ```json
 // manifest.json
 {
-  "theme_color": "#667eea",      // لون شريط العنوان
-  "background_color": "#f5f5dc"  // لون Splash Screen
+  "theme_color": "#667eea", // لون شريط العنوان
+  "background_color": "#f5f5dc" // لون Splash Screen
 }
 ```
 
 ### تغيير النصوص:
+
 ```json
 {
   "name": "الاسم الكامل (max 45 char)",
@@ -350,6 +389,7 @@ if (permission === 'granted') {
 ```
 
 ### إضافة Shortcuts:
+
 ```json
 {
   "shortcuts": [
@@ -367,6 +407,7 @@ if (permission === 'granted') {
 ## 📊 النتائج والأداء
 
 ### Build Size:
+
 ```
 ✅ CSS: 29.78 kB (gzip: 6.16 kB)
 ✅ JS: 288.56 kB (gzip: 87.52 kB)
@@ -375,6 +416,7 @@ if (permission === 'granted') {
 ```
 
 ### PWA Score (بعد HTTPS):
+
 - **Progressive Web App**: 100/100
 - **Performance**: يعتمد على المحتوى
 - **Accessibility**: يعتمد على الـ markup
@@ -386,11 +428,13 @@ if (permission === 'granted') {
 ## 🔒 الأمان
 
 ### Service Worker Scope:
+
 - يعمل فقط على نفس الـ origin
 - لا يمكنه الوصول لـ cross-origin resources
 - يُحذف تلقائياً إذا لم يُستخدم لـ 24 ساعة
 
 ### Caching Strategy:
+
 - API responses: Network First (بيانات حديثة)
 - Static assets: Cache First (أداء أفضل)
 - Sensitive data: لا يُخزن
@@ -400,6 +444,7 @@ if (permission === 'granted') {
 ## 📝 الملفات المُضافة/المُعدلة
 
 ### ملفات جديدة:
+
 ```
 ✅ frontend/public/manifest.json
 ✅ frontend/public/service-worker.js
@@ -410,6 +455,7 @@ if (permission === 'granted') {
 ```
 
 ### ملفات مُعدلة:
+
 ```
 ✅ frontend/index.html (meta tags)
 ✅ frontend/src/main.tsx (SW registration)
@@ -444,6 +490,7 @@ certbot --nginx
 ## 🎯 الخلاصة
 
 ✅ **تم بنجاح:**
+
 - Web App Manifest كامل
 - Service Worker مع Offline Support
 - أيقونات PWA بجميع الأحجام
@@ -454,6 +501,7 @@ certbot --nginx
 - Push Notifications جاهز
 
 ⚠️ **مطلوب للإنتاج:**
+
 - تفعيل HTTPS (ضروري)
 - تحويل Icons من SVG لـ PNG
 - اختبار Lighthouse Audit

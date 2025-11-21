@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './styles/globals.css'
 import { registerServiceWorker, showInstallPrompt } from './pwa/registerSW'
+import './styles/globals.css'
 
 // Register Service Worker for PWA functionality
 registerServiceWorker({
