@@ -257,7 +257,19 @@ function cleanText(value: CellValue): string {
  */
 function cleanEmail(value: CellValue): string {
   if (!value) return ''
-  return String(value).toLowerCase().trim()
+  const cleaned = String(value).toLowerCase().trim()
+  
+  // تجاهل النصوص العربية أو أي قيم غير صحيحة
+  // البريد الإلكتروني يجب أن يحتوي على @ ولا يحتوي على أحرف عربية
+  const hasArabic = /[\u0600-\u06FF]/.test(cleaned)
+  const hasAtSymbol = cleaned.includes('@')
+  
+  // إذا كانت القيمة تحتوي على أحرف عربية أو لا تحتوي على @، نرجع فارغ
+  if (hasArabic || !hasAtSymbol) {
+    return ''
+  }
+  
+  return cleaned
 }
 
 /**
