@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.deps import get_current_user
 from app.models.user import User
+from app.models.subscription import PlanType
+from app.services.subscription_service import SubscriptionService
 from app.schemas.billing import SubscriptionResponse, InvoiceResponse
 
 router = APIRouter()
@@ -20,18 +22,19 @@ async def get_subscription(
     """
     Get current user subscription details.
     """
-    # Mock data for now - في الإنتاج سيتم جلبها من قاعدة البيانات
-    subscription = {
-        "plan": "free",  # free, starter, professional, enterprise
-        "status": "active",
-        "current_period_end": "2025-12-20T00:00:00",
-        "usage": {
-            "contacts": 150,
-            "limit": 1000
-        }
-    }
-    
-    return subscription
+    stats = await SubscriptionService.get_usage_stats(db, current_user.id)
+    return stats
+
+
+@router.get("/usage")
+async def get_usage_statistics(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get detailed usage statistics.
+    """
+    return await SubscriptionService.get_usage_stats(db, current_user.id)
 
 
 @router.get("/invoices", response_model=List[InvoiceResponse])
@@ -128,12 +131,97 @@ async def upgrade_plan(
     """
     Upgrade subscription plan.
     """
-    # Mock response - في الإنتاج سيتم التكامل مع بوابة الدفع
+    try:
+        plan_type = PlanType(plan)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid plan type"
+        )
+    
+    subscription = await SubscriptionService.upgrade_subscription(
+        db, current_user.id, plan_type
+    )
+    
     return {
         "success": True,
         "message": f"Upgraded to {plan} plan",
-        "checkout_url": f"/checkout?plan={plan}"
+        "checkout_url": f"/checkout?plan={plan}",
+        "subscription": await SubscriptionService.get_usage_stats(db, current_user.id)
     }
+
+
+@router.post("/purchase-cards")
+async def purchase_extra_cards(
+    cards_count: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Purchase extra OCR cards.
+    """
+    if cards_count < 1:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cards count must be at least 1"
+        )
+    
+    try:
+        cost, subscription = await SubscriptionService.purchase_extra_cards(
+            db, current_user.id, cards_count
+        )
+        
+        return {
+            "success": True,
+            "cards_purchased": cards_count,
+            "cost": cost,
+            "cost_with_vat": cost * 1.15,
+            "total_cards_available": subscription.ocr_cards_limit + subscription.extra_cards_purchased,
+            "checkout_url": f"/checkout?type=cards&count={cards_count}"
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.post("/cancel")
+async def cancel_subscription(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Cancel subscription.
+    """
+    try:
+        subscription = await SubscriptionService.cancel_subscription(db, current_user.id)
+        return {
+            "success": True,
+            "message": "تم إلغاء الاشتراك بنجاح",
+            "cancelled_at": subscription.cancelled_at.isoformat()
+        }
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+
+
+@router.get("/features/{plan_type}")
+async def get_plan_features(plan_type: str):
+    """
+    Get features for a specific plan.
+    """
+    try:
+        plan = PlanType(plan_type)
+        features = SubscriptionService.get_plan_features(plan)
+        return features
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid plan type"
+        )
 
 
 @router.get("/invoices/{invoice_id}/download")
