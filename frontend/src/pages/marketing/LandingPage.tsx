@@ -78,41 +78,6 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
           </div>
-
-          <div className="dp-hero-card">
-            <div className="dp-hero-card-header">
-              <span>تشغيل فوري</span>
-              <span className="dp-pill">PWA</span>
-            </div>
-            <h2>مثال عملي</h2>
-            <ul className="dp-hero-steps">
-              <li>١. ترفع ملف Excel أو صور كروت من المعرض.</li>
-              <li>٢. النظام ينظّف الأرقام ويزيل التكرار ويكتشف الأخطاء.</li>
-              <li>٣. تحصل على ملف جاهز للتسويق (واتساب / إعلانات).</li>
-            </ul>
-            <div className="dp-hero-mini-table">
-              <div className="dp-hero-mini-header">
-                <span>الاسم</span>
-                <span>الجوال</span>
-                <span>الحالة</span>
-              </div>
-              <div className="dp-hero-mini-row">
-                <span>محمد القحطاني</span>
-                <span>+966 5•••• ••••</span>
-                <span className="dp-pill dp-pill-good">تم التنظيف</span>
-              </div>
-              <div className="dp-hero-mini-row">
-                <span>شركة تطوير الرياض</span>
-                <span>+966 5•••• ••••</span>
-                <span className="dp-pill dp-pill-good">جاهز للتصدير</span>
-              </div>
-              <div className="dp-hero-mini-row">
-                <span>Lead من معرض جدة</span>
-                <span>غير صالح</span>
-                <span className="dp-pill dp-pill-bad">رقم مرفوض</span>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* Features */}
@@ -250,6 +215,44 @@ export const LandingPage: React.FC = () => {
               أنشئ حسابك وابدأ التجربة
             </Link>
             <span>إمكانك الإلغاء في أي وقت.</span>
+          </div>
+        </section>
+
+        {/* Example Section */}
+        <section className="dp-section">
+          <div className="dp-hero-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div className="dp-hero-card-header">
+              <span>تشغيل فوري</span>
+              <span className="dp-pill">PWA</span>
+            </div>
+            <h2>مثال عملي</h2>
+            <ul className="dp-hero-steps">
+              <li>١. ترفع ملف Excel أو صور كروت من المعرض.</li>
+              <li>٢. النظام ينظّف الأرقام ويزيل التكرار ويكتشف الأخطاء.</li>
+              <li>٣. تحصل على ملف جاهز للتسويق (واتساب / إعلانات).</li>
+            </ul>
+            <div className="dp-hero-mini-table">
+              <div className="dp-hero-mini-header">
+                <span>الاسم</span>
+                <span>الجوال</span>
+                <span>الحالة</span>
+              </div>
+              <div className="dp-hero-mini-row">
+                <span>محمد القحطاني</span>
+                <span>+966 5•••• ••••</span>
+                <span className="dp-pill dp-pill-good">تم التنظيف</span>
+              </div>
+              <div className="dp-hero-mini-row">
+                <span>شركة تطوير الرياض</span>
+                <span>+966 5•••• ••••</span>
+                <span className="dp-pill dp-pill-good">جاهز للتصدير</span>
+              </div>
+              <div className="dp-hero-mini-row">
+                <span>Lead من معرض جدة</span>
+                <span>غير صالح</span>
+                <span className="dp-pill dp-pill-bad">رقم مرفوض</span>
+              </div>
+            </div>
           </div>
         </section>
 
