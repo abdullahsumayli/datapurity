@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import apiClient from '../../config/apiClient'
-import { processFile, ProcessedData, exportToExcel, exportToCSV } from '../../utils/fileProcessor'
+import { ProcessedData, exportToCSV, exportToExcel, processFile } from '../../utils/fileProcessor'
 
 function UploadDatasetPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -234,7 +234,6 @@ function UploadDatasetPage() {
         )}
 
         {!processedData && (
-          {!processedData && (
           <div className="upload-tips">
             <h3>نصائح لأفضل النتائج:</h3>
             <ul>
