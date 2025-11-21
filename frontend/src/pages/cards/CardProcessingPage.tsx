@@ -35,9 +35,20 @@ function CardProcessingPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const uploadedFiles = location.state?.files || []
+  const fromBulkScan = location.state?.fromBulkScan || false
+  const preloadedContacts = location.state?.contacts || []
 
   useEffect(() => {
-    if (uploadedFiles.length > 0) {
+    if (fromBulkScan && preloadedContacts.length > 0) {
+      // البيانات جاهزة من BulkCardScanPage
+      setContacts(preloadedContacts)
+      setProcessing({
+        total: preloadedContacts.length,
+        processed: preloadedContacts.length,
+        failed: 0,
+        status: 'completed'
+      })
+    } else if (uploadedFiles.length > 0) {
       processCards()
     } else {
       navigate('/app/cards/upload')
@@ -179,9 +190,26 @@ function CardProcessingPage() {
 
   const saveToContacts = async () => {
     try {
-      // في الإنتاج: حفظ إلى قاعدة البيانات
-      alert(`تم حفظ ${contacts.length} جهة اتصال بنجاح!`)
-      navigate('/app/contacts')
+      // حفظ في المجموعة المركزية
+      const existingCollection = localStorage.getItem('cards_collection')
+      const collection = existingCollection ? JSON.parse(existingCollection) : []
+      
+      // تحديد المصدر بناءً على من أين جاءت البيانات
+      const source = fromBulkScan ? 'single-scan' : 'bulk-upload'
+      
+      // إضافة الكروت الجديدة مع معلومات إضافية
+      const newContacts = contacts.map(contact => ({
+        ...contact,
+        source,
+        addedAt: new Date().toISOString()
+      }))
+      
+      // دمج مع الكروت الموجودة
+      const updatedCollection = [...collection, ...newContacts]
+      localStorage.setItem('cards_collection', JSON.stringify(updatedCollection))
+      
+      alert(`تم حفظ ${contacts.length} جهة اتصال بنجاح في المجموعة!`)
+      navigate('/app/cards/collection')
     } catch (error) {
       console.error('Save failed:', error)
       alert('فشل الحفظ. حاول مرة أخرى.')

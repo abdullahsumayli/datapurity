@@ -97,9 +97,27 @@ function CardUploadPage() {
   return (
     <div className="page-container">
       <div className="page-header">
-        <button className="btn-back" onClick={() => navigate('/app')}>
-          ← العودة إلى الرئيسية
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <button className="btn-back" onClick={() => navigate('/app')}>
+            ← العودة إلى الرئيسية
+          </button>
+          <button 
+            className="btn-collection" 
+            onClick={() => navigate('/app/cards/collection')}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              transition: 'all 0.3s'
+            }}
+          >
+            📇 مجموعة الكروت
+          </button>
+        </div>
         <h1>رفع بطاقات أعمال</h1>
         <p className="page-description">
           ارفع صور بطاقات الأعمال لاستخراج البيانات تلقائياً
