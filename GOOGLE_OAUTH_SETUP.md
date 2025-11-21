@@ -59,6 +59,35 @@ python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## للإنتاج (Production)
 
+### على السيرفر 46.62.239.119
+
+1. **إضافة URIs في Google Console:**
+   ```
+   http://46.62.239.119/api/v1/auth/google/callback
+   http://46.62.239.119/auth/callback
+   ```
+
+2. **تعديل `.env` على السيرفر:**
+   ```bash
+   ssh root@46.62.239.119
+   cd /opt/datapurity/backend
+   nano .env
+   ```
+   
+   أضف:
+   ```env
+   GOOGLE_CLIENT_ID=your-production-client-id.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=your-production-client-secret
+   GOOGLE_REDIRECT_URI=http://46.62.239.119/api/v1/auth/google/callback
+   ```
+
+3. **إعادة تشغيل الخدمة:**
+   ```bash
+   systemctl restart datapurity
+   ```
+
+### للدومين (عند توفره):
+
 في ملف `.env` للإنتاج:
 
 ```env
@@ -72,4 +101,30 @@ GOOGLE_REDIRECT_URI=https://yourdomain.com/api/v1/auth/google/callback
 ```
 https://yourdomain.com/api/v1/auth/google/callback
 https://yourdomain.com/auth/callback
+```
+
+---
+
+## 🔍 الحالة الحالية
+
+**المشكلة:**
+- ❌ `GOOGLE_CLIENT_ID` فارغ في `.env`
+- ❌ `GOOGLE_CLIENT_SECRET` فارغ في `.env`
+- ❌ الزر يعمل لكن لا يوجد OAuth مهيأ
+
+**الحل:**
+1. اتبع الخطوات أعلاه للحصول على Credentials
+2. أضفها في `.env` محلياً وعلى السيرفر
+3. أعد تشغيل الخدمات
+
+---
+
+## ✅ اختبار الإعداد
+
+```bash
+# افتح في المتصفح
+http://46.62.239.119/api/v1/auth/google/login
+
+# يجب أن تُحول لصفحة Google للدخول
+# إذا ظهر خطأ "redirect_uri_mismatch"، تحقق من URIs في Google Console
 ```
