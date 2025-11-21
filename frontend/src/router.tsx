@@ -19,6 +19,7 @@ import BillingPage from './pages/billing/BillingPage'
 import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
 import CardUploadPage from './pages/cards/CardUploadPage'
+import BulkCardScanPage from './pages/cards/BulkCardScanPage'
 import CheckoutPage from './pages/checkout/CheckoutPage'
 import ContactsPage from './pages/contacts/ContactsPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
@@ -89,6 +90,7 @@ function AppRouter() {
         
         <Route path="cards">
           <Route path="upload" element={<CardUploadPage />} />
+          <Route path="bulk-scan" element={<BulkCardScanPage />} />
           <Route path="processing" element={<CardProcessingPage />} />
           <Route path="review" element={<CardReviewPage />} />
         </Route>

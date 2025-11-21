@@ -4,9 +4,14 @@ import { useNavigate } from 'react-router-dom'
 function CardUploadPage() {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [totalSize, setTotalSize] = useState(0)
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+
+  const MAX_FILES = 100
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB per file
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
@@ -24,13 +29,53 @@ function CardUploadPage() {
     setDragActive(false)
     
     if (e.dataTransfer.files) {
-      setFiles(Array.from(e.dataTransfer.files))
+      const newFiles = Array.from(e.dataTransfer.files)
+      const validFiles = newFiles.filter(file => {
+        if (file.size > MAX_FILE_SIZE) {
+          alert(`الملف ${file.name} كبير جداً (الحد الأقصى 10MB)`)
+          return false
+        }
+        return true
+      })
+
+      const combined = [...files, ...validFiles]
+      if (combined.length > MAX_FILES) {
+        alert(`الحد الأقصى ${MAX_FILES} ملف في المرة الواحدة`)
+        setFiles(combined.slice(0, MAX_FILES))
+      } else {
+        setFiles(combined)
+      }
+
+      const size = combined.reduce((sum, f) => sum + f.size, 0)
+      setTotalSize(size)
     }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFiles(Array.from(e.target.files))
+      const newFiles = Array.from(e.target.files)
+      
+      // Filter valid files
+      const validFiles = newFiles.filter(file => {
+        if (file.size > MAX_FILE_SIZE) {
+          alert(`الملف ${file.name} كبير جداً (الحد الأقصى 10MB)`)
+          return false
+        }
+        return true
+      })
+
+      // Limit total number of files
+      const combined = [...files, ...validFiles]
+      if (combined.length > MAX_FILES) {
+        alert(`الحد الأقصى ${MAX_FILES} ملف في المرة الواحدة`)
+        setFiles(combined.slice(0, MAX_FILES))
+      } else {
+        setFiles(combined)
+      }
+
+      // Calculate total size
+      const size = combined.reduce((sum, f) => sum + f.size, 0)
+      setTotalSize(size)
     }
   }
 
@@ -44,7 +89,10 @@ function CardUploadPage() {
   }
 
   const removeFile = (index: number) => {
-    setFiles(files.filter((_, i) => i !== index))
+    const newFiles = files.filter((_, i) => i !== index)
+    setFiles(newFiles)
+    const size = newFiles.reduce((sum, f) => sum + f.size, 0)
+    setTotalSize(size)
   }
 
   return (
@@ -57,6 +105,23 @@ function CardUploadPage() {
         <p className="page-description">
           ارفع صور بطاقات الأعمال لاستخراج البيانات تلقائياً
         </p>
+        
+        <div className="upload-modes">
+          <div className="mode-card active">
+            <span className="mode-icon">📇</span>
+            <h3>رفع ملفات متعددة</h3>
+            <p>ارفع عدة صور منفصلة (الوضع الحالي)</p>
+          </div>
+          <div 
+            className="mode-card" 
+            onClick={() => navigate('/app/cards/bulk-scan')}
+          >
+            <span className="mode-icon">📷</span>
+            <h3>مسح صورة واحدة</h3>
+            <p>صورة بها عدة كروت - اكتشاف تلقائي</p>
+            <span className="mode-badge">جديد</span>
+          </div>
+        </div>
       </div>
 
       <div className="upload-container">
@@ -106,13 +171,43 @@ function CardUploadPage() {
         </div>
 
         {files.length > 0 && (
-          <button
-            onClick={handleUpload}
-            disabled={uploading}
-            className="btn-primary upload-btn"
-          >
-            {uploading ? 'جاري الرفع...' : `رفع ${files.length} بطاقة`}
-          </button>
+          <div className="upload-actions">
+            <div className="upload-stats">
+              <div className="stat-item">
+                <span className="stat-label">📁 عدد الملفات:</span>
+                <span className="stat-value">{files.length}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">📦 الحجم الإجمالي:</span>
+                <span className="stat-value">{(totalSize / (1024 * 1024)).toFixed(2)} MB</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">⚡ معالجة متوقعة:</span>
+                <span className="stat-value">~{Math.ceil(files.length * 3)} ثانية</span>
+              </div>
+            </div>
+            <button
+              onClick={handleUpload}
+              disabled={uploading}
+              className="btn-primary upload-btn"
+            >
+              {uploading ? (
+                <>
+                  <span className="spinner"></span>
+                  جاري الرفع... {uploadProgress}%
+                </>
+              ) : (
+                `رفع ومعالجة ${files.length} بطاقة`
+              )}
+            </button>
+            <button
+              onClick={() => { setFiles([]); setTotalSize(0) }}
+              className="btn-secondary"
+              disabled={uploading}
+            >
+              مسح الكل
+            </button>
+          </div>
         )}
 
         <div className="upload-tips">
@@ -235,6 +330,125 @@ function CardUploadPage() {
           right: 0;
           color: #10b981;
           font-weight: bold;
+        }
+
+        .upload-actions {
+          margin-top: 2rem;
+        }
+
+        .upload-stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+          padding: 1.5rem;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 12px;
+          color: white;
+        }
+
+        .stat-item {
+          text-align: center;
+        }
+
+        .stat-label {
+          display: block;
+          font-size: 0.875rem;
+          opacity: 0.9;
+          margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+          display: block;
+          font-size: 1.5rem;
+          font-weight: 700;
+        }
+
+        .btn-secondary {
+          width: 100%;
+          margin-top: 0.75rem;
+          padding: 0.875rem;
+          background: #6b7280;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.3s;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+          background: #4b5563;
+        }
+
+        .btn-secondary:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .upload-modes {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+          margin-top: 1.5rem;
+        }
+
+        .mode-card {
+          background: white;
+          border: 2px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 1.5rem;
+          cursor: pointer;
+          transition: all 0.3s;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .mode-card:hover {
+          border-color: #667eea;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .mode-card.active {
+          border-color: #667eea;
+          background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        }
+
+        .mode-card .mode-icon {
+          font-size: 2.5rem;
+          display: block;
+          margin-bottom: 0.75rem;
+        }
+
+        .mode-card h3 {
+          color: #1e40af;
+          font-size: 1.125rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .mode-card p {
+          color: #6b7280;
+          font-size: 0.875rem;
+          margin: 0;
+        }
+
+        .mode-badge {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: white;
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+          .upload-modes {
+            grid-template-columns: 1fr;
+          }
         }
       `}</style>
     </div>
