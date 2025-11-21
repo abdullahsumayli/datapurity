@@ -29,11 +29,6 @@ function DashboardPage() {
     updateGreeting()
   }, [])
 
-  useEffect(() => {
-    fetchData()
-    updateGreeting()
-  }, [])
-
   const updateGreeting = () => {
     const hour = new Date().getHours()
     if (hour < 12) setGreeting('صباح الخير')
