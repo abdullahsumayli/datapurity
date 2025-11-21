@@ -3,6 +3,29 @@ import { Link } from 'react-router-dom'
 import apiClient from '../../config/apiClient'
 import './dashboard.css'
 
+// Constants
+const ACTIVITY_ICONS = {
+  upload: '📤',
+  clean: '✨',
+  export: '📥',
+  scan: '📷',
+  default: '📋'
+} as const
+
+const STATUS_BADGES = {
+  success: { text: 'مكتمل', class: 'success' },
+  pending: { text: 'قيد التنفيذ', class: 'pending' },
+  error: { text: 'فشل', class: 'error' }
+} as const
+
+const DEFAULT_STATS = {
+  total_contacts: 0,
+  cleaned_contacts: 0,
+  pending_jobs: 0,
+  success_rate: 0
+}
+
+// Types
 interface Stats {
   total_contacts: number
   cleaned_contacts: number
@@ -18,13 +41,15 @@ interface Activity {
   status: 'success' | 'pending' | 'error'
 }
 
+type TabType = 'overview' | 'analytics' | 'activity'
+
 function DashboardPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [activities, setActivities] = useState<Activity[]>([])
-  const [loading, setLoading] = useState(true)
-  const [greeting, setGreeting] = useState('')
-  const [activeTab, setActiveTab] = useState<'overview' | 'analytics' | 'activity'>('overview')
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [greeting, setGreeting] = useState<string>('')
+  const [activeTab, setActiveTab] = useState<TabType>('overview')
+  const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
   useEffect(() => {
     fetchData()
@@ -33,20 +58,13 @@ function DashboardPage() {
 
   const updateGreeting = () => {
     const hour = new Date().getHours()
-    if (hour < 12) setGreeting('صباح الخير')
-    else if (hour < 18) setGreeting('مساء الخير')
-    else setGreeting('مساء الخير')
+    setGreeting(hour < 12 ? 'صباح الخير' : 'مساء الخير')
   }
 
   const fetchData = async () => {
     try {
       const [statsResponse] = await Promise.all([
-        apiClient.get('/dashboard/stats').catch(() => ({ data: {
-          total_contacts: 0,
-          cleaned_contacts: 0,
-          pending_jobs: 0,
-          success_rate: 0
-        }}))
+        apiClient.get('/dashboard/stats').catch(() => ({ data: DEFAULT_STATS }))
       ])
       
       setStats(statsResponse.data)
@@ -82,30 +100,19 @@ function DashboardPage() {
     }
   }
 
-  const getActivityIcon = (type: string) => {
-    const icons: Record<string, string> = {
-      upload: '📤',
-      clean: '✨',
-      export: '📥',
-      scan: '📷'
-    }
-    return icons[type] || '📋'
+  const getActivityIcon = (type: string): string => {
+    return ACTIVITY_ICONS[type as keyof typeof ACTIVITY_ICONS] || ACTIVITY_ICONS.default
   }
 
-  const getStatusBadge = (status: string) => {
-    const badges: Record<string, { text: string; class: string }> = {
-      success: { text: 'مكتمل', class: 'success' },
-      pending: { text: 'قيد التنفيذ', class: 'pending' },
-      error: { text: 'فشل', class: 'error' }
-    }
-    return badges[status] || badges.success
+  const getStatusBadge = (status: string): { text: string; class: string } => {
+    return STATUS_BADGES[status as keyof typeof STATUS_BADGES] || STATUS_BADGES.success
   }
 
-  const formatTimestamp = (timestamp: string) => {
+  const formatTimestamp = (timestamp: string): string => {
     const date = new Date(timestamp)
     const now = new Date()
-    const diff = now.getTime() - date.getTime()
-    const hours = Math.floor(diff / 3600000)
+    const diffInMs = now.getTime() - date.getTime()
+    const hours = Math.floor(diffInMs / 3600000)
     
     if (hours < 1) return 'منذ لحظات'
     if (hours === 1) return 'منذ ساعة'
@@ -124,8 +131,9 @@ function DashboardPage() {
     )
   }
 
-  const cleaningPercentage = stats?.total_contacts ? 
-    (stats.cleaned_contacts / stats.total_contacts * 100) : 0
+  const cleaningPercentage = stats?.total_contacts 
+    ? Math.round((stats.cleaned_contacts / stats.total_contacts) * 100) 
+    : 0
 
   return (
     <div className="dashboard-container">
