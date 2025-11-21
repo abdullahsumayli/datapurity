@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144" height="144" viewBox="0 0 144 144" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="144" height="144" rx="28.8" fill="url(#grad)" />
+  
+  <!-- Icon - Database/Document symbol -->
+  <g transform="translate(36, 36)">
+    <!-- Document outline -->
+    <rect x="7.2" y="7.2" 
+          width="57.6" height="72" 
+          rx="2.88" fill="white" opacity="0.9" />
+    
+    <!-- Lines representing data -->
+    <line x1="14.4" y1="21.599999999999998" 
+          x2="57.6" y2="21.599999999999998" 
+          stroke="#667eea" stroke-width="2.16" stroke-linecap="round" />
+    <line x1="14.4" y1="36" 
+          x2="57.6" y2="36" 
+          stroke="#667eea" stroke-width="2.16" stroke-linecap="round" />
+    <line x1="14.4" y1="50.4" 
+          x2="50.4" y2="50.4" 
+          stroke="#667eea" stroke-width="2.16" stroke-linecap="round" />
+    <line x1="14.4" y1="64.8" 
+          x2="57.6" y2="64.8" 
+          stroke="#667eea" stroke-width="2.16" stroke-linecap="round" />
+    
+    <!-- Sparkle/Clean symbol -->
+    <circle cx="60.48" cy="17.28" r="5.76" fill="white" opacity="0.95" />
+    <circle cx="54.72" cy="11.52" r="3.6" fill="white" opacity="0.85" />
+  </g>
+  
+  <!-- Text -->
+  <text x="72" y="122.39999999999999" 
+        font-family="Arial, sans-serif" 
+        font-size="17.28" 
+        font-weight="bold" 
+        fill="white" 
+        text-anchor="middle">DP</text>
+</svg>

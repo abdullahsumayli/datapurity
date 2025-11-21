@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PWAInstallButton from "../../components/PWAInstallButton/PWAInstallButton";
 import "../../styles/landing.css";
 
 export const LandingPage: React.FC = () => {
@@ -258,6 +259,9 @@ export const LandingPage: React.FC = () => {
           <span>صمِّم لتخدم الشركات الصغيرة والمتوسطة في المملكة.</span>
         </footer>
       </main>
+      
+      {/* PWA Install Button */}
+      <PWAInstallButton />
     </div>
   );
 };
