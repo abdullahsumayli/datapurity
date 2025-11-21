@@ -54,38 +54,39 @@ export const LandingPage: React.FC = () => {
         <section className="dp-hero">
           <div className="dp-hero-text">
             <h1>
-              حوِّل فوضى الإكسل والكروت
+              حوّل فوضى الإكسل والكروت
               <br />
               إلى{" "}
-              <span className="dp-hero-highlight">داتا نظيفة جاهزة للبيع</span>
+              <span className="dp-hero-highlight">بيانات جاهزة للاستخدام</span>
             </h1>
             <p>
-              DataPurity منصة سعودية تنظّف بيانات عملائك، وتحوّل كروت الأعمال
-              من المعارض والزيارات إلى ملفات Excel جاهزة للتسويق والمبيعات –
-              من المتصفح أو كتطبيق PWA على جوالك.
+              DataPurity — منصة ذكية لتنظيف وتنظيم بيانات العملاء
+            </p>
+            <p style={{ marginTop: '1rem', fontSize: '1.1rem', lineHeight: '1.8' }}>
+              DataPurity تساعد الشركات على تنظيم بيانات العملاء، تنظيف قوائم Excel، واستخراج بيانات كروت الأعمال من المعارض والزيارات خلال ثوانٍ فقط… مباشرة من المتصفح.
             </p>
 
             <div className="dp-hero-actions">
               <Link to="/login" className="dp-btn dp-btn-primary dp-hero-main-cta">
-                جرّب تنظيف أول ١٠٠ سجل مجاناً
+                ابدأ بتنظيف أول 100 سجل مجانًا
               </Link>
               <span className="dp-hero-subtext">
-                بدون كود – بدون تعقيد – تركيز كامل على الشركات في السعودية.
+                بدون تعقيد. بدون أخطاء. بدون شغل يدوي.
               </span>
             </div>
 
             <div className="dp-hero-metrics">
               <div>
-                <strong>+50k</strong>
-                <span>سجل بيانات تم تنظيفه</span>
+                <strong>+50,000</strong>
+                <span>سجل بيانات تمت معالجته</span>
               </div>
               <div>
                 <strong>+20</strong>
-                <span>شركة سعودية جرّبت DataPurity</span>
+                <span>شركة جرّبت المنصة</span>
               </div>
               <div>
                 <strong>99٪</strong>
-                <span>نسبة رضا عن سهولة الاستخدام</span>
+                <span>رضا عن سهولة الاستخدام والنتائج</span>
               </div>
             </div>
           </div>
@@ -93,49 +94,57 @@ export const LandingPage: React.FC = () => {
 
         {/* Features */}
         <section id="features" className="dp-section">
-          <h2>ماذا يفعل DataPurity بالضبط؟</h2>
+          <h2>ماذا يقدم DataPurity؟</h2>
           <p className="dp-section-subtitle">
-            ثلاث أدوات أساسية، مبنية خصيصاً للشركات في السعودية.
+            ثلاث أدوات أساسية مخصصة لاحتياجات الشركات الحديثة
           </p>
 
           <div className="dp-features-grid">
             <div className="dp-feature-card">
-              <h3>تنظيف ملفات Excel و CSV</h3>
+              <h3>1) تنظيف ملفات Excel و CSV</h3>
               <p>
-                يزيل التكرار، يصحّح أرقام الجوال السعودية، يكتشف الإيميلات
-                الخاطئة، ويعطيك ملفاً واحداً نظيفاً جاهزاً للاستخدام.
+                أداة متقدمة لمعالجة الأخطاء، توحيد تنسيق البيانات، وإزالة التكرار، لتصبح بياناتك جاهزة للاستخدام داخل الأنظمة التشغيلية.
               </p>
+              <p style={{ marginTop: '0.75rem', fontWeight: 600 }}>يشمل:</p>
               <ul>
-                <li>تنسيق أرقام 05 و +966 تلقائياً</li>
-                <li>كشف ودمج السجلات المكررة</li>
-                <li>حساب Health Score لقائمة العملاء</li>
+                <li>تصحيح وتوحيد أرقام الجوال</li>
+                <li>اكتشاف السجلات المكررة</li>
+                <li>كشف الإيميلات الخاطئة</li>
+                <li>حساب Data Health Score</li>
               </ul>
             </div>
 
             <div className="dp-feature-card">
-              <h3>تحويل كروت الأعمال إلى بيانات</h3>
+              <h3>2) استخراج بيانات كروت الأعمال (OCR)</h3>
               <p>
-                ارفع صور الكروت من المعارض والزيارات الميدانية، ودع المنصة
-                تستخرج الأسماء، الشركات، الأرقام، والإيميلات تلقائياً.
+                ارفع صور الكروت من المعارض أو الاجتماعات…
+                <br />
+                والنظام يستخرج الأسماء، الشركات، الأرقام، والإيميلات تلقائيًا.
               </p>
+              <p style={{ marginTop: '0.75rem', fontWeight: 600 }}>يشمل:</p>
               <ul>
-                <li>OCR عربي / إنجليزي</li>
+                <li>OCR عربي/إنجليزي</li>
                 <li>معاينة قبل الحفظ</li>
                 <li>تصدير مباشر إلى Excel أو CRM</li>
               </ul>
             </div>
 
             <div className="dp-feature-card">
-              <h3>تصدير جاهز للتسويق والمبيعات</h3>
+              <h3>3) ملفات جاهزة للاستخدام في أنظمة العمل</h3>
               <p>
-                ملف واحد جاهز للرفع إلى واتساب، حملات Meta، أو أدوات البريد،
-                بدون شغل يدوي مرهق على الإكسل.
+                يمكن تصدير البيانات نظيفة وجاهزة للدمج مع:
               </p>
               <ul>
-                <li>قوائم واتساب Marketing</li>
-                <li>قوائم إعلانات Meta / Google</li>
-                <li>تقسيم عملاء Hot / Warm / Cold</li>
+                <li>أنظمة CRM</li>
+                <li>فرق التسويق</li>
+                <li>فرق المبيعات</li>
+                <li>لوحات التحليل والتشغيل</li>
               </ul>
+              <p style={{ marginTop: '0.75rem', fontWeight: 600 }}>
+                مع تقسيم تلقائي للعملاء إلى:
+                <br />
+                Hot / Warm / Cold
+              </p>
             </div>
           </div>
         </section>
@@ -146,102 +155,93 @@ export const LandingPage: React.FC = () => {
           <div className="dp-steps">
             <div className="dp-step">
               <span className="dp-step-number">١</span>
-              <h3>ترفع ملفاتك أو صور الكروت</h3>
-              <p>ملفات Excel/CSV أو صور كروت من المعارض والزيارات.</p>
+              <h3>ارفع ملفات Excel أو صور الكروت</h3>
+              <p>من الحاسوب أو الجوال.</p>
             </div>
             <div className="dp-step">
               <span className="dp-step-number">٢</span>
               <h3>النظام ينظّف ويفهم البيانات</h3>
-              <p>تنظيف أرقام، إزالة تكرار، فهم الأسماء والعناوين بالعربي.</p>
+              <p>تصحيح – استخراج – تنظيم – تدقيق.</p>
             </div>
             <div className="dp-step">
               <span className="dp-step-number">٣</span>
               <h3>تحصل على ملف نظيف جاهز للاستخدام</h3>
-              <p>تصدير إلى Excel أو تكامل مع أدوات التسويق والـ CRM.</p>
+              <p>تصدير فوري إلى Excel أو CRM.</p>
             </div>
           </div>
         </section>
 
         {/* Sectors */}
         <section id="sectors" className="dp-section">
-          <h2>مصمّم لواقع الشركات في السعودية</h2>
+          <h2>مناسب لعدة قطاعات</h2>
           <div className="dp-sectors-grid">
             <div className="dp-sector-card">
               <h3>شركات التطوير العقاري</h3>
-              <p>تنظيم بيانات زوّار المعارض والمشاريع وحملات الوسيط.</p>
+              <p>تنظيم بيانات الزوار والمهتمين بالمشاريع.</p>
             </div>
             <div className="dp-sector-card">
-              <h3>شركات تنظيم المعارض والفعاليات</h3>
-              <p>تحويل بيانات التسجيل والحضور إلى قوائم عملاء منظّمة.</p>
+              <h3>شركات تنظيم المعارض</h3>
+              <p>تحويل بيانات التسجيل والحضور إلى قوائم عملاء واضحة.</p>
             </div>
             <div className="dp-sector-card">
-              <h3>وكالات التسويق الرقمي</h3>
-              <p>تنظيف قوائم العملاء قبل أي حملة Ads أو رسائل جماعية.</p>
+              <h3>وكالات التسويق</h3>
+              <p>تنظيف بيانات العملاء قبل التشغيل.</p>
             </div>
             <div className="dp-sector-card">
-              <h3>شركات B2B والتوريد</h3>
-              <p>حفظ تاريخ العملاء والموردين بشكل نظيف يسهل تحليله.</p>
+              <h3>شركات B2B</h3>
+              <p>تنظيم بيانات العملاء والموردين وتحسين جودة السجلات.</p>
             </div>
           </div>
         </section>
 
         {/* Pricing teaser */}
         <section id="pricing" className="dp-section dp-section-alt">
-          <h2>خطط بسيطة تناسب الشركات الصغيرة والمتوسطة</h2>
+          <h2>خطط الاشتراك</h2>
           <p className="dp-section-subtitle">
-            ابدأ بخطة صغيرة، ووسّع لاحقاً مع نمو فريق المبيعات عندك.
+            اختر الخطة المناسبة لحجم عملك
           </p>
           <div className="dp-pricing-grid">
             <div className="dp-price-card">
               <h3>Starter</h3>
-              <p className="dp-price">79 ر.س / شهر</p>
+              <p className="dp-price">79 / شهر</p>
               <ul>
-                <li>٣ عمليات تنظيف شهرياً</li>
-                <li>٥٠ كرت شهرياً</li>
-                <li>تصدير غير محدود للملفات</li>
+                <li>3 عمليات تنظيف</li>
+                <li>50 كرت شهريًا</li>
+                <li>تصدير غير محدود</li>
               </ul>
             </div>
             <div className="dp-price-card dp-price-card-main">
               <h3>Business</h3>
-              <p className="dp-price">199 ر.س / شهر</p>
+              <p className="dp-price">199 / شهر</p>
               <ul>
-                <li>١٠ عمليات تنظيف شهرياً</li>
-                <li>٣٠٠ كرت شهرياً</li>
-                <li>تقارير جودة بيانات PDF</li>
-                <li>٣ مستخدمين</li>
+                <li>10 عمليات تنظيف</li>
+                <li>300 كرت</li>
+                <li>تقارير جودة بيانات</li>
+                <li>حتى 3 مستخدمين</li>
               </ul>
             </div>
             <div className="dp-price-card">
               <h3>Pro</h3>
-              <p className="dp-price">399 ر.س / شهر</p>
+              <p className="dp-price">399 / شهر</p>
               <ul>
-                <li>٣٠ عملية تنظيف</li>
-                <li>١٠٠٠ كرت شهرياً</li>
+                <li>30 عملية تنظيف</li>
+                <li>1000 كرت</li>
                 <li>وصول إلى API و Webhooks</li>
               </ul>
             </div>
           </div>
           <div className="dp-pricing-cta">
             <Link to="/login" className="dp-btn dp-btn-primary">
-              أنشئ حسابك وابدأ التجربة
+              ابدأ الآن — تشغيل فوري من المتصفح
             </Link>
-            <span>إمكانك الإلغاء في أي وقت.</span>
+            <span>بدون التزام. بدون تجهيزات.</span>
           </div>
         </section>
 
         {/* Example Section */}
         <section className="dp-section">
           <div className="dp-hero-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <div className="dp-hero-card-header">
-              <span>تشغيل فوري</span>
-              <span className="dp-pill">PWA</span>
-            </div>
-            <h2>مثال عملي</h2>
-            <ul className="dp-hero-steps">
-              <li>١. ترفع ملف Excel أو صور كروت من المعرض.</li>
-              <li>٢. النظام ينظّف الأرقام ويزيل التكرار ويكتشف الأخطاء.</li>
-              <li>٣. تحصل على ملف جاهز للتسويق (واتساب / إعلانات).</li>
-            </ul>
+            <h2>مثال مبسّط</h2>
             <div className="dp-hero-mini-table">
               <div className="dp-hero-mini-header">
                 <span>الاسم</span>
@@ -249,19 +249,19 @@ export const LandingPage: React.FC = () => {
                 <span>الحالة</span>
               </div>
               <div className="dp-hero-mini-row">
-                <span>محمد القحطاني</span>
+                <span>محمد سعيد أحمد</span>
                 <span>+966 5•••• ••••</span>
                 <span className="dp-pill dp-pill-good">تم التنظيف</span>
               </div>
               <div className="dp-hero-mini-row">
-                <span>شركة تطوير الرياض</span>
+                <span>شركة تطوير الشرق</span>
                 <span>+966 5•••• ••••</span>
-                <span className="dp-pill dp-pill-good">جاهز للتصدير</span>
+                <span className="dp-pill dp-pill-good">جاهز للاستخدام</span>
               </div>
               <div className="dp-hero-mini-row">
-                <span>Lead من معرض جدة</span>
+                <span>Lead من أحد المعارض</span>
                 <span>غير صالح</span>
-                <span className="dp-pill dp-pill-bad">رقم مرفوض</span>
+                <span className="dp-pill dp-pill-bad">رقم غير قابل للمعالجة</span>
               </div>
             </div>
           </div>
@@ -269,8 +269,8 @@ export const LandingPage: React.FC = () => {
 
         {/* Footer */}
         <footer className="dp-footer">
-          <span>© {new Date().getFullYear()} DataPurity – منصة سعودية لتنظيف البيانات.</span>
-          <span>صمِّم لتخدم الشركات الصغيرة والمتوسطة في المملكة.</span>
+          <span>© {new Date().getFullYear()} DataPurity – منصة ذكية لتنظيف وتنظيم بيانات العملاء</span>
+          <span>مصممة للشركات الحديثة في المملكة العربية السعودية</span>
         </footer>
       </main>
       
