@@ -855,6 +855,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transform: scaleX(-1);
 }
 
 /* Visual Flow */
@@ -1174,7 +1175,7 @@
   }
 
   .dp-process-arrow {
-    transform: rotate(90deg);
+    transform: rotate(90deg) scaleX(-1);
   }
 
   .dp-visual-flow {
