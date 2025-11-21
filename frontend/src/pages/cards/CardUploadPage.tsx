@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom'
 function CardUploadPage() {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
   const [totalSize, setTotalSize] = useState(0)
   const [dragActive, setDragActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -194,7 +193,7 @@ function CardUploadPage() {
               {uploading ? (
                 <>
                   <span className="spinner"></span>
-                  جاري الرفع... {uploadProgress}%
+                  جاري الرفع...
                 </>
               ) : (
                 `رفع ومعالجة ${files.length} بطاقة`
