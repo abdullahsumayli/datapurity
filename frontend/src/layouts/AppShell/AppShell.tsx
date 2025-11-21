@@ -1,12 +1,10 @@
 import { Outlet } from 'react-router-dom'
 import './AppShell.css'
-import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 
 function AppShell() {
   return (
     <div className="app-shell">
-      <Sidebar />
       <div className="main-content">
         <TopBar />
         <main className="content">
