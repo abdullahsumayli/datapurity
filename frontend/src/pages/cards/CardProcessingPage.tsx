@@ -224,6 +224,9 @@ function CardProcessingPage() {
   return (
     <div className="page-container">
       <div className="page-header">
+        <button className="btn-back" onClick={() => navigate('/app')}>
+          ← العودة إلى الرئيسية
+        </button>
         <h1>نتائج المعالجة</h1>
         <p className="page-description">
           تم استخراج {contacts.length} جهة اتصال من البطاقات

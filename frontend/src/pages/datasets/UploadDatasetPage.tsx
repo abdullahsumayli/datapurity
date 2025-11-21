@@ -46,8 +46,13 @@ function UploadDatasetPage() {
     try {
       const result = await processFile(file)
       setProcessedData(result)
+      
+      // رسالة نجاح
+      const validCount = result.cleanedData.filter(c => c.status === 'valid').length
+      const totalCount = result.cleanedData.length
+      alert(`✅ تمت المعالجة بنجاح!\n\n📊 النتائج:\n• إجمالي الصفوف: ${totalCount}\n• البيانات الصحيحة: ${validCount}\n• التكرارات المحذوفة: ${result.duplicates}\n• الصفوف الفارغة المحذوفة: ${result.emptyRows}`)
     } catch (error) {
-      alert(`فشل معالجة الملف: ${error instanceof Error ? error.message : 'خطأ غير معروف'}`)
+      alert(`❌ فشل معالجة الملف\n\n${error instanceof Error ? error.message : 'خطأ غير معروف'}\n\nالرجاء التأكد من صحة الملف والمحاولة مرة أخرى.`)
     } finally {
       setProcessing(false)
     }
@@ -79,14 +84,15 @@ function UploadDatasetPage() {
       
       // الانتقال إلى صفحة التفاصيل
       if (response.data.id) {
+        alert('✅ تم رفع البيانات بنجاح!\n\nسيتم الانتقال إلى صفحة التفاصيل...')
         navigate(`/app/datasets/${response.data.id}`)
       } else {
-        alert('تم رفع البيانات بنجاح!')
+        alert('✅ تم رفع البيانات بنجاح!')
         navigate('/app/datasets')
       }
     } catch (error) {
       console.error('Upload error:', error)
-      alert('فشل رفع الملف. حاول مرة أخرى.')
+      alert('❌ فشل رفع البيانات\n\nالرجاء المحاولة مرة أخرى أو التواصل مع الدعم الفني.')
     } finally {
       setUploading(false)
     }
@@ -96,17 +102,22 @@ function UploadDatasetPage() {
     if (!processedData) return
     const timestamp = new Date().toISOString().slice(0, 10)
     exportToExcel(processedData.cleanedData, `cleaned_data_${timestamp}.xlsx`)
+    alert('✅ تم تصدير الملف بنجاح!\n\nتحقق من مجلد التنزيلات.')
   }
 
   const handleExportCSV = () => {
     if (!processedData) return
     const timestamp = new Date().toISOString().slice(0, 10)
     exportToCSV(processedData.cleanedData, `cleaned_data_${timestamp}.csv`)
+    alert('✅ تم تصدير ملف CSV بنجاح!\n\nتحقق من مجلد التنزيلات.')
   }
 
   return (
     <div className="page-container">
       <div className="page-header">
+        <button className="btn-back" onClick={() => navigate('/app')}>
+          ← العودة إلى الرئيسية
+        </button>
         <h1>رفع ملف بيانات</h1>
         <p className="page-description">
           ارفع ملف Excel أو CSV لتنظيف وتوحيد بيانات جهات الاتصال

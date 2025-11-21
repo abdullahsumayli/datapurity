@@ -50,6 +50,9 @@ function CardUploadPage() {
   return (
     <div className="page-container">
       <div className="page-header">
+        <button className="btn-back" onClick={() => navigate('/app')}>
+          ← العودة إلى الرئيسية
+        </button>
         <h1>رفع بطاقات أعمال</h1>
         <p className="page-description">
           ارفع صور بطاقات الأعمال لاستخراج البيانات تلقائياً
