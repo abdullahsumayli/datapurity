@@ -14,6 +14,7 @@ import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
 import BillingPage from './pages/billing/BillingPage'
+import CheckoutPage from './pages/checkout/CheckoutPage'
 import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
 import CardUploadPage from './pages/cards/CardUploadPage'
@@ -47,6 +48,7 @@ function AppRouter() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
       
       {/* Legacy routes - redirect to new paths */}
       <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />

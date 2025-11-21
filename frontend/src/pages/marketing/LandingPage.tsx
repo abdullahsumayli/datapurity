@@ -460,6 +460,9 @@ export const LandingPage: React.FC = () => {
                   ✨ ابدأ فورًا بدون بطاقة ائتمانية
                 </p>
               </div>
+              <Link to="/login" className="dp-btn dp-btn-primary" style={{ marginTop: '1.5rem', width: '100%', textAlign: 'center' }}>
+                ابدأ مجانًا
+              </Link>
             </div>
 
             <div className="dp-price-card">
@@ -478,6 +481,9 @@ export const LandingPage: React.FC = () => {
                 <li>كشف التكرار الذكي</li>
                 <li>دعم ذو أولوية</li>
               </ul>
+              <Link to="/checkout?plan=starter" className="dp-btn dp-btn-primary" style={{ marginTop: '1.5rem', width: '100%', textAlign: 'center' }}>
+                اشترك الآن
+              </Link>
             </div>
 
             <div className="dp-price-card dp-price-card-main">
@@ -497,6 +503,9 @@ export const LandingPage: React.FC = () => {
                 <li>حتى 5 مستخدمين</li>
                 <li>دعم WhatsApp مباشر</li>
               </ul>
+              <Link to="/checkout?plan=business" className="dp-btn dp-btn-primary" style={{ marginTop: '1.5rem', width: '100%', textAlign: 'center' }}>
+                اشترك الآن
+              </Link>
             </div>
           </div>
           <div className="dp-pricing-note" style={{ 

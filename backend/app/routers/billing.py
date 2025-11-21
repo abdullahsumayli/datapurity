@@ -63,6 +63,62 @@ async def get_invoices(
     return invoices
 
 
+@router.post("/create-checkout")
+async def create_checkout_session(
+    plan_id: str,
+    payment_method: str,
+    billing_info: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Create checkout session for payment.
+    Integrates with Moyasar (Saudi payment gateway) or Stripe.
+    """
+    from pydantic import BaseModel
+    
+    # Validate plan
+    valid_plans = ['starter', 'business']
+    if plan_id not in valid_plans:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid plan selected"
+        )
+    
+    # Plan pricing
+    plan_prices = {
+        'starter': 79.00,
+        'business': 199.00
+    }
+    
+    amount = plan_prices[plan_id]
+    amount_with_vat = amount * 1.15  # Add 15% VAT
+    
+    # TODO: Integrate with Moyasar API
+    # For now, return mock checkout URL
+    # In production, create actual payment session with Moyasar:
+    # https://docs.moyasar.com/ar/api/#create-payment
+    
+    checkout_session = {
+        "id": f"checkout_{plan_id}_{current_user.id}",
+        "amount": amount_with_vat,
+        "currency": "SAR",
+        "plan_id": plan_id,
+        "customer_email": current_user.email,
+        "billing_info": billing_info,
+        "payment_method": payment_method,
+        # In production, this will be Moyasar checkout URL
+        "checkout_url": f"https://moyasar.com/checkout/mock_{plan_id}",
+        "success_url": "http://localhost:5173/app/billing?status=success",
+        "cancel_url": "http://localhost:5173/app/billing?status=cancelled"
+    }
+    
+    # Save checkout session to database for tracking
+    # TODO: Create CheckoutSession model and save
+    
+    return checkout_session
+
+
 @router.post("/upgrade")
 async def upgrade_plan(
     plan: str,
@@ -76,7 +132,7 @@ async def upgrade_plan(
     return {
         "success": True,
         "message": f"Upgraded to {plan} plan",
-        "checkout_url": f"/checkout/{plan}"
+        "checkout_url": f"/checkout?plan={plan}"
     }
 
 

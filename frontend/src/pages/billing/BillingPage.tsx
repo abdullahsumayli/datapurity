@@ -87,8 +87,8 @@ function BillingPage() {
                   </span>
                 </p>
               </div>
-              <Link to="/app/billing/upgrade" className="btn-primary">
-                تحديث الخطة
+              <Link to="/checkout?plan=starter" className="btn-primary">
+                ترقية الباقة
               </Link>
             </div>
 
