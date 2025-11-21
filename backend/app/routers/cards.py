@@ -12,7 +12,7 @@ from app.schemas.card import CardResponse, CardUpdate
 router = APIRouter()
 
 
-@router.post("/upload", response_model=CardResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/upload", response_model=List[CardResponse], status_code=status.HTTP_201_CREATED)
 async def upload_card(
     files: List[UploadFile] = File(...),
     db: AsyncSession = Depends(get_db),
@@ -20,24 +20,36 @@ async def upload_card(
 ):
     """Upload business card images for OCR."""
     from datetime import datetime
-    # Mock response - في الإنتاج سيتم معالجة الصور واستخراج البيانات
-    return {
-        "id": 1,
-        "user_id": current_user.id,
-        "original_filename": files[0].filename if files else "sample.jpg",
-        "storage_path": "/uploads/cards/sample.jpg",
-        "ocr_text": None,
-        "ocr_confidence": None,
-        "extracted_name": "أحمد محمد",
-        "extracted_company": "شركة التقنية",
-        "extracted_phone": "+966501234567",
-        "extracted_email": "ahmed@tech.com",
-        "extracted_address": None,
-        "is_processed": True,
-        "is_reviewed": False,
-        "created_at": datetime.now(),
-        "updated_at": None
-    }
+    import random
+    
+    # Process all uploaded files
+    results = []
+    
+    for idx, file in enumerate(files):
+        # Mock OCR processing - في الإنتاج سيتم معالجة الصور واستخراج البيانات
+        # يمكن استخدام Tesseract OCR أو Google Vision API هنا
+        
+        # Generate mock extracted data
+        card_data = {
+            "id": idx + 1,
+            "user_id": current_user.id,
+            "original_filename": file.filename,
+            "storage_path": f"/uploads/cards/{file.filename}",
+            "ocr_text": None,
+            "ocr_confidence": round(85 + random.random() * 15, 1),
+            "extracted_name": f"جهة اتصال {idx + 1}",
+            "extracted_company": f"شركة {idx + 1}",
+            "extracted_phone": f"+966 50 123 {str(1000 + idx).zfill(4)}",
+            "extracted_email": f"contact{idx + 1}@company.com",
+            "extracted_address": "الرياض، المملكة العربية السعودية",
+            "is_processed": True,
+            "is_reviewed": False,
+            "created_at": datetime.now(),
+            "updated_at": None
+        }
+        results.append(card_data)
+    
+    return results
 
 
 @router.get("/", response_model=List[CardResponse])

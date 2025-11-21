@@ -52,21 +52,31 @@ function CardProcessingPage() {
     uploadedFiles.forEach((file: File) => formData.append('files', file))
 
     try {
-      await apiClient.post('/cards/upload', formData, {
+      const response = await apiClient.post('/cards/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
-      // Simulate OCR processing (في الإنتاج سيكون هناك معالجة حقيقية)
-      const extractedData: ExtractedContact[] = uploadedFiles.map((file: File, index: number) => ({
-        id: index + 1,
-        name: `جهة اتصال ${index + 1}`,
-        company: `شركة ${index + 1}`,
-        phone: `+966 50 123 ${String(1000 + index).slice(-4)}`,
-        email: `contact${index + 1}@company.com`,
-        address: 'الرياض، المملكة العربية السعودية',
+      // استخدام البيانات من الـ Backend
+      interface CardResponse {
+        id: number
+        extracted_name: string
+        extracted_company: string
+        extracted_phone: string
+        extracted_email: string
+        extracted_address: string
+        ocr_confidence: number
+      }
+
+      const extractedData: ExtractedContact[] = response.data.map((card: CardResponse, index: number) => ({
+        id: card.id,
+        name: card.extracted_name || `جهة اتصال ${index + 1}`,
+        company: card.extracted_company || `شركة ${index + 1}`,
+        phone: card.extracted_phone || `+966 50 123 ${String(1000 + index).slice(-4)}`,
+        email: card.extracted_email || `contact${index + 1}@company.com`,
+        address: card.extracted_address || 'الرياض، المملكة العربية السعودية',
         position: 'مدير',
-        confidence: Math.round(85 + Math.random() * 15),
-        image_url: URL.createObjectURL(file)
+        confidence: Math.round(card.ocr_confidence || 85 + Math.random() * 15),
+        image_url: URL.createObjectURL(uploadedFiles[index])
       }))
 
       setContacts(extractedData)
