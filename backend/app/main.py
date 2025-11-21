@@ -57,22 +57,32 @@ if FRONTEND_DIST.exists():
             return FileResponse(str(robots_path))
         return {"error": "robots.txt not found"}
     
-    # Catch-all for SPA routing - MUST BE LAST
-    @app.get("/{full_path:path}", include_in_schema=False)
-    async def serve_spa(full_path: str):
-        """Serve SPA for all non-API routes."""
-        # Skip API routes - they should be handled by FastAPI routers
-        if full_path.startswith("api/"):
-            return {"error": "API endpoint not found"}
-        
-        # Check if it's a file request
-        file_path = FRONTEND_DIST / full_path
-        if file_path.is_file():
-            return FileResponse(str(file_path))
-        
-        # Otherwise serve index.html for client-side routing
+    @app.get("/manifest.json", include_in_schema=False)
+    async def manifest():
+        manifest_path = FRONTEND_DIST / "manifest.json"
+        if manifest_path.exists():
+            return FileResponse(str(manifest_path))
+        return {"error": "manifest.json not found"}
+    
+    @app.get("/registerSW.js", include_in_schema=False)
+    async def register_sw():
+        sw_path = FRONTEND_DIST / "registerSW.js"
+        if sw_path.exists():
+            return FileResponse(str(sw_path))
+        return {"error": "registerSW.js not found"}
+    
+    # SPA catch-all - only for root and app routes
+    @app.get("/", include_in_schema=False)
+    async def root():
         index_path = FRONTEND_DIST / "index.html"
         if index_path.exists():
             return FileResponse(str(index_path))
-        
-        return {"error": "Frontend not built. Run: cd frontend && npm run build"}
+        return {"error": "Frontend not built"}
+    
+    @app.get("/app/{full_path:path}", include_in_schema=False)
+    async def serve_app(full_path: str):
+        """Serve SPA for /app/* routes."""
+        index_path = FRONTEND_DIST / "index.html"
+        if index_path.exists():
+            return FileResponse(str(index_path))
+        return {"error": "Frontend not built"}
