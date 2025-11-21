@@ -53,16 +53,17 @@ export const LandingPage: React.FC = () => {
       <main className="dp-landing-main">
         <section className="dp-hero">
           <div className="dp-hero-text">
+            <div className="dp-badge">🚀 منصة سعودية متقدمة</div>
             <h1>
               حوّل فوضى الإكسل والكروت
               <br />
               إلى{" "}
               <span className="dp-hero-highlight">بيانات جاهزة للاستخدام</span>
             </h1>
-            <p>
+            <p className="dp-hero-tagline">
               DataPurity — منصة ذكية لتنظيف وتنظيم بيانات العملاء
             </p>
-            <p style={{ marginTop: '1rem', fontSize: '1.1rem', lineHeight: '1.8' }}>
+            <p className="dp-hero-description">
               DataPurity تساعد الشركات على تنظيم بيانات العملاء، تنظيف قوائم Excel، واستخراج بيانات كروت الأعمال من المعارض والزيارات خلال ثوانٍ فقط… مباشرة من المتصفح.
             </p>
 
@@ -89,6 +90,21 @@ export const LandingPage: React.FC = () => {
                 <span>رضا عن سهولة الاستخدام والنتائج</span>
               </div>
             </div>
+
+            <div className="dp-trust-badges">
+              <div className="dp-trust-item">
+                <span className="dp-trust-icon">✓</span>
+                <span>بيانات آمنة ومشفرة</span>
+              </div>
+              <div className="dp-trust-item">
+                <span className="dp-trust-icon">✓</span>
+                <span>استخدام فوري بدون تثبيت</span>
+              </div>
+              <div className="dp-trust-item">
+                <span className="dp-trust-icon">✓</span>
+                <span>دعم فني سريع</span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -101,7 +117,8 @@ export const LandingPage: React.FC = () => {
 
           <div className="dp-features-grid">
             <div className="dp-feature-card">
-              <h3>1) تنظيف ملفات Excel و CSV</h3>
+              <div className="dp-feature-icon">📊</div>
+              <h3>تنظيف ملفات Excel و CSV</h3>
               <p>
                 أداة متقدمة لمعالجة الأخطاء، توحيد تنسيق البيانات، وإزالة التكرار، لتصبح بياناتك جاهزة للاستخدام داخل الأنظمة التشغيلية.
               </p>
@@ -115,7 +132,8 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="dp-feature-card">
-              <h3>2) استخراج بيانات كروت الأعمال (OCR)</h3>
+              <div className="dp-feature-icon">📇</div>
+              <h3>استخراج بيانات كروت الأعمال (OCR)</h3>
               <p>
                 ارفع صور الكروت من المعارض أو الاجتماعات…
                 <br />
@@ -130,7 +148,8 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="dp-feature-card">
-              <h3>3) ملفات جاهزة للاستخدام في أنظمة العمل</h3>
+              <div className="dp-feature-icon">🎯</div>
+              <h3>ملفات جاهزة للاستخدام في أنظمة العمل</h3>
               <p>
                 يمكن تصدير البيانات نظيفة وجاهزة للدمج مع:
               </p>
@@ -211,6 +230,7 @@ export const LandingPage: React.FC = () => {
               </ul>
             </div>
             <div className="dp-price-card dp-price-card-main">
+              <div className="dp-popular-badge">الأكثر طلبًا</div>
               <h3>Business</h3>
               <p className="dp-price">199 / شهر</p>
               <ul>
@@ -263,6 +283,22 @@ export const LandingPage: React.FC = () => {
                 <span>غير صالح</span>
                 <span className="dp-pill dp-pill-bad">رقم غير قابل للمعالجة</span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="dp-section dp-cta-final">
+          <div className="dp-cta-content">
+            <h2>جاهز لتنظيف بياناتك؟</h2>
+            <p>ابدأ مجانًا بتنظيف أول 100 سجل — بدون بطاقة ائتمانية</p>
+            <div className="dp-cta-buttons">
+              <Link to="/login" className="dp-btn dp-btn-primary dp-btn-large">
+                ابدأ الآن مجانًا
+              </Link>
+              <a href="#pricing" className="dp-btn dp-btn-text">
+                اطلع على الأسعار
+              </a>
             </div>
           </div>
         </section>
