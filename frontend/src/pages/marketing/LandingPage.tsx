@@ -450,6 +450,7 @@ export const LandingPage: React.FC = () => {
                 <li>عملية تنظيف واحدة شهريًا</li>
                 <li>حتى 100 سجل لكل ملف</li>
                 <li>10 كروت OCR شهريًا</li>
+                <li>كروت إضافية: 0.50 ريال/كرت</li>
                 <li>تصدير إلى Excel/CSV</li>
                 <li>تقرير Data Health أساسي</li>
                 <li>دعم عبر البريد الإلكتروني</li>
@@ -471,6 +472,7 @@ export const LandingPage: React.FC = () => {
                 <li>5 عمليات تنظيف شهريًا</li>
                 <li>حتى 500 سجل لكل ملف</li>
                 <li>100 كرت OCR شهريًا</li>
+                <li>كروت إضافية: 0.40 ريال/كرت</li>
                 <li>تصدير غير محدود</li>
                 <li>تقارير Data Health متقدمة</li>
                 <li>كشف التكرار الذكي</li>
@@ -489,29 +491,32 @@ export const LandingPage: React.FC = () => {
                 <li>20 عملية تنظيف شهريًا</li>
                 <li>حتى 2000 سجل لكل ملف</li>
                 <li>500 كرت OCR شهريًا</li>
+                <li>كروت إضافية: 0.30 ريال/كرت</li>
                 <li>تقارير جودة بيانات تفصيلية</li>
                 <li>تصنيف العملاء (Hot/Warm/Cold)</li>
-                <li>حتى 3 مستخدمين</li>
+                <li>حتى 5 مستخدمين</li>
                 <li>دعم WhatsApp مباشر</li>
               </ul>
             </div>
-
-            <div className="dp-price-card">
-              <h3>Enterprise</h3>
-              <p className="dp-price">499 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
-              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
-                للشركات الكبيرة والمؤسسات
-              </p>
-              <ul>
-                <li>عمليات تنظيف غير محدودة</li>
-                <li>ملفات بدون حد للسجلات</li>
-                <li>2000 كرت OCR شهريًا</li>
-                <li>وصول إلى API و Webhooks</li>
-                <li>تكامل مع CRM خارجي</li>
-                <li>مستخدمين غير محدودين</li>
-                <li>دعم مخصص + تدريب</li>
-              </ul>
-            </div>
+          </div>
+          <div className="dp-pricing-note" style={{ 
+            textAlign: 'center', 
+            marginTop: '2rem', 
+            padding: '1.5rem', 
+            background: 'rgba(31, 127, 237, 0.05)', 
+            borderRadius: '1rem',
+            border: '1px solid rgba(31, 127, 237, 0.2)',
+            maxWidth: '800px',
+            margin: '2rem auto 1.5rem'
+          }}>
+            <p style={{ margin: 0, fontSize: '1rem', color: '#1F7FED', fontWeight: 600, marginBottom: '0.5rem' }}>
+              💳 الدفع حسب الاستخدام للكروت
+            </p>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', lineHeight: 1.6 }}>
+              عند انتهاء الكروت المجانية، يمكنك شراء كروت إضافية بأسعار مرنة حسب باقتك.
+              <br />
+              ادفع فقط مقابل ما تستخدمه — بدون التزامات إضافية.
+            </p>
           </div>
           <div className="dp-pricing-cta">
             <Link to="/login" className="dp-btn dp-btn-primary">
