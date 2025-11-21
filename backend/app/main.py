@@ -61,6 +61,10 @@ if FRONTEND_DIST.exists():
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_spa(full_path: str):
         """Serve SPA for all non-API routes."""
+        # Skip API routes - they should be handled by FastAPI routers
+        if full_path.startswith("api/"):
+            return {"error": "API endpoint not found"}
+        
         # Check if it's a file request
         file_path = FRONTEND_DIST / full_path
         if file_path.is_file():
