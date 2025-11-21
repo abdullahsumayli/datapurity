@@ -14,6 +14,7 @@ import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
 import BillingPage from './pages/billing/BillingPage'
+import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
 import CardUploadPage from './pages/cards/CardUploadPage'
 import ContactsPage from './pages/contacts/ContactsPage'
@@ -83,6 +84,7 @@ function AppRouter() {
         
         <Route path="cards">
           <Route path="upload" element={<CardUploadPage />} />
+          <Route path="processing" element={<CardProcessingPage />} />
           <Route path="review" element={<CardReviewPage />} />
         </Route>
         

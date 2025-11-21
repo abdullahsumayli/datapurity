@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import apiClient from '../../config/apiClient'
 
 function CardUploadPage() {
   const [files, setFiles] = useState<File[]>([])
@@ -39,23 +38,9 @@ function CardUploadPage() {
     if (files.length === 0) return
 
     setUploading(true)
-    const formData = new FormData()
-    files.forEach(file => formData.append('files', file))
-
-    try {
-      const response = await apiClient.post('/cards/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      console.log('Upload successful:', response.data)
-      // Navigate to review page
-      navigate('/app/cards/review')
-    } catch (error: any) {
-      console.error('Upload failed:', error)
-      const errorMessage = error.response?.data?.detail || 'فشل رفع البطاقات. حاول مرة أخرى.'
-      alert(errorMessage)
-    } finally {
-      setUploading(false)
-    }
+    
+    // الانتقال مباشرة لصفحة المعالجة مع الملفات
+    navigate('/app/cards/processing', { state: { files } })
   }
 
   const removeFile = (index: number) => {
