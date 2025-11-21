@@ -106,6 +106,107 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Growth Chart */}
+          <div className="dp-hero-chart">
+            <div className="dp-chart-container">
+              <div className="dp-chart-header">
+                <h3>التأثير على أعمالك</h3>
+                <p>وفّر الوقت وزد الأرباح مع DataPurity</p>
+              </div>
+              
+              <div className="dp-chart-visual">
+                {/* Chart SVG */}
+                <svg className="dp-growth-chart" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Grid lines */}
+                  <line x1="50" y1="200" x2="380" y2="200" stroke="#E5E7EB" strokeWidth="1" opacity="0.5"/>
+                  <line x1="50" y1="150" x2="380" y2="150" stroke="#E5E7EB" strokeWidth="1" opacity="0.5"/>
+                  <line x1="50" y1="100" x2="380" y2="100" stroke="#E5E7EB" strokeWidth="1" opacity="0.5"/>
+                  <line x1="50" y1="50" x2="380" y2="50" stroke="#E5E7EB" strokeWidth="1" opacity="0.5"/>
+                  
+                  {/* Axes */}
+                  <line x1="50" y1="30" x2="50" y2="210" stroke="#6B7280" strokeWidth="2"/>
+                  <line x1="45" y1="210" x2="385" y2="210" stroke="#6B7280" strokeWidth="2"/>
+                  
+                  {/* Before DataPurity - Flat/Declining line */}
+                  <path d="M 80 180 L 120 185 L 160 180 L 200 190" stroke="#EF4444" strokeWidth="3" strokeDasharray="5,5" opacity="0.6"/>
+                  
+                  {/* After DataPurity - Growth line */}
+                  <path d="M 200 190 L 240 160 L 280 120 L 320 70 L 360 50" stroke="url(#growthGradient)" strokeWidth="4" strokeLinecap="round"/>
+                  
+                  {/* Growth area fill */}
+                  <path d="M 200 210 L 200 190 L 240 160 L 280 120 L 320 70 L 360 50 L 360 210 Z" fill="url(#areaGradient)" opacity="0.2"/>
+                  
+                  {/* Data points */}
+                  <circle cx="80" cy="180" r="4" fill="#EF4444"/>
+                  <circle cx="160" cy="180" r="4" fill="#EF4444"/>
+                  <circle cx="200" cy="190" r="5" fill="#F59E0B"/>
+                  <circle cx="280" cy="120" r="5" fill="#1F7FED"/>
+                  <circle cx="360" cy="50" r="6" fill="#10B981"/>
+                  
+                  {/* Labels */}
+                  <text x="80" y="230" fontSize="11" fill="#6B7280" textAnchor="middle">قبل</text>
+                  <text x="200" y="230" fontSize="11" fill="#F59E0B" textAnchor="middle" fontWeight="600">البداية</text>
+                  <text x="360" y="230" fontSize="11" fill="#10B981" textAnchor="middle" fontWeight="600">بعد</text>
+                  
+                  {/* Y-axis labels */}
+                  <text x="35" y="55" fontSize="10" fill="#6B7280" textAnchor="end">عالي</text>
+                  <text x="35" y="155" fontSize="10" fill="#6B7280" textAnchor="end">متوسط</text>
+                  <text x="35" y="205" fontSize="10" fill="#6B7280" textAnchor="end">منخفض</text>
+                  
+                  {/* Annotation */}
+                  <text x="280" y="105" fontSize="12" fill="#1F7FED" fontWeight="600">+250%</text>
+                  <path d="M 310 70 L 340 55" stroke="#10B981" strokeWidth="2" markerEnd="url(#arrowhead)"/>
+                  
+                  <defs>
+                    <linearGradient id="growthGradient" x1="200" y1="190" x2="360" y2="50">
+                      <stop offset="0%" stopColor="#F59E0B"/>
+                      <stop offset="50%" stopColor="#1F7FED"/>
+                      <stop offset="100%" stopColor="#10B981"/>
+                    </linearGradient>
+                    <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1F7FED" stopOpacity="0.3"/>
+                      <stop offset="100%" stopColor="#10B981" stopOpacity="0.1"/>
+                    </linearGradient>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                      <polygon points="0 0, 10 3, 0 6" fill="#10B981"/>
+                    </marker>
+                  </defs>
+                </svg>
+              </div>
+
+              <div className="dp-chart-stats">
+                <div className="dp-stat-item dp-stat-time">
+                  <div className="dp-stat-icon">⏱️</div>
+                  <div className="dp-stat-content">
+                    <div className="dp-stat-value">70%</div>
+                    <div className="dp-stat-label">توفير في الوقت</div>
+                  </div>
+                </div>
+                
+                <div className="dp-stat-item dp-stat-sales">
+                  <div className="dp-stat-icon">📈</div>
+                  <div className="dp-stat-content">
+                    <div className="dp-stat-value">+250%</div>
+                    <div className="dp-stat-label">زيادة في المبيعات</div>
+                  </div>
+                </div>
+                
+                <div className="dp-stat-item dp-stat-revenue">
+                  <div className="dp-stat-icon">💰</div>
+                  <div className="dp-stat-content">
+                    <div className="dp-stat-value">+180%</div>
+                    <div className="dp-stat-label">نمو في الإيرادات</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="dp-chart-insight">
+                <span className="dp-insight-icon">💡</span>
+                <p>بيانات نظيفة = قرارات أسرع = أرباح أعلى</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* How it works Diagram */}

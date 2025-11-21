@@ -139,6 +139,121 @@
   align-items: center;
 }
 
+/* Hero Chart */
+.dp-hero-chart {
+  background: linear-gradient(135deg, rgba(31, 127, 237, 0.95) 0%, rgba(21, 101, 192, 0.95) 100%);
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(31, 127, 237, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.dp-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dp-chart-header {
+  text-align: center;
+  color: white;
+}
+
+.dp-chart-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.dp-chart-header p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dp-chart-visual {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dp-growth-chart {
+  width: 100%;
+  height: auto;
+}
+
+.dp-chart-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.dp-stat-item {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.dp-stat-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.dp-stat-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.dp-stat-content {
+  flex: 1;
+}
+
+.dp-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.dp-stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.25rem;
+}
+
+.dp-chart-insight {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  backdrop-filter: blur(10px);
+}
+
+.dp-insight-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.dp-chart-insight p {
+  color: white;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
 .dp-hero-text {
   text-align: right;
 }
