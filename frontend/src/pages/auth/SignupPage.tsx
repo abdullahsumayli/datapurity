@@ -15,6 +15,24 @@ function SignupPage() {
     e.preventDefault()
     setError('')
     
+    // Validate required fields
+    if (!fullName.trim()) {
+      setError('الرجاء إدخال الاسم الكامل')
+      return
+    }
+    
+    if (!email.trim()) {
+      setError('الرجاء إدخال البريد الإلكتروني')
+      return
+    }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('البريد الإلكتروني غير صحيح')
+      return
+    }
+    
     // Validate password if provided
     if (password && password.length < 8) {
       setError('إذا أدخلت كلمة مرور، يجب أن تكون 8 أحرف على الأقل')
@@ -84,7 +102,7 @@ function SignupPage() {
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="أدخل اسمك الكامل"
                 disabled={loading}
-                required
+                autoComplete="name"
               />
             </div>
           </div>
@@ -100,7 +118,7 @@ function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@email.com"
                 disabled={loading}
-                required
+                autoComplete="email"
               />
             </div>
           </div>
@@ -116,7 +134,7 @@ function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="اتركها فارغة لكلمة مرور تلقائية"
                 disabled={loading}
-                minLength={8}
+                autoComplete="new-password"
               />
             </div>
             <small className="form-hint">💡 يمكنك تركها فارغة وسنرسل لك كلمة مرور مؤقتة</small>
