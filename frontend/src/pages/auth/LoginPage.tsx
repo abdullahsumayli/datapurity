@@ -127,6 +127,41 @@ function LoginPage() {
         <p className="auth-footer">
           ليس لديك حساب؟ <a href="/signup">إنشاء حساب جديد</a>
         </p>
+
+        {/* معلومات الحسابات التجريبية - للتطوير فقط */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="demo-accounts-info">
+            <details>
+              <summary>🧪 حسابات تجريبية للاختبار</summary>
+              <div className="demo-list">
+                <div className="demo-account">
+                  <strong>باقة مجانية:</strong>
+                  <br />
+                  <code>demo.free@datapurity.com</code>
+                  <br />
+                  <small>1 تنظيف، 10 كروت شهرياً</small>
+                </div>
+                <div className="demo-account">
+                  <strong>باقة مبتدئ (79 ريال):</strong>
+                  <br />
+                  <code>demo.starter@datapurity.com</code>
+                  <br />
+                  <small>5 تنظيف، 100 كرت شهرياً</small>
+                </div>
+                <div className="demo-account">
+                  <strong>باقة أعمال (199 ريال):</strong>
+                  <br />
+                  <code>demo.business@datapurity.com</code>
+                  <br />
+                  <small>20 تنظيف، 500 كرت شهرياً</small>
+                </div>
+                <div className="demo-password">
+                  كلمة المرور لجميع الحسابات: <code>Demo123!</code>
+                </div>
+              </div>
+            </details>
+          </div>
+        )}
       </div>
     </div>
   )
