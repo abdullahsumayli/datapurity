@@ -13,6 +13,7 @@ import LoginPage from './pages/auth/LoginPage'
 import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
+import AdminDashboard from './pages/admin/AdminDashboard'
 import BillingPage from './pages/billing/BillingPage'
 import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
@@ -94,6 +95,7 @@ function AppRouter() {
         <Route path="exports" element={<ExportsPage />} />
         <Route path="billing" element={<BillingPage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="admin" element={<AdminDashboard />} />
       </Route>
 
       {/* 404 */}

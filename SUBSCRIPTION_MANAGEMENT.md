@@ -9,6 +9,7 @@
 ## 🎯 أنواع الباقات
 
 ### 1. الباقة المجانية (Free)
+
 - **السعر**: 0 ريال
 - **الحدود**:
   - عملية تنظيف واحدة شهريًا
@@ -18,6 +19,7 @@
 - **سعر الكروت الإضافية**: 0.50 ريال/كرت
 
 ### 2. باقة المبتدئ (Starter)
+
 - **السعر**: 79 ريال/شهر
 - **الحدود**:
   - 5 عمليات تنظيف شهريًا
@@ -28,6 +30,7 @@
 - **الميزات**: تقارير متقدمة، كشف التكرار، دعم ذو أولوية
 
 ### 3. باقة الأعمال (Business)
+
 - **السعر**: 199 ريال/شهر
 - **الحدود**:
   - 20 عملية تنظيف شهريًا
@@ -50,6 +53,7 @@
 **الوصول**: المستخدمين الإداريين فقط
 
 **الوظائف**:
+
 - عرض جميع المستخدمين وباقاتهم
 - تصفية حسب نوع الباقة
 - تغيير باقة أي مستخدم
@@ -59,12 +63,14 @@
 ### 2. عبر API
 
 #### الحصول على معلومات الاشتراك
+
 ```http
 GET /api/v1/billing/subscription
 Authorization: Bearer {token}
 ```
 
 **الرد**:
+
 ```json
 {
   "plan": "starter",
@@ -88,6 +94,7 @@ Authorization: Bearer {token}
 ```
 
 #### ترقية الباقة
+
 ```http
 POST /api/v1/billing/upgrade
 Content-Type: application/json
@@ -98,6 +105,7 @@ Content-Type: application/json
 ```
 
 #### شراء كروت إضافية
+
 ```http
 POST /api/v1/billing/purchase-cards
 Content-Type: application/json
@@ -108,17 +116,19 @@ Content-Type: application/json
 ```
 
 **الرد**:
+
 ```json
 {
   "success": true,
   "cards_purchased": 50,
-  "cost": 15.00,
+  "cost": 15.0,
   "cost_with_vat": 17.25,
   "total_cards_available": 150
 }
 ```
 
 #### إلغاء الاشتراك
+
 ```http
 POST /api/v1/billing/cancel
 ```
@@ -132,10 +142,12 @@ POST /api/v1/billing/cancel
 يتم تصنيف العملاء تلقائيًا بناءً على:
 
 1. **مستخدمين نشطين** (Active Users)
+
    - يستخدمون النظام بانتظام
    - لم يتجاوزوا حدودهم
 
 2. **مستخدمين على وشك التجاوز** (Near Limit)
+
    - استخدموا أكثر من 80% من الحد
    - مرشحون للترقية
 
@@ -147,7 +159,7 @@ POST /api/v1/billing/cancel
 
 ```sql
 -- عدد المستخدمين في كل باقة
-SELECT 
+SELECT
   plan_type,
   COUNT(*) as user_count,
   SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count
@@ -178,6 +190,7 @@ async def calculate_monthly_revenue(db: AsyncSession) -> float:
 ## 🛠️ استخدام SubscriptionService
 
 ### إنشاء اشتراك جديد
+
 ```python
 from app.services.subscription_service import SubscriptionService
 from app.models.subscription import PlanType
@@ -191,6 +204,7 @@ subscription = await SubscriptionService.create_subscription(
 ```
 
 ### فحص الحدود قبل العملية
+
 ```python
 # قبل عملية التنظيف
 can_clean, error = await SubscriptionService.check_cleaning_limit(db, user.id)
@@ -204,6 +218,7 @@ if not can_process:
 ```
 
 ### تحديث الاستخدام
+
 ```python
 # بعد عملية التنظيف
 await SubscriptionService.increment_cleaning_usage(db, user.id)
@@ -213,6 +228,7 @@ await SubscriptionService.increment_ocr_usage(db, user.id, cards_count=10)
 ```
 
 ### الحصول على إحصائيات الاستخدام
+
 ```python
 stats = await SubscriptionService.get_usage_stats(db, user.id)
 print(f"Plan: {stats['plan']}")
@@ -224,6 +240,7 @@ print(f"Cleaning used: {stats['usage']['cleaning']['used']}/{stats['usage']['cle
 ## 📈 تقارير ولوحات تحليلية
 
 ### 1. تقرير الاستخدام الشهري
+
 ```python
 from app.models.subscription import UsageLog
 
@@ -239,12 +256,14 @@ logs = await db.execute(
 ```
 
 ### 2. تحليل معدل التحويل (Conversion Rate)
+
 ```python
 # نسبة المستخدمين الذين ترقوا من Free
 conversion_rate = (paid_users / total_users) * 100
 ```
 
 ### 3. متوسط الإيرادات لكل مستخدم (ARPU)
+
 ```python
 arpu = total_revenue / total_active_users
 ```
@@ -254,6 +273,7 @@ arpu = total_revenue / total_active_users
 ## 🔄 العمليات الدورية (Cron Jobs)
 
 ### إعادة تعيين الحدود الشهرية
+
 ```python
 # يجب تشغيله في بداية كل شهر
 from app.services.subscription_service import SubscriptionService
@@ -265,6 +285,7 @@ async def reset_all_subscriptions():
 ```
 
 ### التحقق من الاشتراكات المنتهية
+
 ```python
 from datetime import datetime
 
@@ -278,7 +299,7 @@ async def check_expired_subscriptions():
             )
         )
     )
-    
+
     for sub in expired.scalars():
         if sub.auto_renew:
             # محاولة تجديد تلقائي
@@ -293,18 +314,21 @@ async def check_expired_subscriptions():
 ## 🎨 واجهة المستخدم
 
 ### صفحة الفوترة (`/app/billing`)
+
 - عرض الباقة الحالية
 - نسبة الاستخدام
 - زر الترقية
 - سجل الفواتير
 
 ### صفحة الدفع (`/checkout?plan=starter`)
+
 - اختيار الباقة
 - معلومات الفوترة
 - طرق الدفع
 - حساب الضريبة
 
 ### لوحة الإدارة (`/app/admin`)
+
 - جدول المستخدمين
 - إحصائيات الباقات
 - تغيير الباقات
@@ -315,12 +339,14 @@ async def check_expired_subscriptions():
 ## 🔐 الصلاحيات
 
 ### صلاحيات المستخدم العادي:
+
 - عرض اشتراكه
 - ترقية اشتراكه
 - شراء كروت إضافية
 - إلغاء اشتراكه
 
 ### صلاحيات المدير (Admin):
+
 - عرض جميع الاشتراكات
 - تغيير باقة أي مستخدم
 - عرض الإحصائيات المالية
@@ -331,6 +357,7 @@ async def check_expired_subscriptions():
 ## 📝 أمثلة عملية
 
 ### سيناريو 1: مستخدم يريد الترقية
+
 ```python
 # 1. المستخدم يختار الباقة من صفحة الهبوط
 # 2. يتم توجيهه لـ /checkout?plan=business
@@ -345,6 +372,7 @@ await SubscriptionService.upgrade_subscription(
 ```
 
 ### سيناريو 2: مستخدم يحتاج كروت إضافية
+
 ```python
 # 1. المستخدم يصل للحد
 # 2. يظهر له تنبيه بالسعر
@@ -361,6 +389,7 @@ cost, subscription = await SubscriptionService.purchase_extra_cards(
 ```
 
 ### سيناريو 3: إدارة يريد تغيير باقة مستخدم
+
 ```python
 # من لوحة الإدارة
 await SubscriptionService.upgrade_subscription(
@@ -388,6 +417,7 @@ await SubscriptionService.upgrade_subscription(
 ## 📞 الدعم
 
 للمساعدة في إدارة الباقات، راجع:
+
 - `backend/app/services/subscription_service.py`
 - `backend/app/models/subscription.py`
 - `backend/app/routers/billing.py`

@@ -63,6 +63,11 @@ function Sidebar() {
           <span className="nav-text">الفوترة والاشتراك</span>
         </NavLink>
         
+        <NavLink to="/app/admin" className="nav-item">
+          <span className="nav-icon">🔧</span>
+          <span className="nav-text">لوحة الإدارة</span>
+        </NavLink>
+        
         <NavLink to="/app/profile" className="nav-item">
           <span className="nav-icon">👤</span>
           <span className="nav-text">الملف الشخصي</span>
