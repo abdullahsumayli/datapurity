@@ -12,7 +12,10 @@ interface User {
     plan: string
     status: string
     current_period_end: string
-    usage: any
+    usage: {
+      cleaning?: { used: number; limit: number }
+      ocr?: { used: number; limit: number }
+    }
   }
 }
 
@@ -32,19 +35,6 @@ function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [selectedPlan, setSelectedPlan] = useState<string>('all')
 
-  // فحص تسجيل الدخول
-  useEffect(() => {
-    const isAuthenticated = sessionStorage.getItem('adminAuthenticated')
-    if (!isAuthenticated) {
-      navigate('/admin/login')
-      return
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAdminData()
-  }, [selectedPlan])
-
   const fetchAdminData = async () => {
     try {
       // Note: هذه الـ endpoints تحتاج إلى إضافتها في الـ backend
@@ -63,6 +53,22 @@ function AdminDashboard() {
       setLoading(false)
     }
   }
+
+  // فحص تسجيل الدخول
+  useEffect(() => {
+    const isAuthenticated = sessionStorage.getItem('adminAuthenticated')
+    if (!isAuthenticated) {
+      navigate('/admin/login')
+      return
+    }
+    fetchAdminData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    fetchAdminData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPlan])
 
   const changePlan = async (userId: number, newPlan: string) => {
     if (!confirm(`هل تريد تغيير باقة هذا المستخدم إلى ${newPlan}؟`)) {
