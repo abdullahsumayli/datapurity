@@ -31,6 +31,7 @@ function CardProcessingPage() {
     status: 'processing'
   })
   const [exporting, setExporting] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
   const navigate = useNavigate()
   const location = useLocation()
   const uploadedFiles = location.state?.files || []
@@ -160,6 +161,12 @@ function CardProcessingPage() {
     link.click()
   }
 
+  const updateContact = (id: number, field: keyof ExtractedContact, value: string | number) => {
+    setContacts(prev => prev.map(contact => 
+      contact.id === id ? { ...contact, [field]: value } : contact
+    ))
+  }
+
   const saveToContacts = async () => {
     try {
       // في الإنتاج: حفظ إلى قاعدة البيانات
@@ -257,34 +264,99 @@ function CardProcessingPage() {
                 </div>
               )}
               <div className="card-details">
+                <div className="edit-controls">
+                  <button 
+                    className="btn-edit"
+                    onClick={() => setEditingId(editingId === contact.id ? null : contact.id)}
+                  >
+                    {editingId === contact.id ? '✓ حفظ' : '✏️ تعديل'}
+                  </button>
+                </div>
+                
                 <div className="detail-row">
                   <span className="label">الاسم:</span>
-                  <span className="value">{contact.name}</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={contact.name}
+                      onChange={(e) => updateContact(contact.id, 'name', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.name}</span>
+                  )}
                 </div>
+                
                 <div className="detail-row">
                   <span className="label">الشركة:</span>
-                  <span className="value">{contact.company}</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={contact.company}
+                      onChange={(e) => updateContact(contact.id, 'company', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.company}</span>
+                  )}
                 </div>
+                
                 <div className="detail-row">
                   <span className="label">الهاتف:</span>
-                  <span className="value">{contact.phone}</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={contact.phone}
+                      onChange={(e) => updateContact(contact.id, 'phone', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.phone}</span>
+                  )}
                 </div>
+                
                 <div className="detail-row">
                   <span className="label">البريد:</span>
-                  <span className="value">{contact.email}</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="email"
+                      className="edit-input"
+                      value={contact.email}
+                      onChange={(e) => updateContact(contact.id, 'email', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.email}</span>
+                  )}
                 </div>
-                {contact.address && (
-                  <div className="detail-row">
-                    <span className="label">العنوان:</span>
-                    <span className="value">{contact.address}</span>
-                  </div>
-                )}
-                {contact.position && (
-                  <div className="detail-row">
-                    <span className="label">الوظيفة:</span>
-                    <span className="value">{contact.position}</span>
-                  </div>
-                )}
+                
+                <div className="detail-row">
+                  <span className="label">العنوان:</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={contact.address || ''}
+                      onChange={(e) => updateContact(contact.id, 'address', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.address || '-'}</span>
+                  )}
+                </div>
+                
+                <div className="detail-row">
+                  <span className="label">الوظيفة:</span>
+                  {editingId === contact.id ? (
+                    <input
+                      type="text"
+                      className="edit-input"
+                      value={contact.position || ''}
+                      onChange={(e) => updateContact(contact.id, 'position', e.target.value)}
+                    />
+                  ) : (
+                    <span className="value">{contact.position || '-'}</span>
+                  )}
+                </div>
+                
                 <div className="confidence-badge">
                   دقة: {contact.confidence}%
                 </div>
@@ -485,11 +557,36 @@ const resultsStyles = `
     text-align: right;
   }
 
+  .edit-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+
+  .btn-edit {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+  }
+
+  .btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+
   .detail-row {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 0.5rem 0;
     border-bottom: 1px solid #f3f4f6;
+    gap: 1rem;
   }
 
   .detail-row:last-of-type {
@@ -500,11 +597,30 @@ const resultsStyles = `
     font-weight: 600;
     color: #6b7280;
     font-size: 0.875rem;
+    min-width: 80px;
   }
 
   .value {
     color: #1f2937;
     font-weight: 500;
+    flex: 1;
+  }
+
+  .edit-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 2px solid #667eea;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: all 0.3s;
+    text-align: right;
+  }
+
+  .edit-input:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
   }
 
   .confidence-badge {
