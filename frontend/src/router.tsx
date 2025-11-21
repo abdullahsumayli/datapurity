@@ -14,6 +14,7 @@ import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminLogin from './pages/admin/AdminLogin'
 import BillingPage from './pages/billing/BillingPage'
 import CardProcessingPage from './pages/cards/CardProcessingPage'
 import CardReviewPage from './pages/cards/CardReviewPage'
@@ -50,6 +51,7 @@ function AppRouter() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/admin/login" element={<AdminLogin />} />
       
       {/* Legacy routes - redirect to new paths */}
       <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />

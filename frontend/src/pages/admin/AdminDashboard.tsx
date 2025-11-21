@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import apiClient from '../../config/apiClient'
 import './admin.css'
 
@@ -25,10 +26,20 @@ interface PlanStats {
 }
 
 function AdminDashboard() {
+  const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
   const [stats, setStats] = useState<PlanStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedPlan, setSelectedPlan] = useState<string>('all')
+
+  // فحص تسجيل الدخول
+  useEffect(() => {
+    const isAuthenticated = sessionStorage.getItem('adminAuthenticated')
+    if (!isAuthenticated) {
+      navigate('/admin/login')
+      return
+    }
+  }, [])
 
   useEffect(() => {
     fetchAdminData()
@@ -71,6 +82,12 @@ function AdminDashboard() {
     }
   }
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('adminAuthenticated')
+    sessionStorage.removeItem('adminLoginTime')
+    navigate('/admin/login')
+  }
+
   const getPlanBadgeClass = (plan: string) => {
     const classes: Record<string, string> = {
       free: 'plan-badge-free',
@@ -100,8 +117,14 @@ function AdminDashboard() {
   return (
     <div className="admin-container">
       <div className="admin-header">
-        <h1>لوحة التحكم الإدارية</h1>
-        <p>إدارة المستخدمين والباقات</p>
+        <div>
+          <h1>لوحة التحكم الإدارية</h1>
+          <p>إدارة المستخدمين والباقات</p>
+        </div>
+        <button onClick={handleLogout} className="logout-btn">
+          <span>🚪</span>
+          تسجيل الخروج
+        </button>
       </div>
 
       {/* Statistics Cards */}
