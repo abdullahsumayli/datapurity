@@ -39,8 +39,8 @@ function SignupPage() {
       return
     }
     
-    // Generate random password if not provided
-    const finalPassword = password || `DP${Math.random().toString(36).slice(2, 10).toUpperCase()}!`
+    // Generate random password if not provided (minimum 12 characters)
+    const finalPassword = password || `DP${Math.random().toString(36).slice(2, 12).toUpperCase()}${Math.random().toString(36).slice(2, 4).toUpperCase()}!`
     
     setLoading(true)
     
