@@ -201,6 +201,21 @@ a:hover {
   margin-bottom: var(--spacing-lg);
 }
 
+/* Form Hints */
+.form-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.form-hint::before {
+  content: '';
+  display: inline-block;
+  margin-left: 4px;
+}
+
 /* Page Container */
 .page-container {
   padding: var(--spacing-2xl);

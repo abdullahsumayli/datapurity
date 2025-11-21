@@ -49,8 +49,8 @@ function LoginPage() {
           </svg>
         </div>
         <div className="auth-header">
-          <h1>مرحباً بعودتك 👋</h1>
-          <p>سجّل دخولك للوصول إلى لوحة التحكم</p>
+          <h1>مرحباً بعودتك! 👋</h1>
+          <p>أدخل بريدك الإلكتروني فقط للدخول السريع</p>
         </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
