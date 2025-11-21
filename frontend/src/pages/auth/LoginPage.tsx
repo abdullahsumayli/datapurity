@@ -34,6 +34,20 @@ function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-container">
+        <div className="auth-logo">
+          <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 10C50 10 25 35 25 55C25 70 35 80 50 80C65 80 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient1)"/>
+            <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+            <rect x="35" y="53" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+            <rect x="35" y="61" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+            <defs>
+              <linearGradient id="gradient1" x1="50" y1="10" x2="50" y2="80" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#1F7FED"/>
+                <stop offset="1" stopColor="#4FE3C1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
         <div className="auth-header">
           <h1>مرحباً بعودتك 👋</h1>
           <p>سجّل دخولك للوصول إلى لوحة التحكم</p>
@@ -44,35 +58,51 @@ function LoginPage() {
           
           <div className="form-group">
             <label htmlFor="email">البريد الإلكتروني</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="example@email.com"
-              disabled={loading}
-              required
-            />
+            <div className="input-with-icon">
+              <span className="input-icon">📧</span>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@email.com"
+                disabled={loading}
+                required
+              />
+            </div>
           </div>
           
           <div className="form-group">
             <label htmlFor="password">كلمة المرور</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              disabled={loading}
-              required
-            />
+            <div className="input-with-icon">
+              <span className="input-icon">🔒</span>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                disabled={loading}
+                required
+              />
+            </div>
             <div className="forgot-password">
               <a href="/forgot-password">نسيت كلمة المرور؟</a>
             </div>
           </div>
           
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                جاري تسجيل الدخول...
+              </>
+            ) : (
+              <>
+                <span>🔑</span>
+                تسجيل الدخول
+              </>
+            )}
           </button>
           
           <div className="auth-divider">
