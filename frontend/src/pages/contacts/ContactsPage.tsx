@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import apiClient from '../../config/apiClient'
 
 interface Contact {
@@ -17,6 +18,7 @@ function ContactsPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterDataset, setFilterDataset] = useState<number | 'all'>('all')
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchContacts()
@@ -98,10 +100,26 @@ function ContactsPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredContacts.length === 0 ? (
+            {filteredContacts.length === 0 && contacts.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="empty-state">
+                  <div className="empty-state-content">
+                    <div className="empty-state-icon">📭</div>
+                    <h3>لا توجد بيانات حتى الآن</h3>
+                    <p>ارفع أول ملف بيانات لبدء التنظيف</p>
+                    <button 
+                      className="empty-state-btn"
+                      onClick={() => navigate('/app/upload')}
+                    >
+                      رفع ملف بيانات
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ) : filteredContacts.length === 0 ? (
               <tr>
                 <td colSpan={6} className="no-data">
-                  {searchTerm ? 'لم يتم العثور على نتائج' : 'لا توجد جهات اتصال'}
+                  لم يتم العثور على نتائج مطابقة
                 </td>
               </tr>
             ) : (
@@ -195,6 +213,54 @@ function ContactsPage() {
           text-align: center;
           color: #6b7280;
           padding: 3rem;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 0;
+        }
+
+        .empty-state-content {
+          padding: 4rem 2rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .empty-state-icon {
+          font-size: 4rem;
+          opacity: 0.6;
+        }
+
+        .empty-state-content h3 {
+          font-size: 1.5rem;
+          color: #1f2937;
+          margin: 0;
+        }
+
+        .empty-state-content p {
+          color: #6b7280;
+          font-size: 1rem;
+          margin: 0;
+        }
+
+        .empty-state-btn {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          padding: 0.875rem 2rem;
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .empty-state-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
         }
 
         .quality-badge {

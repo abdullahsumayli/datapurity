@@ -1,8 +1,27 @@
+import { useState } from 'react'
 import { useAuth } from '../../hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 import './TopBar.css'
 
 function TopBar() {
   const { user, logout } = useAuth()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const navigate = useNavigate()
+  
+  const handleLogout = () => {
+    logout()
+    setShowDropdown(false)
+  }
+
+  const handleProfile = () => {
+    navigate('/app/profile')
+    setShowDropdown(false)
+  }
+
+  const getUserInitials = () => {
+    if (!user?.email) return 'U'
+    return user.email.charAt(0).toUpperCase()
+  }
   
   return (
     <header className="topbar">
@@ -27,11 +46,39 @@ function TopBar() {
         
         <div className="topbar-right">
           {user && (
-            <div className="user-menu">
-              <span className="user-email">{user.email}</span>
-              <button onClick={logout} className="btn-logout">
-                تسجيل الخروج
+            <div className="user-menu-container">
+              <button 
+                className="user-avatar"
+                onClick={() => setShowDropdown(!showDropdown)}
+                aria-label="قائمة المستخدم"
+              >
+                {getUserInitials()}
               </button>
+              
+              {showDropdown && (
+                <>
+                  <div className="dropdown-overlay" onClick={() => setShowDropdown(false)} />
+                  <div className="user-dropdown">
+                    <div className="dropdown-header">
+                      <div className="dropdown-email">{user.email}</div>
+                    </div>
+                    <div className="dropdown-divider" />
+                    <button className="dropdown-item" onClick={handleProfile}>
+                      <span className="dropdown-icon">👤</span>
+                      ملفي الشخصي
+                    </button>
+                    <button className="dropdown-item" onClick={() => { navigate('/app/settings'); setShowDropdown(false); }}>
+                      <span className="dropdown-icon">⚙️</span>
+                      الإعدادات
+                    </button>
+                    <div className="dropdown-divider" />
+                    <button className="dropdown-item danger" onClick={handleLogout}>
+                      <span className="dropdown-icon">🚪</span>
+                      تسجيل الخروج
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

@@ -679,6 +679,27 @@
   gap: 0.5rem;
 }
 
+.action-card-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+}
+
+.action-card-primary .action-card-title,
+.action-card-primary .action-card-desc {
+  color: white;
+}
+
+.action-card-primary .action-card-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+}
+
+.action-card-primary:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  border-color: #764ba2;
+}
+
 .action-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);

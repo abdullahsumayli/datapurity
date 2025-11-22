@@ -50,7 +50,12 @@ function UploadDatasetPage() {
       // رسالة نجاح
       const validCount = result.cleanedData.filter(c => c.status === 'valid').length
       const totalCount = result.cleanedData.length
-      alert(`✅ تمت المعالجة بنجاح!\n\n📊 النتائج:\n• إجمالي الصفوف: ${totalCount}\n• البيانات الصحيحة: ${validCount}\n• التكرارات المحذوفة: ${result.duplicates}\n• الصفوف الفارغة المحذوفة: ${result.emptyRows}`)
+      alert(`✅ تمت المعالجة بنجاح!\n\n📊 النتائج:\n• إجمالي الصفوف: ${totalCount}\n• البيانات الصحيحة: ${validCount}\n• التكرارات المحذوفة: ${result.duplicates}\n• الصفوف الفارغة المحذوفة: ${result.emptyRows}\n\nسيتم الانتقال إلى صفحة النتائج...`)
+      
+      // Auto-navigate to contacts page after successful processing
+      setTimeout(() => {
+        navigate('/app/contacts')
+      }, 2000)
     } catch (error) {
       alert(`❌ فشل معالجة الملف\n\n${error instanceof Error ? error.message : 'خطأ غير معروف'}\n\nالرجاء التأكد من صحة الملف والمحاولة مرة أخرى.`)
     } finally {
@@ -120,7 +125,7 @@ function UploadDatasetPage() {
         </button>
         <h1>رفع ملف بيانات</h1>
         <p className="page-description">
-          ارفع ملف Excel أو CSV لتنظيف وتوحيد بيانات جهات الاتصال
+          بعد رفع الملف سيتم تنظيف البيانات تلقائياً وتحويلها إلى جدول منظم قابل للتنزيل
         </p>
       </div>
 
@@ -150,8 +155,9 @@ function UploadDatasetPage() {
           ) : (
             <div className="dropzone-content">
               <div className="upload-icon">📤</div>
-              <h3>اسحب الملف هنا أو اضغط للاختيار</h3>
-              <p>ملفات CSV, Excel (XLSX, XLS), ZIP</p>
+              <h3>اسحب ملف Excel/CSV هنا لبدء التنظيف</h3>
+              <p>أو اضغط لاختيار الملف من جهازك</p>
+              <p className="supported-formats">CSV, Excel (XLSX, XLS), ZIP</p>
             </div>
           )}
         </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import apiClient from '../../config/apiClient'
+import OnboardingBanner from '../../components/OnboardingBanner/OnboardingBanner'
 import './dashboard.css'
 
 // Constants
@@ -131,12 +132,11 @@ function DashboardPage() {
     )
   }
 
-  const cleaningPercentage = stats?.total_contacts 
-    ? Math.round((stats.cleaned_contacts / stats.total_contacts) * 100) 
-    : 0
-
   return (
     <div className="dashboard-container">
+      {/* Onboarding Banner */}
+      <OnboardingBanner />
+      
       {/* Enhanced Header Section */}
       <div className="dashboard-header">
         <div className="header-top">
@@ -186,9 +186,10 @@ function DashboardPage() {
         </div>
       </div>
 
-      {/* Enhanced Stats Cards */}
+      {/* Simplified Stats Cards */}
       {activeTab === 'overview' && (
         <div className="stats-grid">
+          {/* Show only 2 cards always */}
           <div className="stat-card stat-primary">
             <div className="stat-header">
               <div className="stat-icon-wrapper">
@@ -196,21 +197,10 @@ function DashboardPage() {
               </div>
               <div className="stat-meta">
                 <p className="stat-label">إجمالي جهات الاتصال</p>
-                <span className="stat-info-icon" title="العدد الكلي للجهات المسجلة">ℹ️</span>
               </div>
             </div>
             <div className="stat-body">
               <h3 className="stat-value">{stats?.total_contacts.toLocaleString('ar-SA')}</h3>
-              <div className="stat-comparison">
-                <span className="comparison-badge positive">
-                  <span className="badge-icon">↗</span>
-                  <span className="badge-value">+12.5%</span>
-                </span>
-                <span className="comparison-text">مقارنة بالشهر الماضي</span>
-              </div>
-            </div>
-            <div className="stat-footer">
-              <span className="stat-detail">📅 آخر إضافة: منذ ساعتين</span>
             </div>
           </div>
 
@@ -220,118 +210,101 @@ function DashboardPage() {
                 <div className="stat-icon">✨</div>
               </div>
               <div className="stat-meta">
-                <p className="stat-label">جهات منظفة</p>
-                <span className="stat-info-icon" title="البيانات التي تم تنظيفها بنجاح">ℹ️</span>
+                <p className="stat-label">عدد عمليات التنظيف</p>
               </div>
             </div>
             <div className="stat-body">
               <h3 className="stat-value">{stats?.cleaned_contacts.toLocaleString('ar-SA')}</h3>
-              <div className="stat-progress-enhanced">
-                <div className="progress-info">
-                  <span className="progress-label">نسبة الإنجاز</span>
-                  <span className="progress-percentage">{cleaningPercentage.toFixed(1)}%</span>
-                </div>
-                <div className="progress-bar-modern">
-                  <div 
-                    className="progress-fill-animated"
-                    style={{ width: `${cleaningPercentage}%` }}
-                  >
-                    <span className="progress-glow"></span>
+            </div>
+          </div>
+
+          {/* Show these only if user has data */}
+          {stats && stats.total_contacts > 0 && (
+            <>
+              <div className="stat-card stat-warning">
+                <div className="stat-header">
+                  <div className="stat-icon-wrapper">
+                    <div className="stat-icon stat-icon-pulse">⏳</div>
+                  </div>
+                  <div className="stat-meta">
+                    <p className="stat-label">مهام قيد التنفيذ</p>
+                    <span className="stat-badge live">مباشر</span>
                   </div>
                 </div>
-                <div className="progress-milestones">
-                  <span className="milestone" style={{ left: '50%' }}>50%</span>
-                  <span className="milestone" style={{ left: '100%' }}>100%</span>
+                <div className="stat-body">
+                  <h3 className="stat-value">{stats?.pending_jobs.toLocaleString('ar-SA')}</h3>
+                  <div className="stat-queue">
+                    <div className="queue-bar">
+                      <div className="queue-item"></div>
+                      <div className="queue-item"></div>
+                      <div className="queue-item active"></div>
+                    </div>
+                    <span className="queue-text">معالجة نشطة</span>
+                  </div>
+                </div>
+                <div className="stat-footer">
+                  <span className="stat-detail">⏱️ الوقت المتبقي: ~15 دقيقة</span>
                 </div>
               </div>
-            </div>
-            <div className="stat-footer">
-              <span className="stat-detail">⚡ متوسط الوقت: 2.3 ثانية/جهة</span>
-            </div>
-          </div>
 
-          <div className="stat-card stat-warning">
-            <div className="stat-header">
-              <div className="stat-icon-wrapper">
-                <div className="stat-icon stat-icon-pulse">⏳</div>
-              </div>
-              <div className="stat-meta">
-                <p className="stat-label">مهام قيد التنفيذ</p>
-                <span className="stat-badge live">مباشر</span>
-              </div>
-            </div>
-            <div className="stat-body">
-              <h3 className="stat-value">{stats?.pending_jobs.toLocaleString('ar-SA')}</h3>
-              <div className="stat-queue">
-                <div className="queue-bar">
-                  <div className="queue-item"></div>
-                  <div className="queue-item"></div>
-                  <div className="queue-item active"></div>
+              <div className="stat-card stat-info">
+                <div className="stat-header">
+                  <div className="stat-icon-wrapper">
+                    <div className="stat-icon">📊</div>
+                  </div>
+                  <div className="stat-meta">
+                    <p className="stat-label">معدل النجاح</p>
+                    <span className="stat-quality excellent">ممتاز</span>
+                  </div>
                 </div>
-                <span className="queue-text">معالجة نشطة</span>
-              </div>
-            </div>
-            <div className="stat-footer">
-              <span className="stat-detail">⏱️ الوقت المتبقي: ~15 دقيقة</span>
-            </div>
-          </div>
-
-          <div className="stat-card stat-info">
-            <div className="stat-header">
-              <div className="stat-icon-wrapper">
-                <div className="stat-icon">📊</div>
-              </div>
-              <div className="stat-meta">
-                <p className="stat-label">معدل النجاح</p>
-                <span className="stat-quality excellent">ممتاز</span>
-              </div>
-            </div>
-            <div className="stat-body stat-body-chart">
-              <div className="chart-container">
-                <svg className="circular-chart" width="100" height="100" viewBox="0 0 100 100">
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="#e5e7eb"
-                    strokeWidth="8"
-                  />
-                  <circle
-                    className="progress-ring"
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="8"
-                    strokeDasharray={`${(stats?.success_rate || 0) * 2.51} 251.2`}
-                    strokeLinecap="round"
-                    transform="rotate(-90 50 50)"
-                  />
-                  <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#667eea" />
-                      <stop offset="100%" stopColor="#764ba2" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="chart-center">
-                  <h3 className="chart-value">{stats?.success_rate.toFixed(1)}%</h3>
+                <div className="stat-body stat-body-chart">
+                  <div className="chart-container">
+                    <svg className="circular-chart" width="100" height="100" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="none"
+                        stroke="#e5e7eb"
+                        strokeWidth="8"
+                      />
+                      <circle
+                        className="progress-ring"
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        fill="none"
+                        stroke="url(#gradient)"
+                        strokeWidth="8"
+                        strokeDasharray={`${(stats?.success_rate || 0) * 2.51} 251.2`}
+                        strokeLinecap="round"
+                        transform="rotate(-90 50 50)"
+                      />
+                      <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#667eea" />
+                          <stop offset="100%" stopColor="#764ba2" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="chart-center">
+                      <h3 className="chart-value">{stats?.success_rate.toFixed(1)}%</h3>
+                    </div>
+                  </div>
+                </div>
+                <div className="stat-footer">
+                  <span className="stat-detail">🎯 الهدف: 95%</span>
                 </div>
               </div>
-            </div>
-            <div className="stat-footer">
-              <span className="stat-detail">🎯 الهدف: 95%</span>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       )}
 
       {/* Enhanced Main Content */}
       {activeTab === 'overview' && (
         <div className="dashboard-grid">
-          {/* Simplified Quick Actions */}
+          {/* Enhanced Quick Actions */}
           <div className="dashboard-card quick-actions-card">
             <div className="card-header">
               <h2 className="card-title">
@@ -340,10 +313,10 @@ function DashboardPage() {
               </h2>
             </div>
             <div className="quick-actions-modern">
-              <Link to="/app/datasets/upload" className="action-card">
+              <Link to="/app/upload" className="action-card action-card-primary">
                 <div className="action-card-icon">📤</div>
                 <h4 className="action-card-title">رفع بيانات</h4>
-                <p className="action-card-desc">رفع ملف Excel أو CSV</p>
+                <p className="action-card-desc">ابدأ برفع ملف Excel أو CSV</p>
                 <div className="action-card-overlay">
                   <span className="overlay-text">ابدأ الآن ←</span>
                 </div>
@@ -352,7 +325,7 @@ function DashboardPage() {
               <Link to="/app/cards/upload" className="action-card">
                 <div className="action-card-icon">📇</div>
                 <h4 className="action-card-title">مسح بطاقات</h4>
-                <p className="action-card-desc">استخراج من الصور</p>
+                <p className="action-card-desc">استخراج البيانات من الصور</p>
                 <div className="action-card-overlay">
                   <span className="overlay-text">ابدأ الآن ←</span>
                 </div>
@@ -503,38 +476,8 @@ function DashboardPage() {
           </div>
         </div>
       )}
-
-      {/* Features Showcase */}
-      {activeTab === 'overview' && (
-      <div className="features-section">
-        <h2 className="section-title">ميزات DataPurity</h2>
-        <div className="features-grid">
-          <div className="feature-card">
-            <div className="feature-icon">🤖</div>
-            <h3>تنظيف ذكي</h3>
-            <p>استخدام الذكاء الاصطناعي لتنظيف وتنظيم البيانات تلقائياً</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">⚡</div>
-            <h3>معالجة سريعة</h3>
-            <p>معالجة آلاف السجلات في ثوانٍ معدودة</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">🔒</div>
-            <h3>أمان عالي</h3>
-            <p>حماية بياناتك بأعلى معايير الأمان</p>
-          </div>
-          <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>تقارير تفصيلية</h3>
-            <p>احصل على تقارير شاملة عن جودة بياناتك</p>
-          </div>
-        </div>
-      </div>
-      )}
     </div>
   )
 }
 
 export default DashboardPage
-
