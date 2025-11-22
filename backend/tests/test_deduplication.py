@@ -40,7 +40,7 @@ class TestMarkDuplicates:
         
         # One duplicate (second Ahmed)
         assert df_marked["is_duplicate"].sum() == 1
-        assert df_marked.iloc[1]["is_duplicate"] is True
+        assert df_marked.iloc[1]["is_duplicate"] == True
         assert "phone:" in df_marked.iloc[1]["duplicate_reason"]
     
     def test_email_duplicates(self, settings):
@@ -54,7 +54,7 @@ class TestMarkDuplicates:
         
         # One duplicate (Ali has same email as Ahmed)
         assert df_marked["is_duplicate"].sum() == 1
-        assert df_marked.iloc[1]["is_duplicate"] is True
+        assert df_marked.iloc[1]["is_duplicate"] == True
         assert "email:" in df_marked.iloc[1]["duplicate_reason"]
     
     def test_fuzzy_name_duplicates(self, settings):
