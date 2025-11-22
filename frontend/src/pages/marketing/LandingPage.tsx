@@ -12,12 +12,12 @@ export const LandingPage: React.FC = () => {
       <header className="dp-landing-nav">
         <div className="dp-landing-logo">
           <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 10C50 10 25 35 25 55C25 70 35 85 50 85C65 85 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient)"/>
-            <path d="M35 45 Q40 42 45 45" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.8"/>
-            <path d="M35 55 Q42.5 52 50 55" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.7"/>
-            <path d="M40 65 Q45 62 50 65" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.6"/>
+            <path d="M50 10C50 10 25 35 25 55C25 70 35 80 50 80C65 80 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient-landing)"/>
+            <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+            <rect x="35" y="53" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+            <rect x="35" y="61" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
             <defs>
-              <linearGradient id="gradient" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <linearGradient id="gradient-landing" x1="50" y1="10" x2="50" y2="80" gradientUnits="userSpaceOnUse">
                 <stop stopColor="#1F7FED"/>
                 <stop offset="1" stopColor="#4FE3C1"/>
               </linearGradient>
