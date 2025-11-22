@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     S3_BUCKET: str = "datapurity-uploads"
 
     # Security
+    # WARNING: MUST change JWT_SECRET in production!
+    # Generate with: python -c "import secrets; print(secrets.token_urlsafe(32))"
     JWT_SECRET: str = "CHANGE_ME_IN_PRODUCTION_TO_A_SECURE_RANDOM_STRING"
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
