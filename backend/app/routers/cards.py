@@ -90,38 +90,76 @@ async def upload_card(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Upload business card images for OCR."""
+    """Upload business card images for OCR with real processing."""
     from datetime import datetime
-    import random
+    from PIL import Image
+    import io
     
-    # Process all uploaded files
+    # Create temp directory for uploaded files
+    temp_dir = Path("tmp/cards_upload")
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    
     results = []
+    saved_paths = []
     
-    for idx, file in enumerate(files):
-        # Mock OCR processing - في الإنتاج سيتم معالجة الصور واستخراج البيانات
-        # يمكن استخدام Tesseract OCR أو Google Vision API هنا
+    try:
+        # Save uploaded files temporarily
+        for idx, file in enumerate(files):
+            # Validate file type
+            if not file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Invalid file type: {file.filename}. Only JPG and PNG are supported."
+                )
+            
+            # Save file
+            file_path = temp_dir / f"card_{idx}_{file.filename}"
+            with file_path.open("wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+            
+            saved_paths.append(file_path)
         
-        # Generate mock extracted data
-        card_data = {
-            "id": idx + 1,
-            "user_id": current_user.id,
-            "original_filename": file.filename,
-            "storage_path": f"/uploads/cards/{file.filename}",
-            "ocr_text": None,
-            "ocr_confidence": round(85 + random.random() * 15, 1),
-            "extracted_name": f"جهة اتصال {idx + 1}",
-            "extracted_company": f"شركة {idx + 1}",
-            "extracted_phone": f"+966 50 123 {str(1000 + idx).zfill(4)}",
-            "extracted_email": f"contact{idx + 1}@company.com",
-            "extracted_address": "الرياض، المملكة العربية السعودية",
-            "is_processed": True,
-            "is_reviewed": False,
-            "created_at": datetime.now(),
-            "updated_at": None
-        }
-        results.append(card_data)
+        # Process with real OCR
+        processor = BusinessCardProcessor(saved_paths)
+        df = processor.run(dedupe=False)
+        
+        # Convert to response format
+        for idx, row in df.iterrows():
+            card_data = {
+                "id": idx + 1,
+                "user_id": current_user.id,
+                "original_filename": files[idx].filename,
+                "storage_path": f"/uploads/cards/{files[idx].filename}",
+                "ocr_text": row.get('ocr_text', ''),
+                "ocr_confidence": float(row.get('extraction_quality', 0)),
+                "extracted_name": row.get('name', ''),
+                "extracted_company": row.get('company', ''),
+                "extracted_phone": row.get('phone', ''),
+                "extracted_email": row.get('email', ''),
+                "extracted_address": row.get('address', ''),
+                "is_processed": True,
+                "is_reviewed": False,
+                "created_at": datetime.now(),
+                "updated_at": None
+            }
+            results.append(card_data)
+        
+        return results
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Card processing failed: {str(e)}"
+        )
     
-    return results
+    finally:
+        # Cleanup temporary files
+        for path in saved_paths:
+            try:
+                if path.exists():
+                    path.unlink()
+            except Exception:
+                pass
 
 
 @router.get("/", response_model=List[CardResponse])
