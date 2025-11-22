@@ -293,8 +293,8 @@ export const LandingPage: React.FC = () => {
               <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="40" cy="30" r="25" fill="url(#transformGradient)" opacity="0.15"/>
                 <circle cx="40" cy="30" r="18" fill="url(#transformGradient)" opacity="0.1"/>
-                <path d="M18 24 L58 24 M58 24 L50 16 M58 24 L50 20" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18 36 L58 36 M58 36 L50 40 M58 36 L50 44" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M62 24 L22 24 M22 24 L30 16 M22 24 L30 20" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M62 36 L22 36 M22 36 L30 40 M22 36 L30 44" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 <defs>
                   <linearGradient id="transformGradient" x1="0" y1="0" x2="80" y2="60">
                     <stop offset="0%" stopColor="#1F7FED"/>
