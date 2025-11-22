@@ -29,12 +29,10 @@ function TopBar() {
         <div className="topbar-left">
           <div className="topbar-logo">
             <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 10C50 10 75 35 75 55C75 70 65 80 50 80C35 80 25 70 25 55C25 35 50 10 50 10Z" fill="url(#gradient-topbar)"/>
-              <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
-              <rect x="35" y="53" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
-              <rect x="35" y="61" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+              <circle cx="50" cy="50" r="45" fill="url(#gradient-topbar)"/>
+              <path d="M 30 50 L 60 50 M 60 50 L 50 40 M 60 50 L 50 60" stroke="white" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round"/>
               <defs>
-                <linearGradient id="gradient-topbar" x1="50" y1="10" x2="50" y2="80" gradientUnits="userSpaceOnUse">
+                <linearGradient id="gradient-topbar" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
                   <stop stopColor="#1F7FED"/>
                   <stop offset="1" stopColor="#4FE3C1"/>
                 </linearGradient>
