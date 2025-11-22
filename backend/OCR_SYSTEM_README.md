@@ -1,4 +1,5 @@
 # نظام استخراج المعلومات من صور الكروت (OCR)
+
 ## Business Card OCR System
 
 ---
@@ -12,6 +13,7 @@
 ## 🎯 المميزات
 
 ### 1️⃣ استخراج تلقائي للبيانات
+
 - ✅ **الاسم** (Name)
 - ✅ **الشركة** (Company)
 - ✅ **المسمى الوظيفي** (Title)
@@ -21,6 +23,7 @@
 - ✅ **النص الكامل** (Raw Text)
 
 ### 2️⃣ معالجة متقدمة للصور
+
 ```python
 # خطوات المعالجة:
 1. تحويل لـ Grayscale
@@ -31,6 +34,7 @@
 ```
 
 ### 3️⃣ تقييم جودة البيانات
+
 ```
 Quality Score (0-100):
 • Name: +20 نقطة
@@ -42,11 +46,13 @@ Quality Score (0-100):
 ```
 
 ### 4️⃣ إزالة التكرار
+
 - مقارنة بناءً على البريد والهاتف
 - اختيار السجل الأعلى جودة كـ Master
 - وضع علامة على السجلات المكررة
 
 ### 5️⃣ دعم متعدد اللغات
+
 - ✅ **الإنجليزية** (eng) - مثبت
 - ⚠️ **العربية** (ara) - يحتاج تثبيت
 
@@ -55,6 +61,7 @@ Quality Score (0-100):
 ## 📋 متطلبات النظام
 
 ### Windows
+
 ```bash
 # 1. تثبيت Tesseract OCR
 # حمّل من: https://github.com/UB-Mannheim/tesseract/wiki
@@ -66,6 +73,7 @@ choco install tesseract
 ```
 
 ### Linux (Ubuntu/Debian)
+
 ```bash
 # 1. تثبيت Tesseract
 sudo apt-get update
@@ -76,6 +84,7 @@ sudo apt-get install tesseract-ocr-ara
 ```
 
 ### Python Packages
+
 ```bash
 pip install pytesseract Pillow pandas
 ```
@@ -87,6 +96,7 @@ pip install pytesseract Pillow pandas
 ### 1️⃣ عبر API (الطريقة الموصى بها)
 
 #### رفع صور للمعالجة
+
 ```python
 import requests
 
@@ -102,6 +112,7 @@ print(response.json())
 ```
 
 #### رفع عدة صور دفعة واحدة
+
 ```python
 import requests
 
@@ -123,6 +134,7 @@ for record in result['records']:
 ```
 
 #### باستخدام cURL
+
 ```bash
 curl -X POST \
   http://localhost:8000/api/v1/cards/ocr \
@@ -131,6 +143,7 @@ curl -X POST \
 ```
 
 #### باستخدام PowerShell
+
 ```powershell
 $files = @{
     files = Get-Item "card.jpg"
@@ -146,12 +159,14 @@ Invoke-RestMethod -Uri "http://localhost:8000/api/v1/cards/ocr" `
 ### 2️⃣ عبر السكربت مباشرة
 
 #### معالجة مجلد كامل
+
 ```bash
 cd backend
 python -m app.services.business_card_ocr "path/to/images" --output results.csv
 ```
 
 #### مثال في الكود
+
 ```python
 from pathlib import Path
 from app.services.business_card_ocr import BusinessCardProcessor
@@ -180,6 +195,7 @@ print(f"مكررات: {df['duplicate_of'].notna().sum()}")
 ## 📊 مثال على النتائج
 
 ### Response من API
+
 ```json
 {
   "success": true,
@@ -215,6 +231,7 @@ print(f"مكررات: {df['duplicate_of'].notna().sum()}")
 ```
 
 ### ملف CSV
+
 ```csv
 source_file,name,company,title,phones,emails,website,quality_score,duplicate_of,raw_text
 card1.jpg,أحمد محمد,شركة التقنية,مدير,+966501234567,ahmed@tech.com,https://tech.com,90.0,,النص الكامل...
@@ -226,12 +243,14 @@ card2.jpg,Sarah,Marketing Inc,CEO,+15551234567,sarah@marketing.com,https://marke
 ## 🧪 الاختبار
 
 ### اختبار الإعداد
+
 ```bash
 cd backend
 python test_ocr_setup.py
 ```
 
 **النتيجة المتوقعة:**
+
 ```
 ✅ PIL (Pillow) مثبت
 ✅ pytesseract مثبت
@@ -243,6 +262,7 @@ python test_ocr_setup.py
 ```
 
 ### اختبار OCR الكامل
+
 ```bash
 cd backend
 python test_ocr_system.py
@@ -255,6 +275,7 @@ python test_ocr_system.py
 ### تغيير إعدادات المعالجة
 
 #### في `business_card_ocr.py`
+
 ```python
 # تعديل اللغات
 OCR_LANG = "eng+ara"  # إنجليزي + عربي
@@ -300,11 +321,13 @@ result['linkedin'] = linkedin_match.group(0) if linkedin_match else ''
 ## 📈 الأداء
 
 ### معايير الأداء
+
 - **السرعة**: ~2-5 ثوان لكل صورة
 - **الدقة**: 80-95% حسب جودة الصورة
 - **الذاكرة**: ~50-100 MB لكل صورة
 
 ### نصائح لتحسين الأداء
+
 1. **جودة الصورة**: استخدم صور عالية الدقة (300+ DPI)
 2. **التباين**: صور بتباين واضح تعطي نتائج أفضل
 3. **الإضاءة**: تجنب الظلال والانعكاسات
@@ -315,7 +338,9 @@ result['linkedin'] = linkedin_match.group(0) if linkedin_match else ''
 ## 🐛 استكشاف الأخطاء
 
 ### المشكلة: "TesseractNotFoundError"
+
 **الحل:**
+
 ```bash
 # تأكد من تثبيت Tesseract
 tesseract --version
@@ -328,7 +353,9 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 ```
 
 ### المشكلة: النص العربي يظهر كرموز غريبة
+
 **الحل:**
+
 ```bash
 # تثبيت اللغة العربية
 # Windows: أعد تثبيت Tesseract واختر Arabic
@@ -340,7 +367,9 @@ tesseract --list-langs
 ```
 
 ### المشكلة: دقة منخفضة في الاستخراج
+
 **الحلول:**
+
 1. حسّن جودة الصورة
 2. عدّل threshold في `preprocess_image`
 3. جرّب صيغ صور مختلفة (JPG, PNG)
@@ -368,6 +397,7 @@ backend/
 ## 🚀 النشر على السيرفر
 
 ### 1. تثبيت Tesseract
+
 ```bash
 ssh root@46.62.239.119
 
@@ -381,6 +411,7 @@ tesseract --list-langs
 ```
 
 ### 2. تثبيت Python Packages
+
 ```bash
 cd /opt/datapurity/backend
 source venv/bin/activate
@@ -388,16 +419,19 @@ pip install pytesseract Pillow pandas
 ```
 
 ### 3. اختبار
+
 ```bash
 python3 test_ocr_setup.py
 ```
 
 ### 4. إعادة تشغيل الخدمة
+
 ```bash
 systemctl restart datapurity
 ```
 
 ### 5. اختبار API
+
 ```bash
 curl -X POST \
   http://46.62.239.119:8000/api/v1/cards/ocr \
@@ -409,6 +443,7 @@ curl -X POST \
 ## 📊 إحصائيات
 
 ### حالة النظام
+
 ```
 ✅ Tesseract: v5.5.0 مثبت
 ✅ Business Card OCR: جاهز
@@ -434,6 +469,7 @@ curl -X POST \
 - ✅ دعم دفعات
 
 للأسئلة:
+
 - راجع `business_card_ocr.py`
 - شغّل `test_ocr_setup.py`
 - جرّب API عبر `/docs`

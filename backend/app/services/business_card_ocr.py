@@ -87,7 +87,10 @@ COMPANY_HINTS = [
 TITLE_HINTS = [
     'ceo', 'manager', 'director', 'president', 'officer', 'engineer',
     'developer', 'designer', 'consultant', 'specialist', 'analyst',
-    'مدير', 'رئيس', 'نائب', 'مهندس', 'مطور', 'مستشار', 'أخصائي'
+    'chief', 'head', 'lead', 'senior', 'junior', 'executive',
+    'coordinator', 'supervisor', 'administrator', 'assistant',
+    'مدير', 'رئيس', 'نائب', 'مهندس', 'مطور', 'مستشار', 'أخصائي',
+    'marketing', 'sales', 'finance', 'technical', 'operations'
 ]
 
 
@@ -273,7 +276,7 @@ def preprocess_image(path: Path) -> Image.Image:
 
 def ocr_image(img: Image.Image) -> str:
     """
-    Perform OCR on preprocessed image.
+    Perform OCR on preprocessed image with better configuration.
     
     Args:
         img: Preprocessed PIL Image
@@ -282,15 +285,26 @@ def ocr_image(img: Image.Image) -> str:
         Extracted text string
     """
     try:
+        # Configure OCR for better line detection
+        custom_config = r'--oem 3 --psm 6'  # PSM 6: Assume uniform block of text
+        
         # Try with Arabic + English
-        text = pytesseract.image_to_string(img, lang=OCR_LANG)
+        text = pytesseract.image_to_string(
+            img, 
+            lang=OCR_LANG,
+            config=custom_config
+        )
         return text
     except pytesseract.TesseractError as e:
         # Fallback to English only if Arabic not available
         if "ara" in str(e).lower() or "language" in str(e).lower():
             logging.warning(f"Arabic language not available, falling back to English only")
             try:
-                text = pytesseract.image_to_string(img, lang=OCR_LANG_FALLBACK)
+                text = pytesseract.image_to_string(
+                    img, 
+                    lang=OCR_LANG_FALLBACK,
+                    config=custom_config
+                )
                 return text
             except Exception as fallback_error:
                 logging.error(f"OCR failed even with English: {fallback_error}")
@@ -311,13 +325,8 @@ def extract_fields_from_text(text: str) -> Dict[str, Any]:
     """
     Extract structured fields from OCR text.
     
-    Uses regex patterns and heuristics to identify:
-    - Name (typically first or second line)
-    - Company name (lines with company keywords)
-    - Job title (lines with title keywords)
-    - Phone numbers (regex pattern matching)
-    - Emails (regex pattern matching)
-    - Website (URL pattern matching)
+    Improved algorithm with better field separation and extraction.
+    Handles both multi-line and single-line OCR output.
     
     Args:
         text: Raw OCR text
@@ -342,56 +351,125 @@ def extract_fields_from_text(text: str) -> Dict[str, Any]:
         'raw_text': normalized
     }
     
-    # Extract phones
+    # Extract phones (remove from lines for cleaner processing)
     phone_matches = PHONE_PATTERN.findall(normalized)
     cleaned_phones = []
+    phone_patterns_to_remove = []
     for phone in phone_matches:
         cleaned = clean_phone(phone)
         # Filter out very short numbers (likely not phone numbers)
         if len(re.sub(r'\D', '', cleaned)) >= 7:
             cleaned_phones.append(cleaned)
+            phone_patterns_to_remove.append(re.escape(phone))
     result['phones'] = ', '.join(cleaned_phones) if cleaned_phones else ''
     
     # Extract emails
     email_matches = EMAIL_PATTERN.findall(normalized)
     cleaned_emails = [clean_email(email) for email in email_matches]
     result['emails'] = ', '.join(cleaned_emails) if cleaned_emails else ''
+    email_patterns_to_remove = [re.escape(email) for email in email_matches]
     
     # Extract URLs
     url_matches = URL_PATTERN.findall(normalized)
     cleaned_urls = [clean_url(url) for url in url_matches]
     result['website'] = cleaned_urls[0] if cleaned_urls else ''
+    url_patterns_to_remove = [re.escape(url) for url in url_matches]
     
-    # Extract name (heuristic: first or second non-empty line that doesn't look like contact info)
-    for i, line in enumerate(lines[:3]):
-        if (not '@' in line and 
-            not 'www' in line.lower() and 
-            not re.search(r'\d{7,}', line) and
-            len(line.split()) <= 4 and
-            len(line) > 3):
-            result['name'] = line
+    # Create a cleaned version of text without contact info
+    cleaned_text = normalized
+    
+    # Remove emails
+    for pattern in email_patterns_to_remove:
+        cleaned_text = re.sub(pattern, '', cleaned_text, flags=re.IGNORECASE)
+    
+    # Remove URLs
+    for pattern in url_patterns_to_remove:
+        cleaned_text = re.sub(pattern, '', cleaned_text, flags=re.IGNORECASE)
+    
+    # Remove phone numbers
+    for pattern in phone_patterns_to_remove:
+        cleaned_text = re.sub(pattern, '', cleaned_text)
+    
+    # Remove common labels
+    cleaned_text = re.sub(r'\b(phone|tel|mobile|email|e-mail|web|website|www|fax)[\s:]*', '', cleaned_text, flags=re.IGNORECASE)
+    
+    # Clean up extra whitespace
+    cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
+    
+    # Split cleaned text into potential fields
+    # Try to split by common separators or length
+    parts = []
+    
+    # If we have newlines, use them
+    if '\n' in normalized:
+        parts = [p.strip() for p in cleaned_text.split('\n') if p.strip()]
+    else:
+        # Single line: try to split smartly
+        # Look for patterns like: Name CompanyName Title
+        words = cleaned_text.split()
+        
+        # Try to extract 2-3 word name at the start
+        if len(words) >= 2:
+            # Name is typically 2-3 words at the beginning
+            if len(words) >= 3 and len(words[0]) > 2 and len(words[1]) > 2:
+                parts.append(' '.join(words[:2]))  # First 2 words = name
+                remaining = ' '.join(words[2:])
+                
+                # Rest might be company + title
+                remaining_words = remaining.split()
+                if len(remaining_words) >= 2:
+                    # Try to find title keywords
+                    title_found = False
+                    for i, word in enumerate(remaining_words):
+                        if is_potential_title(word.lower()):
+                            # Everything before is company
+                            if i > 0:
+                                parts.append(' '.join(remaining_words[:i]))
+                            # Title is from here
+                            parts.append(' '.join(remaining_words[i:]))
+                            title_found = True
+                            break
+                    
+                    if not title_found:
+                        # No title found, split company name heuristically
+                        # Take up to 3-4 words as company
+                        parts.append(' '.join(remaining_words[:min(4, len(remaining_words))]))
+                else:
+                    parts.append(remaining)
+            else:
+                parts = [cleaned_text]
+    
+    # Extract NAME: First short part (2-4 words)
+    for part in parts[:3]:
+        words = part.split()
+        if (2 <= len(words) <= 4 and 
+            len(part) >= 5 and
+            len(part) <= 50 and
+            not re.search(r'\d{3,}', part)):  # No long numbers
+            result['name'] = part
             break
     
-    # Extract company (look for company hints)
-    for line in lines:
-        if is_potential_company(line):
-            result['company'] = line
+    # If no name found but have parts, use first part if reasonable
+    if not result['name'] and parts:
+        first_part = parts[0]
+        if len(first_part) >= 3 and len(first_part) <= 50:
+            result['name'] = first_part
+    
+    # Extract COMPANY: Look for company keywords or second part
+    for i, part in enumerate(parts):
+        if (part != result['name'] and 
+            (is_potential_company(part) or 
+             (i == 1 and len(part) > 3))):  # Second part if long enough
+            result['company'] = part
             break
     
-    # If no company found by hints, try to use a longer line from top lines
-    if not result['company']:
-        for line in lines[1:5]:
-            if (len(line) > 10 and 
-                not '@' in line and 
-                not 'www' in line.lower() and
-                line != result['name']):
-                result['company'] = line
-                break
-    
-    # Extract title (look for title hints)
-    for line in lines:
-        if is_potential_title(line) and line != result['name']:
-            result['title'] = line
+    # Extract TITLE: Look for title keywords or third part
+    for i, part in enumerate(parts):
+        if (part != result['name'] and 
+            part != result['company'] and
+            (is_potential_title(part) or 
+             (i == 2 and len(part) > 3))):  # Third part
+            result['title'] = part
             break
     
     return result

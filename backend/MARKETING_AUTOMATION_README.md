@@ -9,18 +9,21 @@
 ## 🎯 الميزات المنفذة
 
 ### 1️⃣ Marketing Automation (التسويق الآلي)
+
 - ✅ جدولة تلقائية لـ 4 رسائل بريد إلكتروني
 - ✅ APScheduler لمعالجة المهام كل 60 ثانية
 - ✅ تتبع الأحداث (Campaign Events)
 - ✅ قوالب بريد إلكتروني عربية
 
 **تسلسل الإيميلات:**
+
 1. **فوري**: رسالة ترحيب + شرح التجربة المجانية
 2. **بعد 24 ساعة**: تذكير بالتجربة المجانية
 3. **بعد 3 أيام**: دراسة حالة عملية
 4. **بعد 7 أيام**: عرض خصم محدود
 
 ### 2️⃣ Free Trial Upload (التجربة المجانية)
+
 - ✅ رفع ملفات Excel/CSV
 - ✅ تنظيف 150 سجل مجاناً
 - ✅ استخدام محرك DataPurity الحالي
@@ -34,6 +37,7 @@
 ### جداول جديدة:
 
 #### `scheduled_tasks`
+
 ```sql
 - id (PK)
 - lead_id (FK → leads.id)
@@ -45,6 +49,7 @@
 ```
 
 #### `campaign_events`
+
 ```sql
 - id (PK)
 - lead_id (FK → leads.id)
@@ -54,6 +59,7 @@
 ```
 
 #### تحديث `leads`
+
 ```sql
 + status (new/trial_started/trial_completed/subscribed/lost)
 ```
@@ -63,12 +69,14 @@
 ## 🔗 API Endpoints
 
 ### Marketing
+
 ```bash
 POST /api/v1/marketing/leads
 GET  /api/v1/marketing/health
 ```
 
 ### Trial
+
 ```bash
 POST /api/v1/trial/upload
 GET  /api/v1/trial/health
@@ -79,12 +87,14 @@ GET  /api/v1/trial/health
 ## 🧪 الاختبار
 
 ### Local (جهازك)
+
 ```bash
 cd d:\datapurity\backend
 python test_marketing_automation.py
 ```
 
 ### Production (السيرفر)
+
 ```bash
 http://46.62.239.119:8000/api/v1/docs
 ```
@@ -108,7 +118,9 @@ EMAIL_FROM=noreply@datapurity.com
 ```
 
 ### 2. Gmail App Password
+
 إذا كنت تستخدم Gmail:
+
 1. اذهب إلى https://myaccount.google.com/security
 2. فعّل "2-Step Verification"
 3. اذهب إلى "App passwords"
@@ -120,6 +132,7 @@ EMAIL_FROM=noreply@datapurity.com
 ## 📝 مثال استخدام
 
 ### إنشاء Lead جديد
+
 ```python
 import requests
 
@@ -140,11 +153,13 @@ print(response.json())
 ```
 
 **النتيجة:**
+
 - ✅ Lead تم إنشاؤه
 - ✅ 4 إيميلات تم جدولتها
 - ✅ Campaign event مسجل
 
 ### رفع ملف للتجربة المجانية
+
 ```python
 files = {'file': open('contacts.xlsx', 'rb')}
 data = {'lead_id': 1}
@@ -165,12 +180,14 @@ print(f"جودة البيانات: {result['stats']['avg_quality_score']}%")
 ## 📈 مراقبة النظام
 
 ### عرض المهام المجدولة
+
 ```bash
 cd d:\datapurity\backend
 python view_marketing_data.py
 ```
 
 ### فحص الجداول
+
 ```bash
 python check_tables.py
 ```
@@ -180,6 +197,7 @@ python check_tables.py
 ## 🚀 الخطوات التالية
 
 ### المرحلة 1: اختبار البريد الإلكتروني
+
 1. ✅ أضف SMTP credentials في `.env`
 2. ✅ شغّل السيرفر محلياً
 3. ✅ أنشئ lead جديد
@@ -187,11 +205,13 @@ python check_tables.py
 5. ✅ افحص بريدك الإلكتروني
 
 ### المرحلة 2: النشر
+
 1. ✅ أضف SMTP credentials على السيرفر
 2. ✅ فعّل `MARKETING_SCHEDULER_ENABLED=true`
 3. ✅ أعد تشغيل الخدمة
 
 ### المرحلة 3: التحسينات المستقبلية
+
 - [ ] WhatsApp integration
 - [ ] SMS notifications
 - [ ] Dashboard for leads management
@@ -224,10 +244,12 @@ backend/
 ## 🎉 النتيجة النهائية
 
 **النظام الآن يعمل بالكامل على:**
+
 - 🌐 Local: http://127.0.0.1:8000/
 - 🌍 Production: http://46.62.239.119:8000/
 
 **يمكنك:**
+
 1. ✅ إنشاء leads من صفحة الهبوط
 2. ✅ جدولة إيميلات تلقائياً
 3. ✅ رفع ملفات للتجربة المجانية (150 سجل)
@@ -239,6 +261,7 @@ backend/
 ## 🆘 المساعدة
 
 إذا واجهت مشكلة:
+
 ```bash
 # فحص logs السيرفر
 ssh root@46.62.239.119 "journalctl -u datapurity -n 50"
