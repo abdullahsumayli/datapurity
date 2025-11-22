@@ -49,6 +49,18 @@ class Settings(BaseSettings):
     OCR_API_KEY: str = ""
     PHONE_VALIDATION_API_KEY: str = ""
 
+    # Email Configuration (Marketing Automation)
+    EMAIL_SMTP_HOST: str = "smtp.gmail.com"
+    EMAIL_SMTP_PORT: int = 587
+    EMAIL_USERNAME: str = ""
+    EMAIL_PASSWORD: str = ""
+    EMAIL_FROM: str = ""
+    EMAIL_FROM_NAME: str = "DataPurity"
+    
+    # Marketing Scheduler
+    MARKETING_SCHEDULER_ENABLED: bool = True
+    SCHEDULER_INTERVAL_SECONDS: int = 60  # Check for tasks every 60 seconds
+
     class Config:
         env_file = ".env"
         case_sensitive = True

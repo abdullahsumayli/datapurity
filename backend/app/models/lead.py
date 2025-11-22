@@ -25,6 +25,7 @@ class Lead(Base):
     
     # Metadata
     source: Mapped[str] = mapped_column(String(50), default="landing_page")
+    status: Mapped[str] = mapped_column(String(50), default="new")  # new, trial_started, trial_completed, subscribed, lost
     ip_address: Mapped[Optional[str]] = mapped_column(String(45))
     user_agent: Mapped[Optional[str]] = mapped_column(String(500))
     

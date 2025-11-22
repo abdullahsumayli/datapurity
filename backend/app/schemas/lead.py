@@ -28,6 +28,7 @@ class LeadResponse(LeadBase):
 
     id: int
     source: str
+    status: str
     ip_address: Optional[str] = None
     user_agent: Optional[str] = None
     created_at: datetime

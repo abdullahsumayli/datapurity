@@ -37,6 +37,9 @@ openpyxl==3.1.2
 # Phone validation
 phonenumbers==8.13.27
 
+# Background tasks & Scheduling
+apscheduler==3.10.4
+
 # Logging
 loguru==0.7.2
 

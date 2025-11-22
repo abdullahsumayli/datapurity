@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.schemas.lead import LeadCreate, LeadResponse
 from app.services.lead_service import create_lead, get_lead_by_email
+from app.services.campaigns_service import schedule_welcome_sequence, log_campaign_event
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,8 @@ async def capture_lead(
     Capture a new marketing lead from the landing page.
     
     This endpoint accepts lead information and stores it in the database
-    for follow-up by the sales team.
+    for follow-up by the sales team. It also schedules an automated
+    welcome email sequence.
     """
     try:
         # Extract client metadata
@@ -42,9 +44,23 @@ async def capture_lead(
         lead = await create_lead(
             db=db,
             lead_data=lead_data,
+            source="landing_page",
             ip_address=ip_address,
             user_agent=user_agent,
         )
+        
+        # Schedule welcome email sequence
+        await schedule_welcome_sequence(db, lead)
+        
+        # Log event
+        await log_campaign_event(
+            db,
+            lead_id=lead.id,
+            event_type="lead_created",
+            meta={"source": "landing_page"}
+        )
+        
+        await db.commit()
         
         logger.info(f"New lead captured: {lead.email} from {ip_address}")
         
