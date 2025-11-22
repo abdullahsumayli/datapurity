@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 
 from app.core.settings import get_settings
 from app.routers import api_router
@@ -78,6 +78,11 @@ if FRONTEND_DIST.exists():
     # SPA catch-all - only for root and app routes
     @app.get("/", include_in_schema=False)
     async def root():
+        """Serve landing page for marketing funnel."""
+        landing_page = Path(__file__).parent / "templates" / "landing.html"
+        if landing_page.exists():
+            return HTMLResponse(content=landing_page.read_text(encoding="utf-8"))
+        # Fallback to React SPA if landing page doesn't exist
         index_path = FRONTEND_DIST / "index.html"
         if index_path.exists():
             return FileResponse(str(index_path))

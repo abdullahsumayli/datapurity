@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataPurity – نظّف بياناتك في 5 دقائق</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input::placeholder {
+            color: #cbd5e0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+            color: #22543d;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            background: #fed7d7;
+            border: 2px solid #fc8181;
+            color: #742a2a;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 20px;
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .features {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .features h3 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            color: #4a5568;
+            padding: 8px 0;
+            padding-right: 30px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .features li::before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <!-- DataPurity Logo (Droplet with lines) -->
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2C16 2 8 12 8 18C8 22.4183 11.5817 26 16 26C20.4183 26 24 22.4183 24 18C24 12 16 2 16 2Z" 
+                      fill="url(#gradient)" stroke="#667eea" stroke-width="2"/>
+                <rect x="11" y="14" width="10" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+                <rect x="11" y="17.5" width="10" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+                <rect x="11" y="21" width="10" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+                <defs>
+                    <linearGradient id="gradient" x1="8" y1="2" x2="24" y2="26" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#667eea"/>
+                        <stop offset="1" stop-color="#764ba2"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+
+        <h1>DataPurity – نظّف بياناتك في 5 دقائق</h1>
+        <p class="subtitle">احصل على بيانات جهات اتصال نظيفة ودقيقة بدون أي جهد يدوي</p>
+
+        <form id="leadForm">
+            <div class="form-group">
+                <label for="full_name">الاسم الكامل <span class="required">*</span></label>
+                <input type="text" id="full_name" name="full_name" placeholder="محمد أحمد" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني <span class="required">*</span></label>
+                <input type="email" id="email" name="email" placeholder="mohammed@company.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">رقم الجوال</label>
+                <input type="tel" id="phone" name="phone" placeholder="+966501234567">
+            </div>
+
+            <div class="form-group">
+                <label for="company">اسم الشركة</label>
+                <input type="text" id="company" name="company" placeholder="شركة التقنية المتقدمة">
+            </div>
+
+            <div class="form-group">
+                <label for="sector">القطاع</label>
+                <select id="sector" name="sector">
+                    <option value="">-- اختر القطاع --</option>
+                    <option value="تقنية">تقنية</option>
+                    <option value="تجزئة">تجزئة</option>
+                    <option value="تعليم">تعليم</option>
+                    <option value="صحة">صحة</option>
+                    <option value="مالية">مالية</option>
+                    <option value="عقارات">عقارات</option>
+                    <option value="خدمات">خدمات</option>
+                    <option value="أخرى">أخرى</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">ابدأ التجربة المجانية</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            ✓ تم استلام بياناتك بنجاح! سنتواصل معك قريباً
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            حدث خطأ أثناء الإرسال. يرجى المحاولة مرة أخرى
+        </div>
+
+        <div class="features">
+            <h3>لماذا DataPurity؟</h3>
+            <ul>
+                <li>تنظيف وتوحيد بيانات جهات الاتصال تلقائياً</li>
+                <li>إزالة التكرارات وتحديد البيانات غير الصحيحة</li>
+                <li>دعم كامل للغة العربية والإنجليزية</li>
+                <li>نتائج فورية خلال دقائق</li>
+                <li>حماية كاملة لبياناتك وخصوصيتك</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('leadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري الإرسال...';
+
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+
+            // Collect form data
+            const formData = {
+                full_name: document.getElementById('full_name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim() || null,
+                company: document.getElementById('company').value.trim() || null,
+                sector: document.getElementById('sector').value || null
+            };
+
+            try {
+                // Submit to API
+                const response = await fetch('/api/v1/marketing/leads', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Success
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    // API error
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    errorMessage.textContent = errorData.detail || 'حدث خطأ أثناء الإرسال';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                // Network error
+                console.error('Network Error:', error);
+                errorMessage.textContent = 'خطأ في الاتصال بالخادم. تحقق من اتصالك بالإنترنت';
+                errorMessage.style.display = 'block';
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ابدأ التجربة المجانية';
+            }
+        });
+
+        // Simple email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email && !emailRegex.test(email)) {
+                this.style.borderColor = '#fc8181';
+            } else {
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+    </script>
+</body>
+</html>

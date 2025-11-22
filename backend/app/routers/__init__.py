@@ -13,6 +13,7 @@ from app.routers import (
     health,
     dashboard,
     billing,
+    marketing,
 )
 
 api_router = APIRouter()
@@ -28,3 +29,4 @@ api_router.include_router(cards.router, prefix="/cards", tags=["cards"])
 api_router.include_router(contacts.router, prefix="/contacts", tags=["contacts"])
 api_router.include_router(exports.router, prefix="/exports", tags=["exports"])
 api_router.include_router(billing.router, prefix="/billing", tags=["billing"])
+api_router.include_router(marketing.router, prefix="/marketing", tags=["marketing"])
