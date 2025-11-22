@@ -13,6 +13,9 @@ export const LandingPage: React.FC = () => {
         <div className="dp-landing-logo">
           <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M50 10C50 10 25 35 25 55C25 70 35 85 50 85C65 85 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient)"/>
+            <path d="M35 45 Q40 42 45 45" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.8"/>
+            <path d="M35 55 Q42.5 52 50 55" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.7"/>
+            <path d="M40 65 Q45 62 50 65" stroke="white" strokeWidth="2.5" strokeLinecap="round" opacity="0.6"/>
             <defs>
               <linearGradient id="gradient" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
                 <stop stopColor="#1F7FED"/>
@@ -288,8 +291,10 @@ export const LandingPage: React.FC = () => {
 
             <div className="dp-visual-transform">
               <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="40" cy="30" r="25" fill="url(#transformGradient)" opacity="0.2"/>
-                <path d="M20 30 L55 30 M55 30 L45 20 M55 30 L45 40" stroke="url(#transformGradient)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
+                <circle cx="40" cy="30" r="25" fill="url(#transformGradient)" opacity="0.15"/>
+                <circle cx="40" cy="30" r="18" fill="url(#transformGradient)" opacity="0.1"/>
+                <path d="M18 24 L58 24 M58 24 L50 16 M58 24 L50 20" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M18 36 L58 36 M58 36 L50 40 M58 36 L50 44" stroke="url(#transformGradient)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                 <defs>
                   <linearGradient id="transformGradient" x1="0" y1="0" x2="80" y2="60">
                     <stop offset="0%" stopColor="#1F7FED"/>
