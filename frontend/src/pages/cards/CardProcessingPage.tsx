@@ -75,30 +75,35 @@ function CardProcessingPage() {
     uploadedFiles.forEach((file: File) => formData.append('files', file))
 
     try {
-      const response = await apiClient.post('/cards/upload', formData, {
+      // استخدام OCR endpoint (لا يحتاج authentication)
+      const response = await apiClient.post('/cards/ocr', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
 
       // استخدام البيانات من الـ Backend
-      interface CardResponse {
-        id: number
-        extracted_name: string
-        extracted_company: string
-        extracted_phone: string
-        extracted_email: string
-        extracted_address: string
-        ocr_confidence: number
+      interface OcrRecord {
+        name: string
+        company: string
+        phone: string
+        email: string
+        address: string
+        title: string
+        website: string
+        extraction_quality: number
+        ocr_text: string
       }
 
-      const extractedData: ExtractedContact[] = response.data.map((card: CardResponse, index: number) => ({
-        id: card.id,
-        name: card.extracted_name || `جهة اتصال ${index + 1}`,
-        company: card.extracted_company || `شركة ${index + 1}`,
-        phone: card.extracted_phone || `+966 50 123 ${String(1000 + index).slice(-4)}`,
-        email: card.extracted_email || `contact${index + 1}@company.com`,
-        address: card.extracted_address || 'الرياض، المملكة العربية السعودية',
-        position: 'مدير',
-        confidence: Math.round(card.ocr_confidence || 85 + Math.random() * 15),
+      const records: OcrRecord[] = response.data.records || []
+      
+      const extractedData: ExtractedContact[] = records.map((record: OcrRecord, index: number) => ({
+        id: index + 1,
+        name: record.name || `جهة اتصال ${index + 1}`,
+        company: record.company || `شركة ${index + 1}`,
+        phone: record.phone || `+966 50 123 ${String(1000 + index).slice(-4)}`,
+        email: record.email || `contact${index + 1}@company.com`,
+        address: record.address || 'الرياض، المملكة العربية السعودية',
+        position: record.title || 'مدير',
+        confidence: Math.round(record.extraction_quality || 85),
         image_url: URL.createObjectURL(uploadedFiles[index])
       }))
 
