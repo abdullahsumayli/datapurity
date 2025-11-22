@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import apiClient from '../../config/apiClient'
 import OnboardingBanner from '../../components/OnboardingBanner/OnboardingBanner'
+import apiClient from '../../config/apiClient'
 import './dashboard.css'
 
 // Constants

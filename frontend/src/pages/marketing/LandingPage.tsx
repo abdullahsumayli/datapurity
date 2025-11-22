@@ -55,24 +55,20 @@ export const LandingPage: React.FC = () => {
           <div className="dp-hero-text">
             <div className="dp-badge">🚀 منصة سعودية متقدمة</div>
             <h1>
-              حوّل فوضى الإكسل والكروت
-              <br />
-              إلى{" "}
-              <span className="dp-hero-highlight">بيانات جاهزة للاستخدام</span>
+              ودّع فوضى الإكسل والكروت… واحصل على{" "}
+              <span className="dp-hero-highlight">بيانات نظيفة ودقيقة</span>
+              {" "}خلال دقائق.
             </h1>
-            <p className="dp-hero-tagline">
-              DataPurity — منصة ذكية لتنظيف وتنظيم بيانات العملاء
-            </p>
             <p className="dp-hero-description">
-              DataPurity تساعد الشركات على تنظيم بيانات العملاء، تنظيف قوائم Excel، واستخراج بيانات كروت الأعمال من المعارض والزيارات خلال ثوانٍ فقط… مباشرة من المتصفح.
+              DataPurity منصة ذكية تنظّف وتنظّم بيانات العملاء من ملفات Excel و CSV وصور الكروت، وتعيدها لك كملف جاهز للاستخدام في أنظمة العمل وفرق التسويق والمبيعات.
             </p>
 
             <div className="dp-hero-actions">
               <Link to="/login" className="dp-btn dp-btn-primary dp-hero-main-cta">
-                ابدأ بتنظيف أول 100 سجل مجانًا
+                ابدأ تنظيف أول 100 سجل مجاناً
               </Link>
               <span className="dp-hero-subtext">
-                بدون تعقيد. بدون أخطاء. بدون شغل يدوي.
+                بدون بطاقة ائتمانية – تجربة كاملة قبل الاشتراك.
               </span>
             </div>
 
@@ -89,6 +85,11 @@ export const LandingPage: React.FC = () => {
                 <strong>99٪</strong>
                 <span>رضا عن سهولة الاستخدام والنتائج</span>
               </div>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+              <a href="#example" style={{ color: '#1F7FED', fontWeight: 600, fontSize: '0.95rem', textDecoration: 'none', borderBottom: '2px solid #1F7FED', paddingBottom: '2px' }}>
+                شاهد مثالاً حقيقياً قبل/بعد ↓
+              </a>
             </div>
 
             <div className="dp-trust-badges">
@@ -213,7 +214,7 @@ export const LandingPage: React.FC = () => {
         <section className="dp-section dp-diagram-section">
           <h2>كيف تعمل المنصة؟</h2>
           <p className="dp-section-subtitle">
-            عملية بسيطة من 3 خطوات لتحويل بياناتك الفوضوية إلى بيانات نظيفة جاهزة للاستخدام
+            عملية بسيطة من 3 خطوات لتحويل بياناتك الفوضوية إلى بيانات نظيفة وجاهزة للاستخدام.
           </p>
           
           <div className="dp-process-diagram">
@@ -222,7 +223,7 @@ export const LandingPage: React.FC = () => {
                 📤
               </div>
               <h3>1. الإدخال</h3>
-              <p>ارفع ملفات Excel/CSV أو صور كروت الأعمال</p>
+              <p>ارفع ملفات Excel/CSV أو صور الكروت من جهازك أو جوالك.</p>
               <div className="dp-process-examples">
                 <span className="dp-tag">Excel</span>
                 <span className="dp-tag">CSV</span>
@@ -242,7 +243,7 @@ export const LandingPage: React.FC = () => {
                 ⚙️
               </div>
               <h3>2. المعالجة الذكية</h3>
-              <p>تنظيف، تصحيح، واستخراج تلقائي للبيانات</p>
+              <p>يقوم النظام بتنظيف وتصحيح البيانات واكتشاف التكرار والأخطاء تلقائياً.</p>
               <div className="dp-process-examples">
                 <span className="dp-tag">تصحيح الأرقام</span>
                 <span className="dp-tag">إزالة التكرار</span>
@@ -262,7 +263,7 @@ export const LandingPage: React.FC = () => {
                 ✅
               </div>
               <h3>3. النتيجة النظيفة</h3>
-              <p>بيانات جاهزة للاستخدام في أنظمتك</p>
+              <p>تحصل على ملف منظّم وجاهز للتصدير إلى Excel أو CRM أو أنظمة عملك.</p>
               <div className="dp-process-examples">
                 <span className="dp-tag">Excel</span>
                 <span className="dp-tag">CRM</span>
@@ -326,7 +327,7 @@ export const LandingPage: React.FC = () => {
 
         {/* Features */}
         <section id="features" className="dp-section">
-          <h2>ماذا يقدم DataPurity؟</h2>
+          <h2>ماذا يقدم DataPurity لشركتك؟</h2>
           <p className="dp-section-subtitle">
             ثلاث أدوات أساسية مخصصة لاحتياجات الشركات الحديثة
           </p>
@@ -336,7 +337,7 @@ export const LandingPage: React.FC = () => {
               <div className="dp-feature-icon">📊</div>
               <h3>تنظيف ملفات Excel و CSV</h3>
               <p>
-                أداة متقدمة لمعالجة الأخطاء، توحيد تنسيق البيانات، وإزالة التكرار، لتصبح بياناتك جاهزة للاستخدام داخل الأنظمة التشغيلية.
+                أداة متقدمة لمعالجة الأخطاء، توحيد تنسيق البيانات، وإزالة التكرار — بيانات جاهزة للاستخدام فوراً في أنظمة العمل.
               </p>
               <p style={{ marginTop: '0.75rem', fontWeight: 600 }}>يشمل:</p>
               <ul>
@@ -351,9 +352,7 @@ export const LandingPage: React.FC = () => {
               <div className="dp-feature-icon">📇</div>
               <h3>استخراج بيانات كروت الأعمال (OCR)</h3>
               <p>
-                ارفع صور الكروت من المعارض أو الاجتماعات…
-                <br />
-                والنظام يستخرج الأسماء، الشركات، الأرقام، والإيميلات تلقائيًا.
+                ارفع صور الكروت من المعارض أو الاجتماعات — استخراج تلقائي من الصور إلى جدول جاهز يحتوي على الأسماء، الشركات، الأرقام، والإيميلات.
               </p>
               <p style={{ marginTop: '0.75rem', fontWeight: 600 }}>يشمل:</p>
               <ul>
@@ -367,7 +366,7 @@ export const LandingPage: React.FC = () => {
               <div className="dp-feature-icon">🎯</div>
               <h3>ملفات جاهزة للاستخدام في أنظمة العمل</h3>
               <p>
-                يمكن تصدير البيانات نظيفة وجاهزة للدمج مع:
+                تصدير مباشر إلى CRM وفرق التسويق — البيانات النظيفة جاهزة للدمج مباشرة مع:
               </p>
               <ul>
                 <li>أنظمة CRM</li>
@@ -386,22 +385,25 @@ export const LandingPage: React.FC = () => {
 
         {/* How it works */}
         <section id="how-it-works" className="dp-section dp-section-alt">
-          <h2>كيف يعمل DataPurity؟</h2>
+          <h2>كيف تعمل المنصة؟</h2>
+          <p className="dp-section-subtitle">
+            عملية بسيطة من 3 خطوات لتحويل بياناتك الفوضوية إلى بيانات نظيفة وجاهزة للاستخدام.
+          </p>
           <div className="dp-steps">
             <div className="dp-step">
               <span className="dp-step-number">١</span>
-              <h3>ارفع ملفات Excel أو صور الكروت</h3>
-              <p>من الحاسوب أو الجوال.</p>
+              <h3>ارفع ملفات Excel/CSV أو صور الكروت</h3>
+              <p>من جهازك أو جوالك.</p>
             </div>
             <div className="dp-step">
               <span className="dp-step-number">٢</span>
-              <h3>النظام ينظّف ويفهم البيانات</h3>
-              <p>تصحيح – استخراج – تنظيم – تدقيق.</p>
+              <h3>يقوم النظام بتنظيف وتصحيح البيانات</h3>
+              <p>واكتشاف التكرار والأخطاء تلقائياً.</p>
             </div>
             <div className="dp-step">
               <span className="dp-step-number">٣</span>
-              <h3>تحصل على ملف نظيف جاهز للاستخدام</h3>
-              <p>تصدير فوري إلى Excel أو CRM.</p>
+              <h3>تحصل على ملف منظّم وجاهز للتصدير</h3>
+              <p>إلى Excel أو CRM أو أنظمة عملك.</p>
             </div>
           </div>
         </section>
@@ -443,8 +445,11 @@ export const LandingPage: React.FC = () => {
                 <span style={{ fontSize: '3rem', fontWeight: 800 }}>0</span>
                 <span style={{ fontSize: '1.25rem', marginRight: '0.5rem' }}>ريال</span>
               </p>
-              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
-                مثالي للتجربة والاستكشاف
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
+                مثالية للتجربة والاستكشاف قبل الانتقال للخطة المدفوعة.
+              </p>
+              <p style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+                يمكنك الإلغاء في أي وقت – بدون التزام طويل.
               </p>
               <ul>
                 <li>عملية تنظيف واحدة شهريًا</li>
@@ -468,8 +473,11 @@ export const LandingPage: React.FC = () => {
             <div className="dp-price-card">
               <h3>Starter</h3>
               <p className="dp-price">79 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
-              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
                 للشركات الناشئة والفرق الصغيرة
+              </p>
+              <p style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+                يمكنك الإلغاء في أي وقت – بدون التزام طويل.
               </p>
               <ul>
                 <li>5 عمليات تنظيف شهريًا</li>
@@ -490,8 +498,11 @@ export const LandingPage: React.FC = () => {
               <div className="dp-popular-badge">الأكثر طلبًا</div>
               <h3>Business</h3>
               <p className="dp-price">199 <span style={{ fontSize: '1rem', fontWeight: 500 }}>ريال / شهر</span></p>
-              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
                 للشركات النامية والفرق المتوسطة
+              </p>
+              <p style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginBottom: '1.5rem' }}>
+                يمكنك الإلغاء في أي وقت – بدون التزام طويل.
               </p>
               <ul>
                 <li>20 عملية تنظيف شهريًا</li>
@@ -536,9 +547,9 @@ export const LandingPage: React.FC = () => {
         </section>
 
         {/* Example Section */}
-        <section className="dp-section">
+        <section id="example" className="dp-section">
           <div className="dp-hero-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <h2>مثال مبسّط</h2>
+            <h2>مثال حقيقي قبل/بعد – هكذا ننظّف بياناتك</h2>
             <div className="dp-hero-mini-table">
               <div className="dp-hero-mini-header">
                 <span>الاسم</span>
@@ -567,11 +578,11 @@ export const LandingPage: React.FC = () => {
         {/* Final CTA */}
         <section className="dp-section dp-cta-final">
           <div className="dp-cta-content">
-            <h2>جاهز لتنظيف بياناتك؟</h2>
-            <p>ابدأ مجانًا الآن — حتى 100 سجل شهريًا بدون بطاقة ائتمانية</p>
+            <h2>جاهز لتنظيف بياناتك والبدء الآن؟</h2>
+            <p>ابدأ مجاناً اليوم ونظّف حتى 100 سجل بدون أي التزام أو بطاقة ائتمانية.</p>
             <div className="dp-cta-buttons">
               <Link to="/login" className="dp-btn dp-btn-primary dp-btn-large">
-                ابدأ مجانًا الآن
+                ابدأ مجاناً الآن
               </Link>
               <a href="#pricing" className="dp-btn dp-btn-text">
                 اطلع على جميع الباقات
