@@ -17,8 +17,7 @@ router = APIRouter()
 
 @router.post("/ocr", status_code=status.HTTP_200_OK)
 async def ocr_business_cards(
-    files: List[UploadFile] = File(...),
-    current_user: User = Depends(get_current_user)
+    files: List[UploadFile] = File(...)
 ):
     """
     Process multiple business card images with OCR.
@@ -30,6 +29,7 @@ async def ocr_business_cards(
     4. Extracts structured data (name, company, phone, email, etc.)
     5. Returns results as JSON
     
+    No authentication required for OCR processing.
     Future enhancement: Save results to database contacts table.
     """
     # Create temp directory for uploaded files
