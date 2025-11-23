@@ -17,6 +17,4 @@ from app.models.dataset import Dataset  # noqa: F401, E402
 from app.models.card import Card  # noqa: F401, E402
 from app.models.contact import Contact  # noqa: F401, E402
 from app.models.export import Export  # noqa: F401, E402
-from app.models.lead import Lead  # noqa: F401, E402
-from app.models.scheduled_task import ScheduledTask  # noqa: F401, E402
-from app.models.campaign_event import CampaignEvent  # noqa: F401, E402
+from app.models.subscription import Subscription  # noqa: F401, E402

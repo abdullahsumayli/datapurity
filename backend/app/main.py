@@ -8,7 +8,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 
 from app.core.settings import get_settings
-from app.core.scheduler import start_scheduler, stop_scheduler
+# Scheduler disabled - requires marketing features (ScheduledTask model)
+# from app.core.scheduler import start_scheduler, stop_scheduler
 from app.routers import api_router
 
 settings = get_settings()
@@ -19,17 +20,16 @@ app = FastAPI(
     docs_url=f"{settings.API_PREFIX}/docs",
 )
 
-# Startup event
-@app.on_event("startup")
-async def startup_event():
-    """Initialize scheduler on startup."""
-    start_scheduler(app)
+# Startup/shutdown events disabled - scheduler requires marketing features
+# @app.on_event("startup")
+# async def startup_event():
+#     """Initialize scheduler on startup."""
+#     start_scheduler(app)
 
-# Shutdown event
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Stop scheduler on shutdown."""
-    stop_scheduler(app)
+# @app.on_event("shutdown")
+# async def shutdown_event():
+#     """Stop scheduler on shutdown."""
+#     stop_scheduler(app)
 
 # CORS middleware
 app.add_middleware(

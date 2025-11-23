@@ -43,9 +43,11 @@ apscheduler==3.10.4
 # Logging
 loguru==0.7.2
 
-# OCR - Business Card Processing
-pytesseract==0.3.10
+# OCR - Business Card Processing (Production-grade)
+easyocr==1.7.1
+opencv-python-headless==4.9.0.80
 Pillow==10.2.0
+numpy==1.26.3
 
 # Testing
 pytest==7.4.4
