@@ -88,22 +88,10 @@ if FRONTEND_DIST.exists():
             return FileResponse(str(sw_path))
         return {"error": "registerSW.js not found"}
     
-    # SPA catch-all - only for root and app routes
-    @app.get("/", include_in_schema=False)
-    async def root():
-        """Serve landing page for marketing funnel."""
-        landing_page = Path(__file__).parent / "templates" / "landing.html"
-        if landing_page.exists():
-            return HTMLResponse(content=landing_page.read_text(encoding="utf-8"))
-        # Fallback to React SPA if landing page doesn't exist
-        index_path = FRONTEND_DIST / "index.html"
-        if index_path.exists():
-            return FileResponse(str(index_path))
-        return {"error": "Frontend not built"}
-    
-    @app.get("/app/{full_path:path}", include_in_schema=False)
-    async def serve_app(full_path: str):
-        """Serve SPA for /app/* routes."""
+    # SPA catch-all - serve React app for all non-API routes
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_spa(full_path: str):
+        """Serve React SPA for all routes."""
         index_path = FRONTEND_DIST / "index.html"
         if index_path.exists():
             return FileResponse(str(index_path))
