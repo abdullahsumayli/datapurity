@@ -4,6 +4,9 @@ import { useAuth } from './contexts/AuthContext'
 // Layouts
 import AppShell from './layouts/AppShell/AppShell'
 
+// Landing Page
+import LandingPage from './pages/landing/LandingPage'
+
 // Auth Pages
 import GoogleCallbackPage from './pages/auth/GoogleCallbackPage'
 import LoginPage from './pages/auth/LoginPage'
@@ -43,7 +46,7 @@ function AppRouter() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />

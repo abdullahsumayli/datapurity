@@ -1,0 +1,195 @@
+import { useNavigate } from 'react-router-dom'
+import './LandingPage.css'
+
+function LandingPage() {
+  const navigate = useNavigate()
+
+  return (
+    <div className="landing-page">
+      {/* Header */}
+      <header className="landing-header">
+        <div className="container">
+          <div className="header-content">
+            <div className="logo">
+              <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10C50 10 25 35 25 55C25 70 35 80 50 80C65 80 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient-landing)"/>
+                <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                <rect x="35" y="53" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                <rect x="35" y="61" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                <defs>
+                  <linearGradient id="gradient-landing" x1="50" y1="10" x2="50" y2="80" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#1F7FED"/>
+                    <stop offset="1" stopColor="#4FE3C1"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="brand">DataPurity</span>
+            </div>
+            
+            <div className="header-actions">
+              <button className="btn-secondary" onClick={() => navigate('/login')}>
+                تسجيل الدخول
+              </button>
+              <button className="btn-primary" onClick={() => navigate('/signup')}>
+                إنشاء حساب
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="container">
+          <div className="hero-content">
+            <h1 className="hero-title">
+              تنظيف ذكي للبيانات
+              <br />
+              <span className="gradient-text">بتقنية الذكاء الاصطناعي</span>
+            </h1>
+            <p className="hero-description">
+              منصة احترافية لتنظيف البيانات، معالجة بطاقات الأعمال بتقنية OCR المتقدمة،
+              وإدارة جهات الاتصال بكفاءة عالية
+            </p>
+            <div className="hero-actions">
+              <button className="btn-hero-primary" onClick={() => navigate('/signup')}>
+                ابدأ مجاناً
+              </button>
+              <button className="btn-hero-secondary" onClick={() => navigate('/login')}>
+                تسجيل الدخول
+              </button>
+            </div>
+          </div>
+          
+          <div className="hero-image">
+            <div className="floating-card card-1">
+              <div className="card-icon">📊</div>
+              <div className="card-text">تنظيف تلقائي</div>
+            </div>
+            <div className="floating-card card-2">
+              <div className="card-icon">🎯</div>
+              <div className="card-text">دقة 99%</div>
+            </div>
+            <div className="floating-card card-3">
+              <div className="card-icon">⚡</div>
+              <div className="card-text">معالجة فورية</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="features">
+        <div className="container">
+          <h2 className="section-title">ميزات DataPurity</h2>
+          <p className="section-subtitle">
+            كل ما تحتاجه لإدارة بياناتك باحترافية
+          </p>
+          
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">🔍</div>
+              <h3 className="feature-title">OCR متقدم</h3>
+              <p className="feature-description">
+                استخراج ذكي للبيانات من بطاقات الأعمال باستخدام Google Cloud Vision
+                بدقة عالية ودعم كامل للغة العربية والإنجليزية
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">✨</div>
+              <h3 className="feature-title">تنظيف تلقائي</h3>
+              <p className="feature-description">
+                تنظيف البيانات تلقائياً، إزالة التكرارات، تصحيح الأخطاء،
+                وتوحيد الصيغ بضغطة زر واحدة
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">📱</div>
+              <h3 className="feature-title">معالجة جماعية</h3>
+              <p className="feature-description">
+                معالجة مئات البطاقات دفعة واحدة، توفير الوقت والجهد
+                مع ضمان الدقة والجودة
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">📊</div>
+              <h3 className="feature-title">تقارير تفصيلية</h3>
+              <p className="feature-description">
+                تقارير شاملة عن جودة البيانات، الإحصائيات، والتحليلات
+                لاتخاذ قرارات أفضل
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🔒</div>
+              <h3 className="feature-title">أمان عالي</h3>
+              <p className="feature-description">
+                حماية متقدمة للبيانات، تشفير شامل، ونسخ احتياطي تلقائي
+                لضمان سلامة معلوماتك
+              </p>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">💾</div>
+              <h3 className="feature-title">تصدير سهل</h3>
+              <p className="feature-description">
+                تصدير البيانات بصيغ متعددة (Excel, CSV, JSON)
+                مع دعم كامل للأحرف العربية
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="cta">
+        <div className="container">
+          <div className="cta-content">
+            <h2 className="cta-title">جاهز لتحسين إدارة بياناتك؟</h2>
+            <p className="cta-description">
+              ابدأ الآن مع DataPurity واستمتع بتجربة تنظيف البيانات الاحترافية
+            </p>
+            <button className="btn-cta" onClick={() => navigate('/signup')}>
+              إنشاء حساب مجاني
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="container">
+          <div className="footer-content">
+            <div className="footer-brand">
+              <div className="logo">
+                <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M50 10C50 10 25 35 25 55C25 70 35 80 50 80C65 80 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient-footer)"/>
+                  <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                  <rect x="35" y="53" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                  <rect x="35" y="61" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
+                  <defs>
+                    <linearGradient id="gradient-footer" x1="50" y1="10" x2="50" y2="80" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#1F7FED"/>
+                      <stop offset="1" stopColor="#4FE3C1"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <span className="brand">DataPurity</span>
+              </div>
+              <p className="footer-tagline">تنظيف ذكي للبيانات بتقنية الذكاء الاصطناعي</p>
+            </div>
+            
+            <div className="footer-copyright">
+              <p>© 2025 DataPurity. جميع الحقوق محفوظة</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default LandingPage
