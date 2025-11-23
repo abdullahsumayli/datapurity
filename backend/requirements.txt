@@ -34,8 +34,9 @@ boto3==1.34.34
 pandas==2.2.0
 openpyxl==3.1.2
 
-# Phone validation
+# Phone & Email validation
 phonenumbers==8.13.27
+email-validator==2.3.0
 
 # Background tasks & Scheduling
 apscheduler==3.10.4
@@ -43,11 +44,9 @@ apscheduler==3.10.4
 # Logging
 loguru==0.7.2
 
-# OCR - Business Card Processing (Production-grade)
-easyocr==1.7.1
-opencv-python-headless==4.9.0.80
+# OCR - Business Card Processing (Google Vision)
+google-cloud-vision==3.7.0
 Pillow==10.2.0
-numpy==1.26.3
 
 # Testing
 pytest==7.4.4

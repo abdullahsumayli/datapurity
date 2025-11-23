@@ -10,79 +10,10 @@ from app.core.database import get_db
 from app.core.deps import get_current_user
 from app.models.user import User
 from app.schemas.card import CardResponse, CardUpdate
-from app.services.business_card_ocr import BusinessCardProcessor
 
 router = APIRouter()
 
-
-@router.post("/ocr", status_code=status.HTTP_200_OK)
-async def ocr_business_cards(
-    files: List[UploadFile] = File(...)
-):
-    """
-    Process multiple business card images with OCR.
-    
-    This endpoint:
-    1. Accepts multiple image files (JPG, PNG)
-    2. Saves them temporarily
-    3. Processes them with Tesseract OCR
-    4. Extracts structured data (name, company, phone, email, etc.)
-    5. Returns results as JSON
-    
-    No authentication required for OCR processing.
-    Future enhancement: Save results to database contacts table.
-    """
-    # Create temp directory for uploaded files
-    temp_dir = Path("tmp/cards")
-    temp_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Save uploaded files
-    saved_paths = []
-    try:
-        for file in files:
-            # Validate file type
-            if not file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Invalid file type: {file.filename}. Only JPG and PNG are supported."
-                )
-            
-            # Save file
-            file_path = temp_dir / file.filename
-            with file_path.open("wb") as buffer:
-                shutil.copyfileobj(file.file, buffer)
-            
-            saved_paths.append(file_path)
-        
-        # Process with OCR
-        processor = BusinessCardProcessor(saved_paths)
-        df = processor.run(dedupe=True)
-        
-        # Convert to dict for JSON response
-        records = df.to_dict(orient="records")
-        
-        return {
-            "success": True,
-            "count": len(records),
-            "records": records,
-            "message": f"Successfully processed {len(records)} business cards"
-        }
-        
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"OCR processing failed: {str(e)}"
-        )
-    
-    finally:
-        # Cleanup: remove temporary files
-        for path in saved_paths:
-            try:
-                if path.exists():
-                    path.unlink()
-            except Exception:
-                pass
-
+# Old /ocr endpoint removed - now handled by dedicated /ocr router with Google Vision
 
 @router.post("/upload", response_model=List[CardResponse], status_code=status.HTTP_201_CREATED)
 async def upload_card(

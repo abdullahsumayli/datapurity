@@ -1,165 +1,197 @@
 """
-Business Card OCR API endpoints using production-grade EasyOCR.
+OCR API Router - Google Cloud Vision.
+
+Provides REST endpoints for business card OCR processing
+using Google Cloud Vision API.
 """
 
-import logging
-from typing import Optional
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
+from typing import List
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel, Field
-from sqlalchemy.ext.asyncio import AsyncSession
+import logging
 
-from app.core.database import get_db
-from app.models.contact import Contact
-from app.services.ocr_business_cards import extract_business_card_data_from_bytes
+from app.services.ocr_google import ocr_business_card
+from app.services.business_card_parser import parse_business_card_text
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter()
+router = APIRouter(prefix="/ocr", tags=["OCR"])
 
 
-# =====================================================================
-# PYDANTIC MODELS
-# =====================================================================
-
-class OcrMetadata(BaseModel):
-    """OCR processing metadata."""
-    total_lines: int = Field(..., description="Total number of lines extracted")
-    avg_confidence: float = Field(..., description="Average OCR confidence (0-1)")
-
-
-class BusinessCardOcrResponse(BaseModel):
-    """Response model for OCR extraction."""
-    full_name: Optional[str] = None
-    company: Optional[str] = None
-    job_title: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    mobile: Optional[str] = None
-    website: Optional[str] = None
-    address: Optional[str] = None
-    other_lines: list[str] = Field(default_factory=list)
-    all_lines: list[str] = Field(default_factory=list)
-    metadata: Optional[OcrMetadata] = None
+# Response Models
+class BusinessCardData(BaseModel):
+    """Extracted business card data."""
+    name: str | None = None
+    company: str | None = None
+    job_title: str | None = None
+    phone: str | None = None
+    email: str | None = None
+    website: str | None = None
+    raw_text: str = ""
 
 
-class ContactSavedResponse(BaseModel):
-    """Response after saving contact."""
+class SingleCardResponse(BaseModel):
+    """Response for single card OCR."""
+    status: str = "success"
+    data: BusinessCardData
+
+
+class BatchCardItem(BaseModel):
+    """Single item in batch processing response."""
+    filename: str
     success: bool
-    contact_id: Optional[int] = None
-    message: str
-    extracted_data: BusinessCardOcrResponse
+    data: BusinessCardData | None = None
+    error: str | None = None
 
 
-# =====================================================================
-# ENDPOINTS
-# =====================================================================
+class BatchCardsResponse(BaseModel):
+    """Response for batch cards OCR."""
+    status: str = "success"
+    items: List[BatchCardItem]
 
-@router.post("/business-card", response_model=BusinessCardOcrResponse)
-async def ocr_business_card(
+
+# Endpoints
+@router.post("/business-card", response_model=SingleCardResponse)
+async def process_single_business_card(
     file: UploadFile = File(..., description="Business card image (JPG/PNG)")
-):
+) -> SingleCardResponse:
     """
-    Extract data from business card image using OCR.
+    OCR single business card using Google Cloud Vision.
     
-    Returns structured data without saving to database.
+    Extracts structured contact information including:
+    - Name
+    - Company
+    - Job title
+    - Phone number
+    - Email address
+    - Website
+    
+    Args:
+        file: Uploaded image file (JPEG, PNG, etc.)
+        
+    Returns:
+        Structured business card data
+        
+    Raises:
+        HTTPException 400: If file is not an image
+        HTTPException 500: If OCR processing fails
     """
+    # Validate file type
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(
+            status_code=400,
+            detail="File must be an image (JPEG, PNG, etc.)"
+        )
+    
     try:
-        # Validate file type
-        if not file.content_type or not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="File must be an image")
+        # Read image bytes
+        image_bytes = await file.read()
         
-        # Read file content
-        content = await file.read()
-        
-        if not content:
+        if not image_bytes:
             raise HTTPException(status_code=400, detail="Empty file")
         
-        logger.info(f"Processing business card: {file.filename}, size={len(content)} bytes")
+        logger.info(
+            f"Processing business card: {file.filename}, "
+            f"size={len(image_bytes)} bytes"
+        )
         
-        # Perform OCR extraction
-        result = extract_business_card_data_from_bytes(content)
+        # Perform OCR
+        ocr_result = ocr_business_card(image_bytes)
+        raw_text = ocr_result["raw_text"]
+        
+        # Parse extracted text
+        parsed_data = parse_business_card_text(raw_text)
         
         # Build response
-        response = BusinessCardOcrResponse(
-            **result["structured"],
-            all_lines=result.get("lines", []),
-            metadata=OcrMetadata(**result["metadata"]) if result.get("metadata") else None
-        )
+        card_data = BusinessCardData(**parsed_data)
         
-        logger.info(f"OCR completed: {response.metadata.total_lines if response.metadata else 0} lines")
+        logger.info(f"OCR completed: {len(raw_text)} chars extracted")
         
-        return response
-    
+        return SingleCardResponse(data=card_data)
+        
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"OCR processing failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"OCR processing failed: {str(e)}")
+        logger.error(f"OCR processing failed: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=500,
+            detail=f"OCR processing failed: {str(e)}"
+        )
 
 
-@router.post("/business-card/save", response_model=ContactSavedResponse)
-async def ocr_and_save_business_card(
-    file: UploadFile = File(..., description="Business card image (JPG/PNG)"),
-    db: AsyncSession = Depends(get_db)
-):
+@router.post("/business-cards/batch", response_model=BatchCardsResponse)
+async def process_batch_business_cards(
+    files: List[UploadFile] = File(..., description="Multiple business card images")
+) -> BatchCardsResponse:
     """
-    Extract data from business card and save to database.
+    OCR multiple business cards using Google Cloud Vision.
     
-    Returns extracted data and saved contact ID.
+    Processes each card independently - failures in individual cards
+    won't stop the entire batch.
+    
+    Args:
+        files: List of uploaded image files
+        
+    Returns:
+        List of results for each card, including success/failure status
+        
+    Note:
+        Invalid files or processing errors are captured per-item
+        and don't halt the entire batch operation.
     """
-    try:
-        # Validate file type
-        if not file.content_type or not file.content_type.startswith("image/"):
-            raise HTTPException(status_code=400, detail="File must be an image")
-        
-        # Read file content
-        content = await file.read()
-        
-        if not content:
-            raise HTTPException(status_code=400, detail="Empty file")
-        
-        logger.info(f"Processing and saving business card: {file.filename}")
-        
-        # Perform OCR extraction
-        result = extract_business_card_data_from_bytes(content)
-        structured = result["structured"]
-        
-        # Create contact from extracted data
-        contact = Contact(
-            full_name=structured.get("full_name"),
-            company=structured.get("company"),
-            job_title=structured.get("job_title"),
-            email=structured.get("email"),
-            phone=structured.get("phone"),
-            mobile=structured.get("mobile"),
-            # Parse address if available
-            address_line1=structured.get("address"),  # For now, store full address in line1
-        )
-        
-        # Save to database
-        db.add(contact)
-        await db.commit()
-        await db.refresh(contact)
-        
-        logger.info(f"Contact saved: ID={contact.id}, name={contact.full_name}")
-        
-        # Build extracted data response
-        extracted_data = BusinessCardOcrResponse(
-            **structured,
-            all_lines=result.get("lines", []),
-            metadata=OcrMetadata(**result["metadata"]) if result.get("metadata") else None
-        )
-        
-        return ContactSavedResponse(
-            success=True,
-            contact_id=contact.id,
-            message="Contact saved successfully",
-            extracted_data=extracted_data
-        )
+    if not files:
+        raise HTTPException(status_code=400, detail="No files provided")
     
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to save contact: {e}", exc_info=True)
-        await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Failed to save contact: {str(e)}")
+    logger.info(f"Processing batch of {len(files)} business cards")
+    
+    results = []
+    
+    for file in files:
+        item = BatchCardItem(
+            filename=file.filename or "unknown",
+            success=False
+        )
+        
+        try:
+            # Validate file type
+            if not file.content_type or not file.content_type.startswith("image/"):
+                item.error = "File is not an image"
+                results.append(item)
+                continue
+            
+            # Read image bytes
+            image_bytes = await file.read()
+            
+            if not image_bytes:
+                item.error = "Empty file"
+                results.append(item)
+                continue
+            
+            # Perform OCR
+            ocr_result = ocr_business_card(image_bytes)
+            raw_text = ocr_result["raw_text"]
+            
+            # Parse extracted text
+            parsed_data = parse_business_card_text(raw_text)
+            
+            # Success
+            item.success = True
+            item.data = BusinessCardData(**parsed_data)
+            
+        except Exception as e:
+            logger.error(
+                f"Failed to process {file.filename}: {str(e)}",
+                exc_info=True
+            )
+            item.error = str(e)
+        
+        results.append(item)
+    
+    # Count successes
+    success_count = sum(1 for item in results if item.success)
+    
+    logger.info(
+        f"Batch processing completed: {success_count}/{len(files)} successful"
+    )
+    
+    return BatchCardsResponse(items=results)

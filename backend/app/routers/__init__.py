@@ -27,7 +27,7 @@ api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboar
 api_router.include_router(datasets.router, prefix="/datasets", tags=["datasets"])
 api_router.include_router(jobs.router, prefix="/jobs", tags=["jobs"])
 api_router.include_router(cards.router, prefix="/cards", tags=["cards"])
-api_router.include_router(ocr.router, prefix="/ocr", tags=["ocr"])
+api_router.include_router(ocr.router, tags=["ocr"])  # Prefix defined in router
 api_router.include_router(contacts.router, prefix="/contacts", tags=["contacts"])
 api_router.include_router(exports.router, prefix="/exports", tags=["exports"])
 api_router.include_router(billing.router, prefix="/billing", tags=["billing"])
