@@ -27,7 +27,7 @@ function TopBar() {
     <header className="topbar">
       <div className="topbar-content">
         <div className="topbar-left">
-          <div className="topbar-logo">
+          <div className="topbar-logo" onClick={() => navigate('/app/dashboard')} style={{ cursor: 'pointer' }}>
             <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M50 10C50 10 25 35 25 55C25 70 35 80 50 80C65 80 75 70 75 55C75 35 50 10 50 10Z" fill="url(#gradient-topbar)"/>
               <rect x="35" y="45" width="30" height="4" rx="2" fill="white" opacity="0.9"/>
@@ -42,6 +42,21 @@ function TopBar() {
             </svg>
             <span className="topbar-brand">DataPurity</span>
           </div>
+          
+          <nav className="topbar-nav">
+            <button 
+              className="nav-link"
+              onClick={() => navigate('/app/dashboard')}
+            >
+              الرئيسية
+            </button>
+            <button 
+              className="nav-link"
+              onClick={() => navigate('/app/cards/processing')}
+            >
+              معالجة البطاقات
+            </button>
+          </nav>
         </div>
         
         <div className="topbar-right">
