@@ -4,9 +4,6 @@ import { useAuth } from './contexts/AuthContext'
 // Layouts
 import AppShell from './layouts/AppShell/AppShell'
 
-// Marketing
-import { LandingPage } from './pages/marketing/LandingPage'
-
 // Auth Pages
 import GoogleCallbackPage from './pages/auth/GoogleCallbackPage'
 import LoginPage from './pages/auth/LoginPage'
@@ -45,10 +42,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function AppRouter() {
   return (
     <Routes>
-      {/* Landing Page */}
-      <Route path="/" element={<LandingPage />} />
-      
       {/* Public Routes */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
