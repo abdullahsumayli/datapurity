@@ -71,73 +71,81 @@ function CardProcessingPage() {
   const processCards = async () => {
     setProcessing(prev => ({ ...prev, total: uploadedFiles.length }))
 
-    const formData = new FormData()
-    uploadedFiles.forEach((file: File) => formData.append('files', file))
-
     try {
-      // استخدام OCR endpoint (لا يحتاج authentication)
-      const response = await apiClient.post('/cards/ocr', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
+      // معالجة كل بطاقة باستخدام نظام EasyOCR الجديد
+      const extractedData: ExtractedContact[] = []
+      
+      for (let i = 0; i < uploadedFiles.length; i++) {
+        const file = uploadedFiles[i]
+        
+        try {
+          // استخدام OCR endpoint الجديد
+          const formData = new FormData()
+          formData.append('file', file)
+          
+          const response = await apiClient.post('/ocr/business-card', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+          })
 
-      // استخدام البيانات من الـ Backend
-      interface OcrRecord {
-        name: string
-        company: string
-        phone: string
-        email: string
-        address: string
-        title: string
-        website: string
-        extraction_quality: number
-        ocr_text: string
+          // البيانات من نظام EasyOCR الجديد
+          const data = response.data
+          
+          extractedData.push({
+            id: i + 1,
+            name: data.full_name || `جهة اتصال ${i + 1}`,
+            company: data.company || '',
+            phone: data.phone || data.mobile || '',
+            email: data.email || '',
+            address: data.address || '',
+            position: data.job_title || '',
+            confidence: Math.round((data.metadata?.avg_confidence || 0.85) * 100),
+            image_url: URL.createObjectURL(file)
+          })
+          
+          // تحديث التقدم
+          setProcessing(prev => ({
+            ...prev,
+            processed: i + 1
+          }))
+          
+        } catch (cardError) {
+          console.error(`فشلت معالجة البطاقة ${i + 1}:`, cardError)
+          
+          // إضافة بيانات افتراضية في حالة الفشل
+          extractedData.push({
+            id: i + 1,
+            name: `جهة اتصال ${i + 1}`,
+            company: '',
+            phone: '',
+            email: '',
+            address: '',
+            position: '',
+            confidence: 0,
+            image_url: URL.createObjectURL(file)
+          })
+          
+          setProcessing(prev => ({
+            ...prev,
+            processed: i + 1,
+            failed: prev.failed + 1
+          }))
+        }
       }
 
-      const records: OcrRecord[] = response.data.records || []
-      
-      const extractedData: ExtractedContact[] = records.map((record: OcrRecord, index: number) => ({
-        id: index + 1,
-        name: record.name || `جهة اتصال ${index + 1}`,
-        company: record.company || `شركة ${index + 1}`,
-        phone: record.phone || `+966 50 123 ${String(1000 + index).slice(-4)}`,
-        email: record.email || `contact${index + 1}@company.com`,
-        address: record.address || 'الرياض، المملكة العربية السعودية',
-        position: record.title || 'مدير',
-        confidence: Math.round(record.extraction_quality || 85),
-        image_url: URL.createObjectURL(uploadedFiles[index])
-      }))
-
       setContacts(extractedData)
-      setProcessing({
-        total: uploadedFiles.length,
-        processed: uploadedFiles.length,
-        failed: 0,
+      setProcessing(prev => ({
+        ...prev,
         status: 'completed'
-      })
+      }))
+      
     } catch (error) {
       console.error('Processing failed:', error)
-      // في حالة فشل الاتصال بالـ Backend، نستخدم بيانات تجريبية
-      const mockData: ExtractedContact[] = uploadedFiles.map((file: File, index: number) => ({
-        id: index + 1,
-        name: `جهة اتصال ${index + 1}`,
-        company: `شركة ${index + 1}`,
-        phone: `+966 50 123 ${String(1000 + index).slice(-4)}`,
-        email: `contact${index + 1}@company.com`,
-        address: 'الرياض، المملكة العربية السعودية',
-        position: 'مدير',
-        confidence: Math.round(85 + Math.random() * 15),
-        image_url: URL.createObjectURL(file)
-      }))
-      
-      setContacts(mockData)
       setProcessing({
         total: uploadedFiles.length,
-        processed: uploadedFiles.length,
-        failed: 0,
-        status: 'completed'
+        processed: 0,
+        failed: uploadedFiles.length,
+        status: 'failed'
       })
-      
-      console.warn('استخدام بيانات تجريبية - Backend غير متصل')
     }
   }
 
