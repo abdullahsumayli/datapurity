@@ -1,3 +1,0 @@
-"""
-DataPurity API Package
-"""
