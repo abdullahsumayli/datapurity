@@ -34,9 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(response.data)
       setIsAuthenticated(true)
     } catch (error) {
-      // في حالة فشل جلب البيانات، نبقي على الحالة كما هي
-      // لا نقوم بتسجيل الخروج تلقائيًا
+      // إذا فشل الحصول على بيانات المستخدم، نقوم بتسجيل الخروج
+      // هذا يحدث عندما يكون التوكن منتهي الصلاحية أو غير صالح
       console.log('Failed to fetch user data:', error)
+      localStorage.removeItem('access_token')
+      setUser(null)
+      setIsAuthenticated(false)
     } finally {
       setIsLoading(false)
     }
