@@ -193,7 +193,7 @@ async def google_callback(
         access_token = create_access_token(subject=str(user.id))
         
         # Redirect to frontend with token
-        frontend_url = f"http://localhost:5173/auth/callback?token={access_token}"
+        frontend_url = f"https://aidotoo.com/auth/callback?token={access_token}"
         return RedirectResponse(url=frontend_url)
         
     except Exception as e:
