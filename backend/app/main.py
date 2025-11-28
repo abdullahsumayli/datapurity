@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.core.settings import get_settings
 # Scheduler disabled - requires marketing features (ScheduledTask model)
@@ -30,6 +31,16 @@ app = FastAPI(
 # async def shutdown_event():
 #     """Stop scheduler on shutdown."""
 #     stop_scheduler(app)
+
+# Session middleware (required for OAuth)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.JWT_SECRET,  # Use same secret as JWT
+    session_cookie="datapurity_session",
+    max_age=3600,  # 1 hour
+    same_site="lax",
+    https_only=True,  # Enable in production with HTTPS
+)
 
 # CORS middleware
 app.add_middleware(
