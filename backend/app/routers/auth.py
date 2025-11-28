@@ -1,10 +1,12 @@
 """Authentication endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import datetime, timedelta
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from authlib.integrations.starlette_client import OAuth
 from starlette.requests import Request
+import secrets
 
 from app.db.session import get_db
 from app.schemas.auth import LoginRequest, SignupRequest, Token
@@ -199,3 +201,114 @@ async def google_callback(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Authentication failed: {str(e)}"
         )
+
+
+# Password reset token storage (in production, use Redis or database)
+password_reset_tokens = {}
+
+
+async def send_password_reset_email(email: str, reset_token: str):
+    """Send password reset email (mock implementation)."""
+    # TODO: Implement actual email sending
+    reset_link = f"https://aidotoo.com/reset-password?token={reset_token}"
+    print(f"Password reset link for {email}: {reset_link}")
+    # In production, use email service like SendGrid, AWS SES, etc.
+
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+async def forgot_password(
+    request: dict,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+):
+    """Request password reset."""
+    email = request.get("email")
+    
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email is required"
+        )
+    
+    # Check if user exists
+    from sqlalchemy import select
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+    
+    # Always return success (security: don't reveal if email exists)
+    if user:
+        # Generate reset token
+        reset_token = secrets.token_urlsafe(32)
+        expires_at = datetime.utcnow() + timedelta(hours=1)
+        
+        # Store token (in production, use database)
+        password_reset_tokens[reset_token] = {
+            "email": email,
+            "expires_at": expires_at
+        }
+        
+        # Send email in background
+        background_tasks.add_task(send_password_reset_email, email, reset_token)
+    
+    return {"message": "If the email exists, a reset link has been sent"}
+
+
+@router.post("/reset-password", status_code=status.HTTP_200_OK)
+async def reset_password(
+    request: dict,
+    db: AsyncSession = Depends(get_db),
+):
+    """Reset password with token."""
+    token = request.get("token")
+    new_password = request.get("new_password")
+    
+    if not token or not new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Token and new password are required"
+        )
+    
+    # Validate password length
+    if len(new_password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters"
+        )
+    
+    # Check if token exists and is valid
+    token_data = password_reset_tokens.get(token)
+    
+    if not token_data:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token"
+        )
+    
+    # Check if token expired
+    if datetime.utcnow() > token_data["expires_at"]:
+        del password_reset_tokens[token]
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Reset token has expired"
+        )
+    
+    # Get user
+    from sqlalchemy import select
+    result = await db.execute(select(User).where(User.email == token_data["email"]))
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Update password
+    user.hashed_password = get_password_hash(new_password)
+    await db.commit()
+    
+    # Delete used token
+    del password_reset_tokens[token]
+    
+    return {"message": "Password has been reset successfully"}
+

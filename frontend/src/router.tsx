@@ -8,8 +8,10 @@ import AppShell from './layouts/AppShell/AppShell'
 import LandingPage from './pages/landing/LandingPage'
 
 // Auth Pages
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 import GoogleCallbackPage from './pages/auth/GoogleCallbackPage'
 import LoginPage from './pages/auth/LoginPage'
+import ResetPasswordPage from './pages/auth/ResetPasswordPage'
 import SignupPage from './pages/auth/SignupPage'
 
 // Protected Pages
@@ -49,6 +51,8 @@ function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/admin/login" element={<AdminLogin />} />
