@@ -95,6 +95,8 @@ function CardProcessingPage() {
   const [ocrError, setOcrError] = useState<string | null>(null);
 
   const navigate = useNavigate()
+  const location = useLocation()
+  const uploadedFiles: File[] = (location as any)?.state?.files ?? []
 
 
   // دالة معالجة بطاقة واحدة وملء الحقول تلقائياً
@@ -141,6 +143,14 @@ function CardProcessingPage() {
       setIsProcessing(false);
     }
   };
+
+  // تشغيل تلقائي للـ OCR عند وجود ملف واحد قادم من صفحة الرفع
+  useEffect(() => {
+    if (uploadedFiles && uploadedFiles.length === 1 && contacts.length === 0 && !isProcessing) {
+      handleOcrForSingleCard(uploadedFiles[0]);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadedFiles]);
 
           const result = await ocrBusinessCard(file)
 
@@ -429,9 +439,8 @@ function CardProcessingPage() {
                     className="btn-primary"
                     style={{ marginRight: '1rem' }}
                     onClick={() => {
-                      // استخدم أول ملف من ملفات المعالجة
-                      if (window.uploadedFiles && window.uploadedFiles.length > 0) {
-                        handleOcrForSingleCard(window.uploadedFiles[0]);
+                      if (uploadedFiles && uploadedFiles.length > 0) {
+                        handleOcrForSingleCard(uploadedFiles[0]);
                       } else {
                         alert('يرجى رفع صورة البطاقة أولاً');
                       }

@@ -1,88 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import apiClient from '../../config/apiClient';
 import './profile.css';
 
 interface UserProfile {
   id: number;
   email: string;
   full_name: string;
-  phone?: string;
-  company?: string;
-  job_title?: string;
+  is_active: boolean;
   created_at: string;
-}
-
-interface ProfileStats {
-  total_cards: number;
   total_contacts: number;
-  total_datasets: number;
-  last_activity: string;
+  total_jobs: number;
 }
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [stats, setStats] = useState<ProfileStats | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'activity'>('profile');
   
   const [formData, setFormData] = useState({
     full_name: '',
-    email: '',
-    phone: '',
-    company: '',
-    job_title: ''
+    email: ''
   });
 
   useEffect(() => {
     loadProfile();
-    loadStats();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProfile = async () => {
     try {
-      // Mock data - replace with actual API call
-      const mockProfile: UserProfile = {
-        id: 1,
-        email: user?.email || 'user@example.com',
-        full_name: user?.email?.split('@')[0] || 'المستخدم',
-        phone: '+966 50 123 4567',
-        company: 'شركة DataPurity',
-        job_title: 'مدير تقنية المعلومات',
-        created_at: new Date().toISOString()
-      };
+      setError(null);
+      const response = await apiClient.get('/users/me');
+      const profileData = response.data;
       
-      setProfile(mockProfile);
+      setProfile(profileData);
       setFormData({
-        full_name: mockProfile.full_name,
-        email: mockProfile.email,
-        phone: mockProfile.phone || '',
-        company: mockProfile.company || '',
-        job_title: mockProfile.job_title || ''
+        full_name: profileData.full_name || '',
+        email: profileData.email
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load profile:', error);
+      setError('فشل تحميل الملف الشخصي');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadStats = async () => {
-    try {
-      // Mock data - replace with actual API call
-      const mockStats: ProfileStats = {
-        total_cards: 156,
-        total_contacts: 892,
-        total_datasets: 24,
-        last_activity: new Date().toISOString()
-      };
-      
-      setStats(mockStats);
-    } catch (error) {
-      console.error('Failed to load stats:', error);
     }
   };
 
@@ -95,20 +60,14 @@ const ProfilePage: React.FC = () => {
 
   const handleSave = async () => {
     setSaving(true);
+    setError(null);
     try {
-      // Mock save - replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (profile) {
-        setProfile({
-          ...profile,
-          ...formData
-        });
-      }
-      
+      const response = await apiClient.put('/users/me', formData);
+      setProfile(response.data);
       setIsEditing(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save profile:', error);
+      setError('فشل حفظ التعديلات');
     } finally {
       setSaving(false);
     }
@@ -117,14 +76,12 @@ const ProfilePage: React.FC = () => {
   const handleCancel = () => {
     if (profile) {
       setFormData({
-        full_name: profile.full_name,
-        email: profile.email,
-        phone: profile.phone || '',
-        company: profile.company || '',
-        job_title: profile.job_title || ''
+        full_name: profile.full_name || '',
+        email: profile.email
       });
     }
     setIsEditing(false);
+    setError(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -153,7 +110,7 @@ const ProfilePage: React.FC = () => {
           <div className="profile-avatar">
             <div className="avatar-circle">
               <span className="avatar-initials">
-                {profile?.full_name.charAt(0).toUpperCase() || 'M'}
+                {profile?.full_name?.charAt(0).toUpperCase() || profile?.email.charAt(0).toUpperCase() || 'M'}
               </span>
             </div>
             <button className="avatar-upload-btn">
@@ -163,7 +120,7 @@ const ProfilePage: React.FC = () => {
           </div>
           
           <div className="profile-header-info">
-            <h1>{profile?.full_name}</h1>
+            <h1>{profile?.full_name || profile?.email.split('@')[0]}</h1>
             <p className="profile-email">{profile?.email}</p>
             <p className="profile-member-since">
               عضو منذ {profile && formatDate(profile.created_at)}
@@ -181,30 +138,30 @@ const ProfilePage: React.FC = () => {
         {/* Stats Cards */}
         <div className="profile-stats">
           <div className="stat-card">
-            <div className="stat-icon card-icon">🎴</div>
-            <div className="stat-content">
-              <h3>{stats?.total_cards || 0}</h3>
-              <p>بطاقة معالجة</p>
-            </div>
-          </div>
-          
-          <div className="stat-card">
             <div className="stat-icon contact-icon">👥</div>
             <div className="stat-content">
-              <h3>{stats?.total_contacts || 0}</h3>
-              <p>جهة اتصال</p>
+              <h3>{profile?.total_contacts || 0}</h3>
+              <p>جهات الاتصال</p>
             </div>
           </div>
           
           <div className="stat-card">
             <div className="stat-icon dataset-icon">📊</div>
             <div className="stat-content">
-              <h3>{stats?.total_datasets || 0}</h3>
-              <p>مجموعة بيانات</p>
+              <h3>{profile?.total_jobs || 0}</h3>
+              <p>مهمات المعالجة</p>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="error-banner">
+          <span className="error-icon">⚠️</span>
+          {error}
+        </div>
+      )}
 
       {/* Tabs Navigation */}
       <div className="profile-tabs">
@@ -264,48 +221,6 @@ const ProfilePage: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     disabled={!isEditing}
-                    className={!isEditing ? 'disabled' : ''}
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="phone">رقم الهاتف</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="+966 50 123 4567"
-                    className={!isEditing ? 'disabled' : ''}
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label htmlFor="company">الشركة</label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="اسم الشركة"
-                    className={!isEditing ? 'disabled' : ''}
-                  />
-                </div>
-
-                <div className="form-field full-width">
-                  <label htmlFor="job_title">المسمى الوظيفي</label>
-                  <input
-                    type="text"
-                    id="job_title"
-                    name="job_title"
-                    value={formData.job_title}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    placeholder="المسمى الوظيفي"
                     className={!isEditing ? 'disabled' : ''}
                   />
                 </div>

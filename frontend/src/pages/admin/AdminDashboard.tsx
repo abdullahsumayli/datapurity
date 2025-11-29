@@ -7,48 +7,45 @@ interface User {
   id: number
   email: string
   full_name: string
+  is_active: boolean
+  is_superuser: boolean
   created_at: string
-  subscription?: {
-    plan: string
-    status: string
-    current_period_end: string
-    usage: {
-      cleaning?: { used: number; limit: number }
-      ocr?: { used: number; limit: number }
-    }
-  }
+  total_contacts: number
+  total_jobs: number
 }
 
-interface PlanStats {
+interface AdminStats {
   total_users: number
-  active_subscriptions: number
-  free_users: number
-  starter_users: number
-  business_users: number
-  monthly_revenue: number
+  active_users: number
+  total_contacts: number
+  total_jobs: number
+  completed_jobs: number
 }
 
 function AdminDashboard() {
   const navigate = useNavigate()
   const [users, setUsers] = useState<User[]>([])
-  const [stats, setStats] = useState<PlanStats | null>(null)
+  const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedPlan, setSelectedPlan] = useState<string>('all')
+  const [error, setError] = useState<string | null>(null)
 
   const fetchAdminData = async () => {
     try {
-      // Note: هذه الـ endpoints تحتاج إلى إضافتها في الـ backend
+      setError(null)
       const [usersRes, statsRes] = await Promise.all([
-        apiClient.get('/admin/users', {
-          params: { plan: selectedPlan !== 'all' ? selectedPlan : undefined }
-        }),
-        apiClient.get('/admin/stats')
+        apiClient.get('/users/admin/users'),
+        apiClient.get('/users/admin/stats')
       ])
       
       setUsers(usersRes.data)
       setStats(statsRes.data)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to fetch admin data:', error)
+      if (error.response?.status === 403) {
+        setError('ليس لديك صلاحيات الوصول إلى لوحة التحكم')
+      } else {
+        setError('فشل تحميل البيانات')
+      }
     } finally {
       setLoading(false)
     }
@@ -65,18 +62,13 @@ function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    fetchAdminData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedPlan])
-
   const changePlan = async (userId: number, newPlan: string) => {
     if (!confirm(`هل تريد تغيير باقة هذا المستخدم إلى ${newPlan}؟`)) {
       return
     }
 
     try {
-      await apiClient.post(`/admin/users/${userId}/change-plan`, {
+      await apiClient.post(`/users/admin/users/${userId}/change-plan`, {
         plan: newPlan
       })
       
@@ -94,22 +86,8 @@ function AdminDashboard() {
     navigate('/admin/login')
   }
 
-  const getPlanBadgeClass = (plan: string) => {
-    const classes: Record<string, string> = {
-      free: 'plan-badge-free',
-      starter: 'plan-badge-starter',
-      business: 'plan-badge-business'
-    }
-    return classes[plan] || 'plan-badge-default'
-  }
-
-  const getPlanName = (plan: string) => {
-    const names: Record<string, string> = {
-      free: 'مجاني',
-      starter: 'مبتدئ',
-      business: 'أعمال'
-    }
-    return names[plan] || plan
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ar-SA')
   }
 
   if (loading) {
@@ -120,12 +98,23 @@ function AdminDashboard() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="admin-container">
+        <div className="error-banner">
+          <span className="error-icon">⚠️</span>
+          {error}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="admin-container">
       <div className="admin-header">
         <div>
           <h1>لوحة التحكم الإدارية</h1>
-          <p>إدارة المستخدمين والباقات</p>
+          <p>إدارة المستخدمين والنظام</p>
         </div>
         <button onClick={handleLogout} className="logout-btn">
           <span>🚪</span>
@@ -147,59 +136,48 @@ function AdminDashboard() {
           <div className="stat-card">
             <div className="stat-icon">✅</div>
             <div className="stat-content">
-              <h3>اشتراكات نشطة</h3>
-              <p className="stat-value">{stats.active_subscriptions}</p>
+              <h3>مستخدمون نشطون</h3>
+              <p className="stat-value">{stats.active_users}</p>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">🆓</div>
+            <div className="stat-icon">👤</div>
             <div className="stat-content">
-              <h3>باقة مجانية</h3>
-              <p className="stat-value">{stats.free_users}</p>
+              <h3>جهات الاتصال</h3>
+              <p className="stat-value">{stats.total_contacts}</p>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">🚀</div>
+            <div className="stat-icon">📊</div>
             <div className="stat-content">
-              <h3>باقة مبتدئ</h3>
-              <p className="stat-value">{stats.starter_users}</p>
+              <h3>إجمالي المهام</h3>
+              <p className="stat-value">{stats.total_jobs}</p>
+            </div>
+          </div>
+
+          <div className="stat-card stat-card-success">
+            <div className="stat-icon">✓</div>
+            <div className="stat-content">
+              <h3>مهام مكتملة</h3>
+              <p className="stat-value">{stats.completed_jobs}</p>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon">💼</div>
+            <div className="stat-icon">📈</div>
             <div className="stat-content">
-              <h3>باقة أعمال</h3>
-              <p className="stat-value">{stats.business_users}</p>
-            </div>
-          </div>
-
-          <div className="stat-card stat-card-revenue">
-            <div className="stat-icon">💰</div>
-            <div className="stat-content">
-              <h3>الإيرادات الشهرية</h3>
-              <p className="stat-value">{stats.monthly_revenue.toFixed(2)} ريال</p>
+              <h3>معدل النجاح</h3>
+              <p className="stat-value">
+                {stats.total_jobs > 0 
+                  ? Math.round((stats.completed_jobs / stats.total_jobs) * 100) 
+                  : 0}%
+              </p>
             </div>
           </div>
         </div>
       )}
-
-      {/* Filter */}
-      <div className="filter-section">
-        <label>تصفية حسب الباقة:</label>
-        <select 
-          value={selectedPlan} 
-          onChange={(e) => setSelectedPlan(e.target.value)}
-          className="plan-filter"
-        >
-          <option value="all">جميع الباقات</option>
-          <option value="free">مجاني</option>
-          <option value="starter">مبتدئ</option>
-          <option value="business">أعمال</option>
-        </select>
-      </div>
 
       {/* Users Table */}
       <div className="users-table-container">
@@ -207,46 +185,36 @@ function AdminDashboard() {
         <table className="users-table">
           <thead>
             <tr>
-              <th>المستخدم</th>
+              <th>المعرف</th>
               <th>البريد الإلكتروني</th>
-              <th>الباقة</th>
+              <th>الاسم</th>
+              <th>جهات الاتصال</th>
+              <th>المهام</th>
               <th>الحالة</th>
-              <th>الاستخدام</th>
-              <th>تاريخ الانتهاء</th>
+              <th>صلاحية الإدارة</th>
+              <th>تاريخ التسجيل</th>
               <th>إجراءات</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td className="user-name">{user.full_name || 'غير محدد'}</td>
+                <td>{user.id}</td>
                 <td>{user.email}</td>
+                <td className="user-name">{user.full_name || 'غير محدد'}</td>
+                <td>{user.total_contacts}</td>
+                <td>{user.total_jobs}</td>
                 <td>
-                  <span className={`plan-badge ${getPlanBadgeClass(user.subscription?.plan || 'free')}`}>
-                    {getPlanName(user.subscription?.plan || 'free')}
+                  <span className={`status-badge status-${user.is_active ? 'active' : 'inactive'}`}>
+                    {user.is_active ? 'نشط' : 'غير نشط'}
                   </span>
                 </td>
                 <td>
-                  <span className={`status-badge status-${user.subscription?.status || 'inactive'}`}>
-                    {user.subscription?.status === 'active' ? 'نشط' : 'غير نشط'}
+                  <span className={`status-badge ${user.is_superuser ? 'admin-badge' : ''}`}>
+                    {user.is_superuser ? 'مدير' : 'مستخدم عادي'}
                   </span>
                 </td>
-                <td>
-                  {user.subscription?.usage && (
-                    <div className="usage-mini">
-                      <small>
-                        تنظيف: {user.subscription.usage.cleaning?.used}/{user.subscription.usage.cleaning?.limit}
-                        <br />
-                        كروت: {user.subscription.usage.ocr?.used}/{user.subscription.usage.ocr?.limit}
-                      </small>
-                    </div>
-                  )}
-                </td>
-                <td>
-                  {user.subscription?.current_period_end ? (
-                    new Date(user.subscription.current_period_end).toLocaleDateString('ar-SA')
-                  ) : '-'}
-                </td>
+                <td>{formatDate(user.created_at)}</td>
                 <td>
                   <div className="action-buttons">
                     <select
@@ -258,6 +226,18 @@ function AdminDashboard() {
                       <option value="free">مجاني</option>
                       <option value="starter">مبتدئ</option>
                       <option value="business">أعمال</option>
+                    </select>
+                <td>
+                  <div className="action-btns">
+                    <select 
+                      onChange={(e) => changePlan(user.id, e.target.value)}
+                      className="plan-select"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>تغيير الباقة</option>
+                      <option value="free">مجاني</option>
+                      <option value="pro">احترافي</option>
+                      <option value="enterprise">مؤسسي</option>
                     </select>
                   </div>
                 </td>

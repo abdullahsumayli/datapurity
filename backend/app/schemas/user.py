@@ -39,10 +39,41 @@ class UserInDB(UserBase):
 
 
 class UserResponse(UserBase):
-    """User response schema (public)."""
+    """User response schema (public) with statistics."""
 
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     is_active: bool
     created_at: datetime
+    total_contacts: int = 0
+    total_jobs: int = 0
+
+
+class AdminUserResponse(UserBase):
+    """Admin user response with full details."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    is_active: bool
+    is_superuser: bool
+    created_at: datetime
+    total_contacts: int = 0
+    total_jobs: int = 0
+
+
+class AdminStatsResponse(BaseModel):
+    """Admin dashboard statistics."""
+
+    total_users: int
+    active_users: int
+    total_contacts: int
+    total_jobs: int
+    completed_jobs: int
+
+
+class ChangePlanRequest(BaseModel):
+    """Request to change user's subscription plan."""
+
+    plan: str  # e.g., "free", "pro", "enterprise"
