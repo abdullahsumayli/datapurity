@@ -152,170 +152,31 @@ function CardProcessingPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadedFiles]);
 
-          const result = await ocrBusinessCard(file)
-
-          
-
-          // استخدم القيم المستخرجة حتى لو كانت فارغة — لا نعتمد على قيم افتراضية
-          extractedData.push({
-            id: i + 1,
-            name: result.fields.name ?? '',
-            company: result.fields.company ?? '',
-            phone: result.fields.phone?.normalized ?? result.fields.phone?.raw ?? '',
-            email: result.fields.email ?? '',
-            address: result.fields.address ?? result.raw_text ?? '',
-            position: result.fields.title ?? '',
-            confidence: 90,
-            image_url: URL.createObjectURL(file)
-          })
-
-          
-
-          setProcessing(prev => ({
-
-            ...prev,
-
-            processed: i + 1
-
-          }))
-
-          
-
-        } catch (cardError) {
-
-          setOcrError('فشل في قراءة الكرت، حاول مرة أخرى.')
-
-          console.error(`فشلت معالجة البطاقة ${i + 1}:`, cardError)
-
-          
-
-          // إضافة بيانات افتراضية في حالة الفشل
-
-          extractedData.push({
-
-            id: i + 1,
-
-            name: `جهة اتصال ${i + 1}`,
-
-            company: '',
-
-            phone: '',
-
-            email: '',
-
-            address: '',
-
-            position: '',
-
-            confidence: 0,
-
-            image_url: URL.createObjectURL(file)
-
-          })
-
-          
-
-          setProcessing(prev => ({
-
-            ...prev,
-
-            processed: i + 1,
-
-            failed: prev.failed + 1
-
-          }))
-
-        }
-
-      }
-
-
-
-      setContacts(extractedData)
-
-      setProcessing(prev => ({
-
-        ...prev,
-
-        status: 'completed'
-
-      }))
-
-      
-
-    } catch (error) {
-
-      console.error('Processing failed:', error)
-
-      setOcrError('فشل في معالجة البطاقات.')
-
-      setProcessing({
-
-        total: uploadedFiles.length,
-
-        processed: 0,
-
-        failed: uploadedFiles.length,
-
-        status: 'failed'
-
-      })
-
-    } finally {
-
-      setIsProcessing(false)
-
-    }
-
-  }
-
-
-
   const downloadExcel = () => {
-
     if (contacts.length === 0) return
-
     setExporting(true)
 
-
-
     try {
-
       // تحضير البيانات للـ Excel
-
       const excelData = contacts.map(contact => ({
-
         'الاسم': contact.name,
-
         'الشركة': contact.company,
-
         'رقم الهاتف': contact.phone,
-
         'البريد الإلكتروني': contact.email,
-
         'العنوان': contact.address || '',
-
         'الوظيفة': contact.position || '',
-
         'نسبة الدقة': `${contact.confidence}%`
-
       }))
 
-
-
       // إنشاء Workbook
-
       const wb = XLSX.utils.book_new()
-
       // ...existing code...
-  // زر جديد لمعالجة بطاقة واحدة (أول ملف فقط)
-  // يمكن وضعه في مكان مناسب في الواجهة
-  // مثال: تحت معاينة البطاقة
-  // <button onClick={() => handleOcrForSingleCard(uploadedFiles[0])}>معالجة البطاقة</button>
-
+    } catch (error) {
+      console.error('Error exporting:', error)
+    } finally {
+      setExporting(false)
+    }
   }
-
-
 
   const updateContact = (id: number, field: keyof ExtractedContact, value: string | number) => {
 
@@ -343,7 +204,7 @@ function CardProcessingPage() {
 
       // تحديد المصدر بناءً على من أين جاءت البيانات
 
-      const source = fromBulkScan ? 'single-scan' : 'bulk-upload'
+      const source = 'single-scan'
 
       
 
@@ -545,7 +406,7 @@ function CardProcessingPage() {
 
             className="btn-secondary"
 
-            onClick={downloadCSV}
+            onClick={downloadExcel}
 
           >
 
