@@ -20,6 +20,21 @@ ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
   echo ">>> Pull latest code"
   git pull origin main
 
+  echo ">>> Setup systemd services if not exists"
+  if [ ! -f /etc/systemd/system/datapurity-backend.service ]; then
+    echo "Installing backend service..."
+    sudo cp infra/datapurity-backend.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable datapurity-backend.service
+  fi
+  
+  if [ ! -f /etc/systemd/system/datapurity-frontend.service ]; then
+    echo "Installing frontend service..."
+    sudo cp infra/datapurity-frontend.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable datapurity-frontend.service
+  fi
+
   # Backend: Python virtualenv handling
   if [ -d venv ]; then
     echo ">>> Backend: Activate venv and install requirements"

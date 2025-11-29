@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import * as XLSX from 'xlsx'
 
-import { ocrBusinessCard } from '../../hooks/useOcr'
 
 
 
