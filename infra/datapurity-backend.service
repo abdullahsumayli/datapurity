@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=www-data
 WorkingDirectory=/opt/datapurity/backend
-ExecStart=/opt/datapurity/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+ExecStart=/opt/datapurity/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -15,6 +15,7 @@ SyslogIdentifier=datapurity-backend
 
 Environment=PYTHONUNBUFFERED=1
 Environment=ENVIRONMENT=production
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/opt/datapurity/backend/gcv-credentials.json
 
 [Install]
 WantedBy=multi-user.target
