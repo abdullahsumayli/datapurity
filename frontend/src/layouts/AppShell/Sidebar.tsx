@@ -48,6 +48,11 @@ function Sidebar() {
           <span className="nav-text">مراجعة البطاقات</span>
         </NavLink>
         
+        <NavLink to="/app/cards/collection" className="nav-item">
+          <span className="nav-icon">📇</span>
+          <span className="nav-text">مجموعة الكروت</span>
+        </NavLink>
+        
         <NavLink to="/app/jobs" className="nav-item">
           <span className="nav-icon">⚙️</span>
           <span className="nav-text">المهام الخلفية</span>

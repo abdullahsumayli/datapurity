@@ -9,7 +9,6 @@ interface Contact {
   company: string
   phone: string
   email: string
-  address: string
   position: string
   source: 'bulk-upload' | 'single-scan' | 'manual'
   addedAt: string
@@ -106,7 +105,6 @@ export default function CardsCollectionPage() {
       'الشركة': c.company,
       'الهاتف': c.phone,
       'البريد الإلكتروني': c.email,
-      'العنوان': c.address,
       'المنصب': c.position,
       'المصدر': c.source === 'bulk-upload' ? 'رفع متعدد' : c.source === 'single-scan' ? 'مسح فردي' : 'يدوي',
       'تاريخ الإضافة': new Date(c.addedAt).toLocaleString('ar-SA')
@@ -128,13 +126,12 @@ export default function CardsCollectionPage() {
     }
 
     const csvContent = [
-      ['الاسم', 'الشركة', 'الهاتف', 'البريد الإلكتروني', 'العنوان', 'المنصب', 'المصدر', 'تاريخ الإضافة'].join(','),
+      ['الاسم', 'الشركة', 'الهاتف', 'البريد الإلكتروني', 'المنصب', 'المصدر', 'تاريخ الإضافة'].join(','),
       ...dataToExport.map(c => [
         c.name,
         c.company,
         c.phone,
         c.email,
-        c.address,
         c.position,
         c.source === 'bulk-upload' ? 'رفع متعدد' : c.source === 'single-scan' ? 'مسح فردي' : 'يدوي',
         new Date(c.addedAt).toLocaleString('ar-SA')
@@ -170,7 +167,7 @@ export default function CardsCollectionPage() {
       <div className="collection-header">
         <div className="header-top">
           <h1>📇 مجموعة الكروت</h1>
-          <button onClick={() => navigate('/cards')} className="btn-back">
+          <button onClick={() => navigate('/app/cards/upload')} className="btn-back">
             ← العودة
           </button>
         </div>
@@ -280,7 +277,7 @@ export default function CardsCollectionPage() {
               ? 'ابدأ بإضافة كروت من خلال صفحات الاستخراج'
               : 'لا توجد نتائج تطابق البحث أو الفلتر'}
           </p>
-          <button onClick={() => navigate('/cards')} className="btn-add-cards">
+          <button onClick={() => navigate('/app/cards/upload')} className="btn-add-cards">
             + إضافة كروت جديدة
           </button>
         </div>
@@ -300,7 +297,6 @@ export default function CardsCollectionPage() {
                 <th>الشركة</th>
                 <th>الهاتف</th>
                 <th>البريد الإلكتروني</th>
-                <th>العنوان</th>
                 <th>المنصب</th>
                 <th>المصدر</th>
                 <th>تاريخ الإضافة</th>
@@ -320,7 +316,6 @@ export default function CardsCollectionPage() {
                   <td>{contact.company}</td>
                   <td className="contact-phone">{contact.phone}</td>
                   <td className="contact-email">{contact.email}</td>
-                  <td>{contact.address}</td>
                   <td>{contact.position}</td>
                   <td>
                     <span className={`source-badge source-${contact.source}`}>
