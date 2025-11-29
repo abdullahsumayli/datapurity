@@ -365,7 +365,7 @@ function CardProcessingPage() {
   if (processing.status === 'failed') {
 
     return (
-
+      <div className="page-container">
         <div className="error-container">
 
           <div className="error-icon">❌</div>
