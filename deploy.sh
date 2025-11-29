@@ -9,38 +9,41 @@ SERVER_HOST="aidotoo.com"
 PROJECT_DIR="/opt/datapurity"
 
 echo ">>> Connecting to $SERVER_USER@$SERVER_HOST"
-ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" bash -lc "
+ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
   set -e
-  echo '>>> Navigate to project directory'
-  cd \"$PROJECT_DIR\"
+  echo ">>> Navigate to project directory"
+  cd "/opt/datapurity"
 
-  echo '>>> Pull latest code'
+  echo ">>> Stash any local changes"
+  git stash
+
+  echo ">>> Pull latest code"
   git pull origin main
 
   # Backend: Python virtualenv handling
   if [ -d venv ]; then
-    echo '>>> Backend: Activate venv and install requirements'
+    echo ">>> Backend: Activate venv and install requirements"
     source venv/bin/activate
     if [ -f requirements.txt ]; then
       pip install -r requirements.txt
     fi
-    echo '>>> Restart backend service'
+    echo ">>> Restart backend service"
     sudo systemctl restart datapurity-backend.service
   else
-    echo '>>> Backend: venv not found, skipping Python dependencies and backend restart'
+    echo ">>> Backend: venv not found, skipping Python dependencies and backend restart"
   fi
 
   # Frontend build & restart
   if [ -d frontend ]; then
-    echo '>>> Build frontend'
+    echo ">>> Build frontend"
     cd frontend
     npm install
     npm run build
-    echo '>>> Restart frontend service'
+    echo ">>> Restart frontend service"
     sudo systemctl restart datapurity-frontend.service
   else
-    echo '>>> Frontend directory not found, skipping frontend build and restart'
+    echo ">>> Frontend directory not found, skipping frontend build and restart"
   fi
 
-  echo '>>> Deployment completed successfully'
-"
+  echo ">>> Deployment completed successfully"
+ENDSSH
