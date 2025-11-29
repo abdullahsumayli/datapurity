@@ -133,36 +133,36 @@ async def get_all_users(
     
     try:
         query = select(User).offset(skip).limit(limit).order_by(User.id.desc())
-    result = await db.execute(query)
-    users = result.scalars().all()
-    
-    # Get statistics for each user
-    users_data = []
-    for user in users:
-        try:
-        contacts_query = select(func.count(Contact.id)).where(Contact.user_id == user.id)
-        contacts_result = await db.execute(contacts_query)
-        total_contacts = contacts_result.scalar() or 0
+        result = await db.execute(query)
+        users = result.scalars().all()
         
-        jobs_query = select(func.count(Job.id)).where(Job.user_id == user.id)
-            jobs_result = await db.execute(jobs_query)
-        total_jobs = jobs_result.scalar() or 0
+        # Get statistics for each user
+        users_data = []
+        for user in users:
+            try:
+                contacts_query = select(func.count(Contact.id)).where(Contact.user_id == user.id)
+                contacts_result = await db.execute(contacts_query)
+                total_contacts = contacts_result.scalar() or 0
+                
+                jobs_query = select(func.count(Job.id)).where(Job.user_id == user.id)
+                jobs_result = await db.execute(jobs_query)
+                total_jobs = jobs_result.scalar() or 0
+                
+                users_data.append({
+                    "id": user.id,
+                    "email": user.email,
+                    "full_name": user.full_name or "",
+                    "is_active": user.is_active,
+                    "is_superuser": user.is_superuser,
+                    "created_at": user.created_at,
+                    "total_contacts": total_contacts,
+                    "total_jobs": total_jobs,
+                })
+            except Exception as e:
+                print(f"Error processing user {user.id}: {e}")
+                continue
         
-        users_data.append({
-            "id": user.id,
-            "email": user.email,
-                "full_name": user.full_name or "",
-            "is_active": user.is_active,
-            "is_superuser": user.is_superuser,
-                "created_at": user.created_at,
-            "total_contacts": total_contacts,
-            "total_jobs": total_jobs,
-        })
-        except Exception as e:
-            print(f"Error processing user {user.id}: {e}")
-            continue
-        
-    return users_data
+        return users_data
     except Exception as e:
         print(f"Error in get_all_users: {e}")
         import traceback
