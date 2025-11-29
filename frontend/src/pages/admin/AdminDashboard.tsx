@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../contexts/AuthContext'
 import apiClient from '../../config/apiClient'
+import { useAuth } from '../../contexts/AuthContext'
 import './admin.css'
 
 interface User {
@@ -34,6 +34,7 @@ function AdminDashboard() {
   const fetchAdminData = async () => {
     try {
       setError(null)
+      console.log('Fetching admin data...')
       const [usersRes, statsRes] = await Promise.all([
         apiClient.get('/users/admin/users'),
         apiClient.get('/users/admin/stats')
@@ -41,12 +42,16 @@ function AdminDashboard() {
       
       setUsers(usersRes.data)
       setStats(statsRes.data)
+      console.log('Admin data loaded successfully')
     } catch (error: any) {
       console.error('Failed to fetch admin data:', error)
+      console.error('Error response:', error.response)
       if (error.response?.status === 403) {
-        setError('ليس لديك صلاحيات الوصول إلى لوحة التحكم')
+        setError('ليس لديك صلاحيات الوصول إلى لوحة التحكم - تأكد من أنك مسجل دخول كمستخدم superuser')
+      } else if (error.response?.status === 401) {
+        setError('يجب تسجيل الدخول أولاً')
       } else {
-        setError('فشل تحميل البيانات')
+        setError(`فشل تحميل البيانات: ${error.response?.data?.detail || error.message}`)
       }
     } finally {
       setLoading(false)
@@ -55,10 +60,13 @@ function AdminDashboard() {
 
   // فحص تسجيل الدخول
   useEffect(() => {
+    console.log('AdminDashboard: isAuthenticated=', isAuthenticated, 'user=', user)
     if (!isAuthenticated) {
+      console.log('Not authenticated, redirecting to login')
       navigate('/login')
       return
     }
+    console.log('User authenticated, fetching admin data')
     fetchAdminData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated])
