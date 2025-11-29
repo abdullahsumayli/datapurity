@@ -45,3 +45,6 @@ frontend/dist/
 frontend/.vite/
 frontend/dev-dist/
 keys/
+ 
+# Local tools (do not commit CLI binaries)
+.tools/

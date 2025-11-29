@@ -213,7 +213,6 @@ def parse_business_card(text: str) -> Dict[str, Any]:
             "email": None,
             "phone": {"raw": None, "normalized": None},
             "website": None,
-            "address": None,
         }
 
     lines = _split_lines(text)
@@ -225,7 +224,6 @@ def parse_business_card(text: str) -> Dict[str, Any]:
             "email": None,
             "phone": {"raw": None, "normalized": None},
             "website": None,
-            "address": None,
         }
 
     joined = " ".join(lines)
@@ -236,28 +234,6 @@ def parse_business_card(text: str) -> Dict[str, Any]:
 
     name, company, title, remaining_lines = _classify_lines(lines)
 
-    # تنظيف العنوان: إزالة أي سطر كله تكرار لاسم/شركة/وظيفة/إيميل/جوال/موقع
-    clean_address_lines: List[str] = []
-    seen: set[str] = set()
-
-    for ln in remaining_lines:
-        if not ln:
-            continue
-        if _looks_like_contact(ln):
-            continue
-        if name and ln == name:
-            continue
-        if company and ln == company:
-            continue
-        if title and ln == title:
-            continue
-        if ln in seen:
-            continue
-        seen.add(ln)
-        clean_address_lines.append(ln)
-
-    address = "\n".join(clean_address_lines) if clean_address_lines else None
-
     return {
         "name": name,
         "company": company,
@@ -265,5 +241,4 @@ def parse_business_card(text: str) -> Dict[str, Any]:
         "email": email,
         "phone": phone,
         "website": website,
-        "address": address,
     }

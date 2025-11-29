@@ -19,8 +19,6 @@ interface ExtractedContact {
 
   email: string
 
-  address?: string
-
   position?: string
 
   confidence: number
@@ -42,8 +40,6 @@ interface Contact {
   phone: string
 
   email: string
-
-  address: string
 
   position: string
 
@@ -146,7 +142,6 @@ function CardProcessingPage() {
         company: f.company || '',
         phone: phoneValue,
         email: f.email || '',
-        address: f.address || '',
         position: positionValue,
         confidence: 90,
         image_url: URL.createObjectURL(file),
@@ -180,7 +175,6 @@ function CardProcessingPage() {
         'الشركة': contact.company,
         'رقم الهاتف': contact.phone,
         'البريد الإلكتروني': contact.email,
-        'العنوان': contact.address || '',
         'الوظيفة': contact.position || '',
         'نسبة الدقة': `${contact.confidence}%`
       }))
@@ -248,8 +242,6 @@ function CardProcessingPage() {
         phone: contact.phone,
 
         email: contact.email,
-
-        address: contact.address || 'الرياض، المملكة العربية السعودية',
 
         position: contact.position || 'مدير',
 
@@ -613,34 +605,6 @@ function CardProcessingPage() {
                   ) : (
 
                     <span className="value">{contact.email}</span>
-
-                  )}
-
-                </div>
-
-                
-
-                <div className="detail-row">
-
-                  <span className="label">العنوان:</span>
-
-                  {editingId === contact.id ? (
-
-                    <input
-
-                      type="text"
-
-                      className="edit-input"
-
-                      value={contact.address || ''}
-
-                      onChange={(e) => updateContact(contact.id, 'address', e.target.value)}
-
-                    />
-
-                  ) : (
-
-                    <span className="value">{contact.address || '-'}</span>
 
                   )}
 
