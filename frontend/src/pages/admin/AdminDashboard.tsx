@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 import apiClient from '../../config/apiClient'
 import './admin.css'
 
@@ -24,6 +25,7 @@ interface AdminStats {
 
 function AdminDashboard() {
   const navigate = useNavigate()
+  const { isAuthenticated, user } = useAuth()
   const [users, setUsers] = useState<User[]>([])
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -53,14 +55,13 @@ function AdminDashboard() {
 
   // فحص تسجيل الدخول
   useEffect(() => {
-    const isAuthenticated = sessionStorage.getItem('adminAuthenticated')
     if (!isAuthenticated) {
-      navigate('/admin/login')
+      navigate('/login')
       return
     }
     fetchAdminData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isAuthenticated])
 
   const changePlan = async (userId: number, newPlan: string) => {
     if (!confirm(`هل تريد تغيير باقة هذا المستخدم إلى ${newPlan}؟`)) {
@@ -81,9 +82,7 @@ function AdminDashboard() {
   }
 
   const handleLogout = () => {
-    sessionStorage.removeItem('adminAuthenticated')
-    sessionStorage.removeItem('adminLoginTime')
-    navigate('/admin/login')
+    navigate('/app/dashboard')
   }
 
   const formatDate = (dateString: string) => {
