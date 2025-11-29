@@ -84,6 +84,7 @@ function AppRouter() {
       <Route path="/contacts" element={<Navigate to="/app/contacts" replace />} />
       <Route path="/exports" element={<Navigate to="/app/exports" replace />} />
       <Route path="/billing" element={<Navigate to="/app/billing" replace />} />
+      <Route path="/admin" element={<Navigate to="/app/admin" replace />} />
 
       {/* Protected Routes */}
       <Route
