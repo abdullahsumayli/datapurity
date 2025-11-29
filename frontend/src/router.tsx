@@ -35,7 +35,23 @@ import NotFoundPage from './pages/misc/NotFoundPage'
 import ProfilePage from './pages/profile/ProfilePage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
+  
+  // Wait for auth check to complete before redirecting
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#666'
+      }}>
+        جاري التحميل...
+      </div>
+    )
+  }
   
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
