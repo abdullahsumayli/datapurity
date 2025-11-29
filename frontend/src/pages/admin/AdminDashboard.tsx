@@ -216,18 +216,6 @@ function AdminDashboard() {
                 </td>
                 <td>{formatDate(user.created_at)}</td>
                 <td>
-                  <div className="action-buttons">
-                    <select
-                      onChange={(e) => changePlan(user.id, e.target.value)}
-                      defaultValue=""
-                      className="plan-change-select"
-                    >
-                      <option value="" disabled>تغيير الباقة</option>
-                      <option value="free">مجاني</option>
-                      <option value="starter">مبتدئ</option>
-                      <option value="business">أعمال</option>
-                    </select>
-                <td>
                   <div className="action-btns">
                     <select 
                       onChange={(e) => changePlan(user.id, e.target.value)}
