@@ -3,10 +3,20 @@ set -e
 
 # Usage: Run from local machine
 # Ensure this file is executable: chmod +x deploy.sh
+# Optional: bash deploy.sh --no-frontend --no-backend
 
 SERVER_USER="root"
 SERVER_HOST="aidotoo.com"
 PROJECT_DIR="/opt/datapurity"
+
+SKIP_FRONTEND=false
+SKIP_BACKEND=false
+for arg in "$@"; do
+  case "$arg" in
+    --no-frontend) SKIP_FRONTEND=true ;;
+    --no-backend) SKIP_BACKEND=true ;;
+  esac
+done
 
 echo ">>> Connecting to $SERVER_USER@$SERVER_HOST"
 ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
@@ -15,7 +25,7 @@ ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
   cd "/opt/datapurity"
 
   echo ">>> Stash any local changes"
-  git stash
+  git stash || true
 
   echo ">>> Pull latest code"
   git pull origin main
@@ -35,29 +45,46 @@ ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
     sudo systemctl enable datapurity-frontend.service
   fi
 
-  # Backend: Python virtualenv handling
-  if [ -d venv ]; then
-    echo ">>> Backend: Activate venv and install requirements"
-    source venv/bin/activate
-    if [ -f requirements.txt ]; then
-      pip install -r requirements.txt
-    fi
-    echo ">>> Restart backend service"
-    sudo systemctl restart datapurity-backend.service
+  # Backend: Python virtualenv handling (supports venv or .venv)
+  if [ "$SKIP_BACKEND" = true ]; then
+    echo ">>> Skipping backend per flag"
   else
-    echo ">>> Backend: venv not found, skipping Python dependencies and backend restart"
+    if [ -d venv ]; then
+      VENV_DIR="venv"
+    elif [ -d .venv ]; then
+      VENV_DIR=".venv"
+    else
+      VENV_DIR=""
+    fi
+
+    if [ -n "$VENV_DIR" ]; then
+      echo ">>> Backend: Activate $VENV_DIR and install requirements"
+      source "$VENV_DIR/bin/activate"
+      if [ -f requirements.txt ]; then
+        pip install -r requirements.txt --quiet
+      fi
+      echo ">>> Restart backend service"
+      sudo systemctl restart datapurity-backend.service || sudo systemctl start datapurity-backend.service
+    else
+      echo ">>> Backend: No virtualenv (venv/.venv) found; skipping dependencies and restart"
+    fi
   fi
 
   # Frontend build & restart
-  if [ -d frontend ]; then
-    echo ">>> Build frontend"
-    cd frontend
-    npm install
-    npm run build
-    echo ">>> Restart frontend service"
-    sudo systemctl restart datapurity-frontend.service
+  if [ "$SKIP_FRONTEND" = true ]; then
+    echo ">>> Skipping frontend per flag"
   else
-    echo ">>> Frontend directory not found, skipping frontend build and restart"
+    if [ -d frontend ]; then
+      echo ">>> Build frontend"
+      cd frontend
+      npm install --quiet
+      npm run build
+      echo ">>> Restart frontend service"
+      sudo systemctl restart datapurity-frontend.service || sudo systemctl start datapurity-frontend.service
+      cd ..
+    else
+      echo ">>> Frontend directory not found, skipping frontend build and restart"
+    fi
   fi
 
   echo ">>> Deployment completed successfully"

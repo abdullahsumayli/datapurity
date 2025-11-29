@@ -68,8 +68,11 @@ def ocr_business_card(image_bytes: bytes) -> Dict[str, Any]:
         # Create Vision API image object
         image = vision.Image(content=image_bytes)
         
-        # Call document_text_detection for structured OCR
-        response = client.document_text_detection(image=image)
+        # Call document_text_detection for structured OCR with Arabic/English hints
+        response = client.document_text_detection(
+            image=image,
+            image_context=vision.ImageContext(language_hints=["ar", "en"]),
+        )
         
         # Check for errors in the response
         if response.error.message:

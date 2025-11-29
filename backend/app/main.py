@@ -7,9 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi import UploadFile, File, HTTPException
-from google.cloud import vision
-from app.utils.business_card_parser import detect_language, parse_business_card
+ 
 
 from app.core.settings import get_settings
 # Scheduler disabled - requires marketing features (ScheduledTask model)
@@ -73,30 +71,7 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_PREFIX)
 app.include_router(ocr.router)
 
-
-# Compatibility endpoint: legacy clients posting to /api/v1/cards/ocr
-@app.post(f"{settings.API_PREFIX}/cards/ocr")
-async def legacy_cards_ocr(file: UploadFile = File(...)):
-    """Compatibility endpoint that mirrors the old `/api/v1/cards/ocr` behavior.
-
-    This runs the same OCR -> parse flow and returns the same JSON shape.
-    """
-    content = await file.read()
-    if not content:
-        raise HTTPException(status_code=400, detail="Empty file")
-
-    client = vision.ImageAnnotatorClient()
-    image = vision.Image(content=content)
-    response = client.text_detection(image=image)
-
-    if getattr(response, "error", None) and getattr(response.error, "message", None):
-        raise HTTPException(status_code=500, detail=response.error.message)
-
-    full_text = response.full_text_annotation.text or ""
-    language = detect_language(full_text)
-    fields = parse_business_card(full_text)
-
-    return {"raw_text": full_text, "language": language, "fields": fields}
+# Legacy endpoint `/api/v1/cards/ocr` removed. Use `/api/v1/ocr/card`.
 
 # Static files and SPA setup
 FRONTEND_DIST = Path(__file__).parent.parent.parent / "frontend" / "dist"
