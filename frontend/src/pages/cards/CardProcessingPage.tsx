@@ -81,7 +81,7 @@ function CardProcessingPage() {
 
     failed: 0,
 
-    status: 'processing'
+    status: 'completed'
 
   })
 
@@ -103,15 +103,30 @@ function CardProcessingPage() {
     if (!file) return;
     setIsProcessing(true);
     setOcrError(null);
+    // ضبط حالة المعالجة الأولية لبطاقة واحدة
+    setProcessing({
+      total: 1,
+      processed: 0,
+      failed: 0,
+      status: 'processing'
+    });
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const res = await fetch('https://aidotoo.com/api/v1/ocr/card', {
+      // استخدم المسار النسبي لتجنب مشاكل CORS وبيئات مختلفة
+      let res = await fetch('/api/v1/ocr/card', {
         method: 'POST',
         body: formData,
       });
+      // تمت إزالة مسار التوافق القديم، نعتمد فقط على المسار الأساسي
       if (!res.ok) {
-        setOcrError('فشل في قراءة البطاقة، حاول مرة أخرى.');
+        let detail = 'فشل في قراءة البطاقة، حاول مرة أخرى.';
+        try {
+          const errBody = await res.json();
+          detail = errBody?.detail || detail;
+        } catch {}
+        setOcrError(detail);
+        setProcessing(prev => ({ ...prev, status: 'failed', failed: 1 }));
         setIsProcessing(false);
         return;
       }
@@ -136,8 +151,11 @@ function CardProcessingPage() {
         confidence: 90,
         image_url: URL.createObjectURL(file),
       }]);
+      // تحديث التقدم بعد الاكتمال
+      setProcessing(prev => ({ ...prev, processed: 1, status: 'completed' }));
     } catch (error) {
       setOcrError('فشل في معالجة البطاقة.');
+      setProcessing(prev => ({ ...prev, status: 'failed', failed: 1 }));
     } finally {
       setIsProcessing(false);
     }
@@ -282,9 +300,7 @@ function CardProcessingPage() {
           <p>استخدام الذكاء الاصطناعي لاستخراج البيانات من الكرت</p>
 
           <div className="progress-bar">
-
-            <div className="progress-fill" style={{ width: `${(processing.processed / processing.total) * 100}%` }}></div>
-
+            <div className="progress-fill" style={{ width: `${processing.total > 0 ? (processing.processed / processing.total) * 100 : 0}%` }}></div>
           </div>
 
           <p className="progress-text">
@@ -322,8 +338,34 @@ function CardProcessingPage() {
   if (processing.status === 'failed') {
 
     return (
-
+  // في حال فتح الصفحة مباشرة بدون ملفات مرفوعة مسبقاً
+  if ((!uploadedFiles || uploadedFiles.length === 0) && contacts.length === 0 && !isProcessing && processing.status !== 'processing') {
+    return (
       <div className="page-container">
+        <div className="empty-state-container">
+          <h2>لا توجد بطاقة لمعالجتها</h2>
+          <p>يمكنك رفع صورة بطاقة هنا أو العودة لصفحة الرفع.</p>
+          <div style={{ marginTop: '1rem' }}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) {
+                  handleOcrForSingleCard(f)
+                }
+              }}
+            />
+          </div>
+          <button className="btn-primary" style={{ marginTop: '1rem' }} onClick={() => navigate('/app/cards/upload')}>
+            الذهاب إلى صفحة رفع البطاقات
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
 
         <div className="error-container">
 

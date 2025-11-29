@@ -21,7 +21,8 @@ export async function ocrBusinessCard(file: File): Promise<OcrCardResult> {
   // backend single-card endpoint expects field name 'file'
   formData.append('file', file);
 
-  const res = await fetch('/api/v1/ocr/business-card', {
+  // Backend OCR endpoint is /api/v1/ocr/card (legacy /api/v1/cards/ocr also exists)
+  const res = await fetch('/api/v1/ocr/card', {
     method: 'POST',
     body: formData,
   });

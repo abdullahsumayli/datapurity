@@ -76,17 +76,17 @@ class CardRecord:
 
 ## API Endpoints
 
-### POST /api/v1/cards/ocr
+### POST /api/v1/ocr/card
 
 معالجة كروت الأعمال باستخدام OCR.
 
 **Request:**
 
 ```http
-POST /api/v1/cards/ocr
+POST /api/v1/ocr/card
 Content-Type: multipart/form-data
 
-files: [card1.jpg, card2.jpg, card3.png]
+file: card.jpg
 ```
 
 **Response:**
@@ -195,9 +195,9 @@ files = [
 ]
 
 response = httpx.post(
-    'http://localhost:8000/api/v1/cards/ocr',
-    files=files,
-    headers={'Authorization': 'Bearer YOUR_TOKEN'}
+  'http://localhost:8000/api/v1/ocr/card',
+  files={'file': open('card1.jpg', 'rb')},
+  headers={'Authorization': 'Bearer YOUR_TOKEN'}
 )
 
 print(response.json())
@@ -361,7 +361,7 @@ sudo apt-get install tesseract-ocr-ara
 
 ```python
 # Save to database (future)
-@router.post("/cards/ocr")
+@router.post("/ocr/card")
 async def ocr_cards(files, db: Session):
     processor = BusinessCardProcessor(paths)
     df = processor.run(dedupe=True)
@@ -392,10 +392,9 @@ pytest tests/test_ocr.py -v
 
 ```bash
 # Test endpoint
-curl -X POST http://localhost:8000/api/v1/cards/ocr \
+curl -X POST http://localhost:8000/api/v1/ocr/card \
   -H "Authorization: Bearer TOKEN" \
-  -F "files=@card1.jpg" \
-  -F "files=@card2.jpg"
+  -F "file=@card1.jpg"
 ```
 
 ### Sample Test Cases
