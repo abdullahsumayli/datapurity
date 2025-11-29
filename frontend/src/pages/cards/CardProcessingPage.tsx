@@ -81,7 +81,7 @@ function CardProcessingPage() {
 
     failed: 0,
 
-    status: 'processing'
+    status: 'completed'
 
   })
 
@@ -338,8 +338,34 @@ function CardProcessingPage() {
   if (processing.status === 'failed') {
 
     return (
-
+  // في حال فتح الصفحة مباشرة بدون ملفات مرفوعة مسبقاً
+  if ((!uploadedFiles || uploadedFiles.length === 0) && contacts.length === 0 && !isProcessing && processing.status !== 'processing') {
+    return (
       <div className="page-container">
+        <div className="empty-state-container">
+          <h2>لا توجد بطاقة لمعالجتها</h2>
+          <p>يمكنك رفع صورة بطاقة هنا أو العودة لصفحة الرفع.</p>
+          <div style={{ marginTop: '1rem' }}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) {
+                  handleOcrForSingleCard(f)
+                }
+              }}
+            />
+          </div>
+          <button className="btn-primary" style={{ marginTop: '1rem' }} onClick={() => navigate('/app/cards/upload')}>
+            الذهاب إلى صفحة رفع البطاقات
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
 
         <div className="error-container">
 
