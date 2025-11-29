@@ -55,12 +55,11 @@ Description=DataPurity FastAPI Service
 After=network.target
 
 [Service]
-User=root
-WorkingDirectory=/opt/datapurity/backend
-ExecStart=/opt/datapurity/backend/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
+User=www-data
+WorkingDirectory=/opt/datapurity
+Environment="GOOGLE_APPLICATION_CREDENTIALS=/opt/datapurity/keys/datapurity-ocr-5dbb14e3432a.json"
+ExecStart=/usr/bin/env uvicorn app.main:app --host 127.0.0.1 --port 8000
 Restart=always
-RestartSec=3
-Environment="PYTHONPATH=/opt/datapurity/backend"
 
 [Install]
 WantedBy=multi-user.target
@@ -321,3 +320,43 @@ free -h
 ---
 
 **تم التحديث**: 21 نوفمبر 2025
+
+## OCR Endpoint
+
+- **URL:** `POST /api/v1/ocr/card`
+- **Request:** `multipart/form-data` مع حقل واحد باسم `file` يحتوي صورة البطاقة (JPG/PNG/WebP).
+- **استجابة نموذجية:**
+  ```json
+  {
+    "raw_text": "Raw OCR text ...",
+    "language": "ar",
+    "fields": {
+      "name": "Ahmad Ali",
+      "company": "DataPurity",
+      "title": "Sales Manager",
+      "email": "ahmad@example.com",
+      "phone": {
+        "raw": "+966 50 123 4567",
+        "normalized": "+966501234567"
+      },
+      "website": "https://datapurity.com",
+      "address": "Riyadh, Saudi Arabia"
+    }
+  }
+  ```
+- **ملاحظة تشغيلية:** بعد تعديل الاعتمادات قم بتشغيل:
+  ```bash
+  pip install -r requirements.txt
+  sudo systemctl restart datapurity
+  ```
+
+---
+
+## استخدام OCR من واجهة المستخدم
+
+1. انتقل إلى صفحة "معالجة البطاقات" من القائمة الرئيسية.
+2. قم برفع صورة بطاقة العمل عبر زر رفع الصورة.
+3. ستظهر رسالة "جاري المعالجة..." أثناء معالجة الصورة.
+4. بعد انتهاء المعالجة، سيتم تعبئة الحقول تلقائياً بالبيانات المستخرجة (الاسم، الشركة، الهاتف، البريد الإلكتروني، العنوان، الوظيفة).
+5. يمكنك تعديل أي حقل يدوياً عبر زر التعديل بجانب كل حقل.
+6. لا حاجة لأي تعديل في الـ backend، فقط استخدم endpoint `/api/v1/ocr/card` الموجود مسبقاً.

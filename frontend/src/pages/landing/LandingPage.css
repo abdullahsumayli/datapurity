@@ -246,6 +246,120 @@
   gap: 2rem;
 }
 
+/* Pricing Section */
+.pricing {
+  padding: 5rem 0;
+  background: #f8fbff;
+}
+
+.pricing-grid {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.pricing-card {
+  background: white;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+  position: relative;
+  border: 1px solid rgba(79, 227, 193, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pricing-card-popular {
+  border: 2px solid #1F7FED;
+  transform: translateY(-10px);
+}
+
+.plan-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #1F7FED, #4FE3C1);
+  color: #fff;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.plan-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.plan-description {
+  color: #4a5568;
+  line-height: 1.7;
+  min-height: 60px;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.price-number {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #1F7FED 0%, #4FE3C1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.price-period {
+  color: #475569;
+  font-weight: 600;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.plan-features li {
+  display: flex;
+  gap: 0.75rem;
+  color: #1f2937;
+  font-weight: 600;
+  align-items: center;
+}
+
+.plan-features li span {
+  color: #10b981;
+  font-size: 1.2rem;
+}
+
+.btn-plan {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #1F7FED, #4FE3C1);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-plan:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(31, 127, 237, 0.25);
+}
+
 .feature-card {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   padding: 2.5rem;
@@ -372,6 +486,10 @@
   }
 
   .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricing-grid {
     grid-template-columns: 1fr;
   }
 }

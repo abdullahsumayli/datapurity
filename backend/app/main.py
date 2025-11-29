@@ -7,11 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi import UploadFile, File, HTTPException
+from google.cloud import vision
+from app.utils.business_card_parser import detect_language, parse_business_card
 
 from app.core.settings import get_settings
 # Scheduler disabled - requires marketing features (ScheduledTask model)
 # from app.core.scheduler import start_scheduler, stop_scheduler
-from app.routers import api_router
+from app.routers import api_router, ocr
 
 settings = get_settings()
 
@@ -20,6 +23,16 @@ app = FastAPI(
     openapi_url=f"{settings.API_PREFIX}/openapi.json",
     docs_url=f"{settings.API_PREFIX}/docs",
 )
+
+# إضافة مسار صريح لخدمة test-auth.html مباشرة بعد تعريف app
+FRONTEND_DIST = Path(__file__).parent.parent.parent / "frontend" / "dist"
+
+@app.get("/test-auth.html", include_in_schema=False)
+async def test_auth():
+    test_auth_path = FRONTEND_DIST / "test-auth.html"
+    if test_auth_path.exists():
+        return FileResponse(str(test_auth_path))
+    return {"error": "test-auth.html not found"}
 
 # Startup/shutdown events disabled - scheduler requires marketing features
 # @app.on_event("startup")
@@ -48,19 +61,42 @@ app.add_middleware(
     allow_origins=[
         "https://aidotoo.com",
         "https://www.aidotoo.com",
-        "http://aidotoo.com",
-        "http://www.aidotoo.com",
-        "http://46.62.239.119",
         "http://localhost:5173",
         "http://localhost:3000",
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 # Include all API routers
 app.include_router(api_router, prefix=settings.API_PREFIX)
+app.include_router(ocr.router)
+
+
+# Compatibility endpoint: legacy clients posting to /api/v1/cards/ocr
+@app.post(f"{settings.API_PREFIX}/cards/ocr")
+async def legacy_cards_ocr(file: UploadFile = File(...)):
+    """Compatibility endpoint that mirrors the old `/api/v1/cards/ocr` behavior.
+
+    This runs the same OCR -> parse flow and returns the same JSON shape.
+    """
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Empty file")
+
+    client = vision.ImageAnnotatorClient()
+    image = vision.Image(content=content)
+    response = client.text_detection(image=image)
+
+    if getattr(response, "error", None) and getattr(response.error, "message", None):
+        raise HTTPException(status_code=500, detail=response.error.message)
+
+    full_text = response.full_text_annotation.text or ""
+    language = detect_language(full_text)
+    fields = parse_business_card(full_text)
+
+    return {"raw_text": full_text, "language": language, "fields": fields}
 
 # Static files and SPA setup
 FRONTEND_DIST = Path(__file__).parent.parent.parent / "frontend" / "dist"
@@ -81,6 +117,13 @@ if FRONTEND_DIST.exists():
         if favicon_path.exists():
             return FileResponse(str(favicon_path))
         return {"error": "favicon not found"}
+
+    @app.get("/test-auth.html", include_in_schema=False)
+    async def test_auth():
+        test_auth_path = FRONTEND_DIST / "test-auth.html"
+        if test_auth_path.exists():
+            return FileResponse(str(test_auth_path))
+        return {"error": "test-auth.html not found"}
     
     @app.get("/robots.txt", include_in_schema=False)
     async def robots():

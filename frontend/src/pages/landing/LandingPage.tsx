@@ -3,6 +3,50 @@ import './LandingPage.css'
 
 function LandingPage() {
   const navigate = useNavigate()
+  const plans = [
+    {
+      id: 'free',
+      title: 'الخطة المجانية',
+      price: '0',
+      period: 'ريال/شهر',
+      description: 'مناسبة للتجربة السريعة وعدد محدود من عمليات التنظيف.',
+      features: [
+        'تنظيف ملف واحد حتى 100 سجل',
+        '10 بطاقات أعمال OCR',
+        'تقارير جودة أساسية'
+      ],
+      cta: 'ابدأ مجاناً'
+    },
+    {
+      id: 'starter',
+      title: 'خطة الشركات الناشئة',
+      price: '79',
+      period: 'ريال/شهر',
+      description: 'أفضل خيار للفرق الصغيرة التي تحتاج معالجة منتظمة للبيانات.',
+      features: [
+        '5 عمليات تنظيف لكل شهر',
+        'حتى 500 سجل في الملف الواحد',
+        '100 بطاقة أعمال OCR',
+        'تقارير وتصدير CSV/Excel'
+      ],
+      popular: true,
+      cta: 'جرّب الخطة'
+    },
+    {
+      id: 'business',
+      title: 'خطة الأعمال',
+      price: '199',
+      period: 'ريال/شهر',
+      description: 'قدرات متقدمة مع دعم الأولوية وفريق متعدد المستخدمين.',
+      features: [
+        '20 عملية تنظيف + كشف مكرر ذكي',
+        '2000 سجل لكل ملف',
+        '500 بطاقة أعمال OCR',
+        'دعم WhatsApp + وصول API'
+      ],
+      cta: 'احجز عرضاً'
+    }
+  ]
 
   return (
     <div className="landing-page">
@@ -140,6 +184,49 @@ function LandingPage() {
                 مع دعم كامل للأحرف العربية
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="pricing" id="pricing">
+        <div className="container">
+          <h2 className="section-title">خطط الاشتراك</h2>
+          <p className="section-subtitle">
+            اختر الخطة المناسبة لفريقك وابدأ بتنظيف البيانات خلال دقائق.
+          </p>
+
+          <div className="pricing-grid">
+            {plans.map(plan => (
+              <div
+                key={plan.id}
+                className={`pricing-card ${plan.popular ? 'pricing-card-popular' : ''}`}
+              >
+                {plan.popular && <div className="plan-badge">الأكثر طلباً</div>}
+                <h3 className="plan-title">{plan.title}</h3>
+                <p className="plan-description">{plan.description}</p>
+                <div className="plan-price">
+                  <span className="price-number">{plan.price}</span>
+                  <span className="price-period">{plan.period}</span>
+                </div>
+
+                <ul className="plan-features">
+                  {plan.features.map(feature => (
+                    <li key={feature}>
+                      <span>✓</span>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+
+                <button
+                  className="btn-plan"
+                  onClick={() => navigate(`/checkout?plan=${plan.id}`)}
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </section>

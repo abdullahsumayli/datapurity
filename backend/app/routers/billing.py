@@ -1,7 +1,9 @@
 """Billing router."""
 
-from typing import List
+from typing import List, Literal, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -12,6 +14,27 @@ from app.services.subscription_service import SubscriptionService
 from app.schemas.billing import SubscriptionResponse, InvoiceResponse
 
 router = APIRouter()
+
+
+class BillingInfo(BaseModel):
+    """Checkout billing details provided by the customer."""
+
+    fullName: str
+    email: EmailStr
+    phone: str
+    company: Optional[str] = None
+    vatNumber: Optional[str] = None
+    address: str
+    city: str
+    country: str
+
+
+class CheckoutRequest(BaseModel):
+    """Payload for creating a checkout session."""
+
+    plan_id: Literal["starter", "business"]
+    payment_method: Literal["mada", "visa", "applepay"]
+    billing_info: BillingInfo
 
 
 @router.get("/subscription", response_model=SubscriptionResponse)
@@ -68,9 +91,7 @@ async def get_invoices(
 
 @router.post("/create-checkout")
 async def create_checkout_session(
-    plan_id: str,
-    payment_method: str,
-    billing_info: dict,
+    request: CheckoutRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -78,22 +99,13 @@ async def create_checkout_session(
     Create checkout session for payment.
     Integrates with Moyasar (Saudi payment gateway) or Stripe.
     """
-    from pydantic import BaseModel
-    
-    # Validate plan
-    valid_plans = ['starter', 'business']
-    if plan_id not in valid_plans:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid plan selected"
-        )
-    
     # Plan pricing
     plan_prices = {
         'starter': 79.00,
         'business': 199.00
     }
     
+    plan_id = request.plan_id
     amount = plan_prices[plan_id]
     amount_with_vat = amount * 1.15  # Add 15% VAT
     
@@ -108,8 +120,8 @@ async def create_checkout_session(
         "currency": "SAR",
         "plan_id": plan_id,
         "customer_email": current_user.email,
-        "billing_info": billing_info,
-        "payment_method": payment_method,
+        "billing_info": request.billing_info.model_dump(),
+        "payment_method": request.payment_method,
         # In production, this will be Moyasar checkout URL
         "checkout_url": f"https://moyasar.com/checkout/mock_{plan_id}",
         "success_url": "http://localhost:5173/app/billing?status=success",
