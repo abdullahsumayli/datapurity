@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import apiClient from '../../config/apiClient';
+import { useAuth } from '../../contexts/AuthContext';
 import './profile.css';
 
 interface UserProfile {
