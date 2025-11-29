@@ -334,10 +334,6 @@ function CardProcessingPage() {
   }
 
 
-
-  if (processing.status === 'failed') {
-
-    return (
   // في حال فتح الصفحة مباشرة بدون ملفات مرفوعة مسبقاً
   if ((!uploadedFiles || uploadedFiles.length === 0) && contacts.length === 0 && !isProcessing && processing.status !== 'processing') {
     return (
@@ -365,7 +361,10 @@ function CardProcessingPage() {
     )
   }
 
-  return (
+
+  if (processing.status === 'failed') {
+
+    return (
 
         <div className="error-container">
 
