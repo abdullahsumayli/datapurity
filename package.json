@@ -1,0 +1,8 @@
+{
+  "name": "datapurity-root",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "deploy": "bash deploy.sh"
+  }
+}
