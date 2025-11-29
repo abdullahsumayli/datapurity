@@ -87,5 +87,22 @@ ssh "$SERVER_USER@$SERVER_HOST" << 'ENDSSH'
     fi
   fi
 
+  # Update Nginx configuration
+  echo ">>> Update Nginx configuration"
+  sudo cp infra/nginx.conf /etc/nginx/nginx.conf
+  sudo nginx -t
+  sudo systemctl reload nginx
+
+  # Update systemd service files
+  echo ">>> Update systemd service files"
+  sudo cp infra/datapurity-backend.service /etc/systemd/system/
+  sudo cp infra/datapurity-frontend.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+
+  # Show service status
+  echo ">>> Service status:"
+  sudo systemctl status datapurity-backend --no-pager -l | head -n 10 || true
+  sudo systemctl status datapurity-frontend --no-pager -l | head -n 10 || true
+
   echo ">>> Deployment completed successfully"
 ENDSSH
