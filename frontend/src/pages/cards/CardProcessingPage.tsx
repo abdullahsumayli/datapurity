@@ -335,7 +335,7 @@ function CardProcessingPage() {
 
 
   // في حال فتح الصفحة مباشرة بدون ملفات مرفوعة مسبقاً
-  if ((!uploadedFiles || uploadedFiles.length === 0) && contacts.length === 0 && !isProcessing && processing.status !== 'processing') {
+  if ((!uploadedFiles || uploadedFiles.length === 0) && contacts.length === 0 && !isProcessing) {
     return (
       <div className="page-container">
         <div className="empty-state-container">
